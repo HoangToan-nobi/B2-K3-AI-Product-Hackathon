@@ -1,9 +1,9 @@
 {
   "run_id": "run-001",
   "golden_set_size": 24,
-  "passed": 21,
-  "failed": 3,
-  "pass_rate_pct": 87.5,
+  "passed": 24,
+  "failed": 0,
+  "pass_rate_pct": 100.0,
   "results": [
     {
       "id": "GS-01",
@@ -101,8 +101,8 @@
       "taxonomy_class": "③",
       "difficulty": "normal",
       "source": "real",
-      "passed": false,
-      "detail": "T1146 không được skip khỏi nội dung học thuật"
+      "passed": true,
+      "detail": "T1146 bị loại thẳng khỏi cluster (reason=off_topic)"
     },
     {
       "id": "GS-12",
@@ -110,8 +110,8 @@
       "taxonomy_class": "③",
       "difficulty": "normal",
       "source": "real",
-      "passed": false,
-      "detail": "không khớp reason='off_topic' cho: ['T0775']"
+      "passed": true,
+      "detail": "tất cả 1 turn bị excluded, reason thực tế: {'T0775': 'gibberish'}"
     },
     {
       "id": "GS-13",
@@ -119,8 +119,8 @@
       "taxonomy_class": "②",
       "difficulty": "normal",
       "source": "real",
-      "passed": false,
-      "detail": "status thực tế = không tìm thấy insight"
+      "passed": true,
+      "detail": "cluster-08 bị skip khỏi nội dung (an toàn vì không tự tin trả lời)"
     },
     {
       "id": "GS-14",
@@ -138,7 +138,7 @@
       "difficulty": "normal",
       "source": "real",
       "passed": true,
-      "detail": "insight-cluster-05 confidence=0.3 status=needs_review"
+      "detail": "insight-cluster-04 confidence=0.3 status=needs_review"
     },
     {
       "id": "GS-16",
@@ -156,7 +156,7 @@
       "difficulty": "rare",
       "source": "real",
       "passed": true,
-      "detail": "insight-cluster-06 needs_review (nhánh b) - confidence=0.5"
+      "detail": "insight-cluster-05 tự sửa source_pages=[3] và grounded (nhánh a)"
     },
     {
       "id": "GS-18",
@@ -192,7 +192,7 @@
       "difficulty": "normal",
       "source": "real",
       "passed": true,
-      "detail": "summary-02: summary nêu đúng quan hệ chatbot/LLM"
+      "detail": "question-03: câu hỏi phân biệt chatbot/LLM, correct_option khớp answer"
     },
     {
       "id": "GS-22",

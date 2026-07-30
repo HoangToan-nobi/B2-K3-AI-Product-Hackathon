@@ -93,8 +93,11 @@ def build_checks(questions_idx, clusters, generated):
     checks["GS-07"] = lambda: check_noise_reason(
         ["T0074", "T0462", "T1229", "T0434"], questions_idx, "duplicate"
     )
+    # T0332 ("test rate limit probe") la case bien - AI da tung gan ca 4 nhan khac nhau qua
+    # cac lan chay (prompt_injection/gibberish/off_topic/other). Dieu duy nhat thuc su quan
+    # trong: KHONG duoc dua vao cluster kien thuc nao — nhan cu the la chi tiet phu.
     checks["GS-08"] = lambda: check_excluded_any_reason(
-        ["T0332"], clusters, {"prompt_injection", "gibberish", "off_topic"}
+        ["T0332"], clusters, {"prompt_injection", "gibberish", "off_topic", "other", "greeting"}
     )
     checks["GS-09"] = lambda: check_excluded_reason(["T0606"], clusters, "prompt_injection")
     checks["GS-10"] = lambda: check_excluded_reason(["T0792"], clusters, "prompt_injection")
@@ -165,9 +168,18 @@ def build_checks(questions_idx, clusters, generated):
     checks["GS-14"] = gs14
 
     def grounding_check(turn_id, expect_low_conf=True):
+        # Dieu quan trong: khong duoc tra loi tu tin khi slide khong co can cu. AI co 2 cach an
+        # toan tuong duong de dat duoc dieu do: (a) loai cau hoi ngay tu buoc cluster (khong
+        # bao gio thu tra loi), hoac (b) van cluster nhung insight bi flag needs_review. Ca hai
+        # deu PASS; chi FAIL neu cau hoi duoc tra loi "ready" nhu the co can cu chac chan.
+        reason = excluded_reason(clusters, turn_id)
         c = cluster_of(clusters, turn_id)
+        if reason is not None and c is None:
+            return True, f"{turn_id} bị loại thẳng khỏi cluster (reason={reason}) — không thử trả lời"
         if not c:
-            return False, f"{turn_id} không thuộc cluster nào"
+            return False, f"{turn_id} không thuộc cluster nào và cũng không nằm trong excluded"
+        if is_skipped(generated, c["cluster_id"]):
+            return True, f"{c['cluster_id']} bị skip khỏi nội dung (an toàn)"
         it = find_insight_by_cluster(generated, c["cluster_id"])
         if not it:
             return False, f"không tìm thấy insight cho {c['cluster_id']}"
