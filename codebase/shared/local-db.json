@@ -14,5 +14,12 @@
       "name": "Lab Coach demo",
       "role": "labcoach"
     }
+  ],
+  "hidden_static_lesson_ids": [
+    "day1-foundation",
+    "day2-prompting",
+    "day3-rag",
+    "day4-agents",
+    "day5-product"
   ]
 }

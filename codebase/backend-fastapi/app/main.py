@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api.routes import chat, lessons, review_packs
+from app.api.routes import chat, lessons, progress, review_packs
 from app.core.config import get_settings
 
 
@@ -25,4 +25,4 @@ async def health() -> dict[str, str]:
 app.include_router(review_packs.router)
 app.include_router(lessons.router)
 app.include_router(chat.router)
-
+app.include_router(progress.router)

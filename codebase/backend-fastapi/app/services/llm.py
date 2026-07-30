@@ -8,8 +8,9 @@ from app.core.config import get_settings
 
 
 SYSTEM_PROMPT = """Bạn là AI Tutor cho lớp AI & LLM Foundation.
-Chỉ trả lời dựa trên CONTEXT được cung cấp. Nếu context không đủ, nói rõ là chưa đủ dữ liệu.
-Trả lời bằng tiếng Việt, ngắn gọn, có cấu trúc dễ đọc. Không nhắc đến implementation nội bộ."""
+Chỉ dùng tài liệu tham khảo từ slide được cung cấp để trả lời. Nếu tài liệu chưa đủ, nói rõ là slide hiện tại chưa đủ dữ liệu.
+Trả lời bằng tiếng Việt, ngắn gọn, có cấu trúc dễ đọc.
+Không nhắc đến các nhãn nội bộ như context, prompt, tài liệu được cung cấp, hệ thống, implementation nội bộ."""
 
 
 class LlmService:
@@ -30,7 +31,7 @@ class LlmService:
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {
                     "role": "user",
-                    "content": f"CONTEXT:\n{context}\n\nCÂU HỎI:\n{question}\n\nTRẢ LỜI:",
+                    "content": f"TÀI LIỆU THAM KHẢO TỪ SLIDE:\n{context}\n\nCÂU HỎI:\n{question}\n\nTRẢ LỜI CHO HỌC VIÊN:",
                 },
             ],
             "temperature": 0.2,
@@ -44,19 +45,20 @@ class LlmService:
             response = await client.post(self.settings.deepseek_api_url, json=payload, headers=headers)
             response.raise_for_status()
             body = response.json()
-        return body["choices"][0]["message"]["content"].strip()
+        return self._clean_tutor_answer(body["choices"][0]["message"]["content"])
 
     async def answer_general(self, *, question: str, web_context: str = "") -> str | None:
         if not self.enabled:
             return None
 
         system_prompt = """Bạn là AI Tutor tiếng Việt.
-Nếu câu hỏi không nằm trong slide, hãy trả lời bằng kiến thức phổ thông hoặc web context được cung cấp.
-Mở đầu ngắn gọn rằng nội dung này nằm ngoài slide nếu phù hợp. Không bịa nguồn; nếu dùng web context thì nêu nguồn ngắn ở cuối."""
+Nếu câu hỏi không nằm trong slide, hãy trả lời bằng kiến thức phổ thông hoặc nguồn web tham khảo nếu có.
+Mở đầu ngắn gọn rằng nội dung này nằm ngoài slide nếu phù hợp. Không bịa nguồn; nếu dùng nguồn web tham khảo thì nêu nguồn ngắn ở cuối.
+Không nhắc đến các nhãn nội bộ như context, prompt, dữ liệu được cung cấp, hệ thống."""
         user_content = (
-            f"WEB CONTEXT:\n{web_context}\n\nCÂU HỎI:\n{question}\n\nTRẢ LỜI:"
+            f"NGUỒN WEB THAM KHẢO:\n{web_context}\n\nCÂU HỎI:\n{question}\n\nTRẢ LỜI CHO HỌC VIÊN:"
             if web_context
-            else f"CÂU HỎI:\n{question}\n\nTRẢ LỜI:"
+            else f"CÂU HỎI:\n{question}\n\nTRẢ LỜI CHO HỌC VIÊN:"
         )
         payload: dict[str, Any] = {
             "model": self.settings.deepseek_model,
@@ -75,17 +77,45 @@ Mở đầu ngắn gọn rằng nội dung này nằm ngoài slide nếu phù h�
             response = await client.post(self.settings.deepseek_api_url, json=payload, headers=headers)
             response.raise_for_status()
             body = response.json()
-        return body["choices"][0]["message"]["content"].strip()
+        return self._clean_tutor_answer(body["choices"][0]["message"]["content"])
+
+    @staticmethod
+    def _clean_tutor_answer(answer: str) -> str:
+        cleaned = answer.strip()
+        cleaned = re.sub(
+            r"^\s*(dựa|dua)\s+trên\s+(context|ngữ\s*cảnh|du\s*lieu\s*duoc\s*cung\s*cap|dữ\s*liệu\s*được\s*cung\s*cấp)\s*,?\s*",
+            "",
+            cleaned,
+            flags=re.IGNORECASE,
+        )
+        cleaned = re.sub(
+            r"^\s*(theo|từ)\s+(context|ngữ\s*cảnh|dữ\s*liệu\s*được\s*cung\s*cấp)\s*,?\s*",
+            "",
+            cleaned,
+            flags=re.IGNORECASE,
+        )
+        return cleaned.lstrip(":- \n")
 
     async def generate_review_pack(self, *, lesson_title: str, slide_context: str, transcript_context: str, chat_context: str) -> dict[str, Any] | None:
         if not self.enabled:
             return None
 
-        system_prompt = """Bạn tạo gói ôn tập VLười cho VLearn.
+        system_prompt = """Bạn tạo gói ôn tập VLười cho VLearn bằng tiếng Việt có dấu, đúng chính tả, tự nhiên như tài liệu ôn thi cho học viên.
 Nguyên tắc bắt buộc:
 - Slide là nguồn sự thật duy nhất cho kiến thức.
 - Transcript chỉ bổ sung diễn giải nếu khớp slide.
 - Chatlog chỉ dùng làm tín hiệu học viên vướng, không dùng làm nguồn khẳng định.
+- Phần summary phải tổng hợp các ý quan trọng nhất trên TOÀN BỘ slide text được cung cấp, không được lấy tuần tự các slide đầu.
+- Phần class_insights chỉ sinh từ CHATLOG ẨN DANH trong database/chatlog: mỗi mục phải đại diện cho một câu hỏi học viên thường hỏi. topic là câu hỏi hoặc nhóm câu hỏi ngắn; common_confusion là câu hỏi học viên thường hỏi, không phải mô tả lỗi hệ thống; correct_understanding phải gồm câu trả lời và giải thích nội dung dựa trên slide.
+- Ưu tiên kiến thức trọng tâm theo learning objective và cấu trúc slide; không chạy theo câu hỏi logistics hoặc câu hỏi chung chung như "tóm tắt slide này".
+- Nội dung phải theo bố cục tài liệu ôn tập dễ đọc:
+  1) Lý thuyết trọng tâm: mỗi mục có title là câu/nhóm khái niệm nổi bật, content là 2-3 câu giải thích liền mạch, không gạch đầu dòng con.
+  2) Cả lớp thường hỏi: mỗi mục có topic ở dạng câu hỏi học viên hay hỏi, common_confusion ghi câu hỏi tiêu biểu, correct_understanding ghi câu trả lời và giải thích bằng 2-4 câu chắc ý.
+  3) Quiz nhanh: tạo 3-5 câu trắc nghiệm từ phần Lý thuyết trọng tâm và Cả lớp thường hỏi. Mỗi câu có 4 lựa chọn cụ thể, answer là đầy đủ nội dung đáp án đúng kèm tiền tố A/B/C/D nếu tự nhiên, explanation giải thích vì sao đúng và nhắc lại ý liên quan trong slide/câu hỏi hay gặp.
+- Title của summary nên giống heading trong tài liệu: rõ chủ đề, có thể dùng dấu phẩy/chấm giữa các khái niệm, ví dụ "Token, Context, Attention — ba khái niệm nền".
+- Không nhồi quá nhiều khái niệm vào một mục; mỗi mục nên xử lý một cụm kiến thức có quan hệ trực tiếp.
+- Không viết tiếng Việt không dấu. Không dùng LaTeX escape như \\( hoặc \\).
+- Nếu không tìm được căn cứ trong slide, giảm confidence dưới 0.72.
 - Trả về JSON hợp lệ, không markdown, không giải thích ngoài JSON.
 Schema:
 {
@@ -104,7 +134,10 @@ Schema:
                         f"SLIDE TEXT:\n{slide_context}\n\n"
                         f"TRANSCRIPT:\n{transcript_context}\n\n"
                         f"CHATLOG ẨN DANH:\n{chat_context}\n\n"
-                        "Hãy tạo 4 ý chính, 3 blindspot, 3 câu tự kiểm tra. Nội dung mỗi trường ngắn gọn."
+                        "Hãy tạo đúng cấu trúc nội dung cho PDF gồm: "
+                        "5-6 mục lý thuyết trọng tâm, 4-5 mục cả lớp thường hỏi, 3-5 câu quiz nhanh. "
+                        "Văn phong như tài liệu ôn tập chính thức: câu ngắn vừa phải, thuật ngữ rõ, "
+                        "không markdown, không bullet trong content/common_confusion/correct_understanding."
                     ),
                 },
             ],

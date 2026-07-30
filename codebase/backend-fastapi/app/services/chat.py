@@ -118,7 +118,7 @@ class ChatService:
                 lesson_id = fallback_lesson_id
         if not pages:
             return {
-                "reply": "Em chưa tìm thấy text slide cho bài học này. Lab Coach hãy bấm Transcribe lại slide có sẵn hoặc upload lại PDF/PPTX để backend ingest.",
+                "reply": "Em chưa tìm thấy text slide cho bài học này. Lab Coach hãy bấm Transcribe lại slide có sẵn hoặc upload lại PDF/PPTX để VLười đọc slide.",
                 "citations": "",
                 "context_sources": [],
             }

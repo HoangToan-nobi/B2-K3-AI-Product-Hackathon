@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "VLười — Gói Ôn Tập",
-  description: "Lười đọc dài. Không lười hiểu.",
+  title: "VLười — Gói Ôn Tập AI",
+  description: "Lười đọc dài. Không lười hiểu. Học thông minh với trợ lý AI theo ngữ cảnh bài giảng.",
+  keywords: ["học tập", "AI tutor", "ôn tập", "VinUni", "slide"],
 };
 
 export default function RootLayout({
@@ -12,12 +13,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="vi" suppressHydrationWarning data-theme="dark">
+    <html lang="vi" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Literata:ital,opsz,wght@0,18..36,400;0,18..36,500;0,18..36,600;1,18..36,400;1,18..36,500&family=JetBrains+Mono:wght@400;500;600&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
           rel="stylesheet"
         />
       </head>

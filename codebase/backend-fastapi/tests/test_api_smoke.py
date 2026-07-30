@@ -4,6 +4,7 @@ from fastapi.testclient import TestClient
 
 from app.core.database import get_db_session
 from app.main import app
+from app.services import lessons as lessons_service
 
 
 async def _test_db_session_override():
@@ -77,6 +78,7 @@ def test_export_pdf_returns_binary_headers():
     assert response.status_code == 200
     assert response.headers["content-type"].startswith("application/pdf")
     assert response.headers["content-disposition"] == 'attachment; filename="pack-day1-foundation-001.pdf"'
+    assert response.headers["x-artifact-url"].startswith(("memory://", "https://"))
     assert response.content.startswith(b"%PDF")
 
 
@@ -91,6 +93,7 @@ def test_upload_lesson_slide_and_chat_flow(tmp_path: Path):
     body = response.json()
     lesson_id = body["lesson"]["id"]
     assert body["slideDeck"]["status"] == "ready"
+    assert not body["slideDeck"]["storageKey"].startswith("uploads/")
 
     lessons = client.get("/api/lessons")
     assert lessons.status_code == 200
@@ -113,3 +116,53 @@ def test_upload_lesson_slide_and_chat_flow(tmp_path: Path):
     assert chat.status_code == 200
     assert "reply" in chat.json()
     assert chat.json()["citations"].startswith("Slide")
+
+
+def test_delete_uploaded_slide_clears_runtime_slide_pages():
+    response = client.post(
+        "/api/lessons",
+        headers={"x-vluoi-role": "labcoach"},
+        data={"title": "Runtime Delete Slide Lesson"},
+        files={"file": ("slides.pdf", b"%PDF-1.4\n%%EOF\n", "application/pdf")},
+    )
+    body = response.json()
+    lesson_id = body["lesson"]["id"]
+    deck_id = body["slideDeck"]["id"]
+
+    deleted = client.delete(
+        f"/api/lessons/{lesson_id}/slides/{deck_id}",
+        headers={"x-vluoi-role": "labcoach"},
+    )
+
+    assert deleted.status_code == 200
+    assert deleted.json() == {"ok": True}
+    assert lesson_id not in lessons_service.UPLOADED_PAGES
+
+
+def test_labcoach_can_hide_and_reingest_static_lesson(tmp_path: Path, monkeypatch):
+    local_db = tmp_path / "local-db.json"
+    local_db.write_text(
+        """
+{
+  "active_lesson_id": "day1-foundation",
+  "published_pack_ids": ["pack-day1-foundation-001"],
+  "users": []
+}
+""".strip()
+        + "\n",
+        encoding="utf-8",
+    )
+    lessons_service.HIDDEN_STATIC_LESSON_IDS.clear()
+    monkeypatch.setattr(lessons_service, "LOCAL_DB_PATH", local_db)
+    monkeypatch.setattr(lessons_service, "refresh_all_static_slide_artifacts", lambda: {"ok": True})
+
+    deleted = client.delete("/api/lessons/day1-foundation", headers={"x-vluoi-role": "labcoach"})
+    listed = client.get("/api/lessons")
+    reingested = client.post("/api/lessons/reingest-static", headers={"x-vluoi-role": "labcoach"})
+    listed_again = client.get("/api/lessons")
+
+    assert deleted.status_code == 200
+    assert deleted.json() == {"ok": True}
+    assert all(lesson["id"] != "day1-foundation" for lesson in listed.json()["lessons"])
+    assert reingested.status_code == 200
+    assert any(lesson["id"] == "day1-foundation" for lesson in listed_again.json()["lessons"])

@@ -1,0 +1,285 @@
+{
+  "schema_version": "1.0",
+  "pack_id": "pack-lesson_45f69e32e6024748922f85df-001",
+  "status": "ready",
+  "lesson": {
+    "id": "lesson_45f69e32e6024748922f85df",
+    "title": "Day 01 - AI & LLM Foundation",
+    "slide_count": 29
+  },
+  "analysis": {
+    "student_question_count": 1222,
+    "unique_user_count": 367,
+    "cluster_count": 5,
+    "included_cluster_count": 5,
+    "excluded_noise_count": 0
+  },
+  "summary": [
+    {
+      "id": "summary-01",
+      "title": "AI, ML, Deep Learning, GenAI, LLM — hệ thống phân cấp từ rộng đến hẹp",
+      "content": "AI là chiếc ô lớn nhất bao gồm mọi hệ thống có yếu tố thông minh. Machine Learning là nhánh con của AI, học từ dữ liệu thay vì viết luật tay. Deep Learning là nhánh con của ML, dùng mạng nơ-ron nhiều tầng tự học đặc trưng. Generative AI là nhánh con của Deep Learning, sinh nội dung mới như văn bản, ảnh, code. LLM là model nền chuyên ngôn ngữ, là trái tim của làn sóng AI hiện nay. LLM không phải toàn bộ AI nhưng là tầng nền cho gần hết trải nghiệm AI bạn dùng hôm nay.",
+      "source_pages": [
+        3
+      ],
+      "source_excerpt": "AI, ML, Deep Learning, GenAI, LLM — nằm ở đâu trong cùng một hệ? từ rộng đến hẹp",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "summary-02",
+      "title": "Ba nhóm AI chính: Discriminative, Generative, Agentic",
+      "content": "Discriminative AI giỏi phân loại và dự đoán như lọc spam, phát hiện gian lận, nhận diện ảnh. Generative AI sinh ra thứ mới như văn bản, ảnh, code. Agentic AI nhận mục tiêu rồi tự làm nhiều bước: lập kế hoạch, dùng công cụ, hành động. LLM là engine chung của cả Generative lẫn Agentic.",
+      "source_pages": [
+        4
+      ],
+      "source_excerpt": "Ba nhóm AI chính: phân loại · sinh nội dung · hành động",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "summary-03",
+      "title": "LLM là gì? — bộ não nền, không phải chatbot",
+      "content": "LLM (Large Language Model) là mô hình ngôn ngữ rất lớn dựa trên kiến trúc Transformer, được luyện trên hàng nghìn tỷ token để học cách đoán token tiếp theo. Nhờ luyện đủ rộng, nó trở thành nền chung cho nhiều việc: tóm tắt, viết code, dịch thuật, phân tích. Chatbot chỉ là một dạng sản phẩm đóng gói quanh bộ não đó. Model hiện nay chủ yếu là decoder-only, nhiều model dùng MoE; sau pre-training còn các bước căn chỉnh (SFT, RLHF/DPO) và luyện suy luận.",
+      "source_pages": [
+        10
+      ],
+      "source_excerpt": "LLM là gì? — một bộ não nền, không phải một chatbot",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "summary-04",
+      "title": "Token, Context, Attention — ba khái niệm vận hành cốt lõi",
+      "content": "Token là mảnh chữ nhỏ nhất model đọc; model cắt văn bản thành token, mỗi token đều có giá. Context là lượng chữ tối đa model nhìn được mỗi lần, như bàn làm việc có hạn; context càng dài càng tốn tiền và dễ bỏ sót thông tin ở giữa. Attention là cơ chế cho phép mỗi token chủ động nhìn sang các token khác trong câu, chấm điểm mức độ liên quan, giúp model hiểu ngữ cảnh linh hoạt hơn hẳn các thế hệ trước.",
+      "source_pages": [
+        13,
+        14,
+        15
+      ],
+      "source_excerpt": "Token: model không đọc 'từ', model đọc mảnh chữ",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "summary-05",
+      "title": "Quản context = quản sự chú ý: ba nguyên tắc dùng AI hiệu quả",
+      "content": "Đầu và cuối prompt được chú ý nhiều nhất, đồ ở giữa dễ bị bỏ sót — vì vậy cần đặt điều quan trọng ở đầu hoặc cuối. Context rác tạo ra attention rác, cần giữ bàn làm việc sạch. Khi tài liệu dài, nên dùng RAG để lấy đoạn liên quan nhét vào context thay vì bắt model nhớ hết. Agent mạnh không phải vì context khổng lồ mà vì nó có tools để lấy đúng thứ vào bàn làm việc đúng lúc.",
+      "source_pages": [
+        16
+      ],
+      "source_excerpt": "Hiểu attention để dùng AI hiệu quả: quản context = quản sự chú ý",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "summary-06",
+      "title": "Giới hạn bẩm sinh của LLM: bong bóng thời gian, ảo giác, context hữu hạn",
+      "content": "Model bị đóng băng tại ngày ngừng đọc, không biết chuyện sau đó trừ khi bạn cung cấp. Model tối ưu cho câu nghe hợp lý, không phải tra sự thật, nên có thể tự tin mà sai (hallucination). Context có trần, quá dài vừa tốn tiền vừa dễ bỏ sót thông tin ở giữa. Đây không phải lỗi tạm thời mà là bản chất của cỗ máy đoán token, vì vậy cần prompt tốt, context sạch, tra sổ (RAG), tools và luôn kiểm chứng.",
+      "source_pages": [
+        20
+      ],
+      "source_excerpt": "Giới hạn bẩm sinh: học giả trong bong bóng",
+      "confidence": 0.95,
+      "status": "ready"
+    }
+  ],
+  "class_insights": [
+    {
+      "id": "insight-cluster-01",
+      "topic": "Làm thế nào để tải slide về máy?",
+      "common_confusion": "Tôi muốn tải slide về máy để học, làm sao để tải được toàn bộ slide?",
+      "correct_understanding": "Chức năng tải slide phụ thuộc vào cài đặt của giảng viên trên VLearn. Nếu không thấy nút tải, bạn có thể liên hệ giảng viên để yêu cầu bổ sung tài liệu. Trong quá trình học, bạn có thể chụp màn hình hoặc ghi chép lại nội dung quan trọng từ slide.",
+      "source_pages": [
+        1
+      ],
+      "source_excerpt": "cách tải slide về",
+      "confidence": 0.72,
+      "status": "ready",
+      "unique_user_count": 5,
+      "question_count": 8,
+      "representative_questions": [
+        "cách tải slide về",
+        "làm sao để tải slide về máy (toàn bộ slide)",
+        "tôi muốn tải slide về tải được không"
+      ]
+    },
+    {
+      "id": "insight-cluster-02",
+      "topic": "Sự khác nhau giữa LLM và chatbot là gì?",
+      "common_confusion": "LLM và chatbot có gì khác nhau? Tôi thường gọi ChatGPT là LLM, nhưng slide nói LLM không phải chatbot.",
+      "correct_understanding": "LLM là mô hình ngôn ngữ lớn, là bộ não nền có khả năng xử lý ngôn ngữ. Chatbot là một sản phẩm được xây dựng trên LLM, thêm giao diện trò chuyện và các lớp căn chỉnh. LLM có thể được dùng cho nhiều việc khác ngoài chat như tóm tắt, dịch, viết code. Chatbot chỉ là một lớp áo bên ngoài của LLM.",
+      "source_pages": [
+        10
+      ],
+      "source_excerpt": "LLM là gì? — một bộ não nền, không phải một chatbot",
+      "confidence": 0.95,
+      "status": "ready",
+      "unique_user_count": 3,
+      "question_count": 5,
+      "representative_questions": [
+        "LLM giải thích về llm",
+        "AI & LLM Foundation là gì"
+      ]
+    },
+    {
+      "id": "insight-cluster-03",
+      "topic": "Token là gì và tại sao tiếng Việt tốn token hơn?",
+      "common_confusion": "Token là gì? Tại sao cùng một nội dung, tiếng Việt lại tốn token hơn tiếng Anh?",
+      "correct_understanding": "Token là mảnh chữ nhỏ nhất mà model đọc. Model cắt văn bản thành các token, có từ là một mảnh, có từ vỡ nhiều mảnh. Tiếng Việt tốn token hơn vì dấu thanh và ký tự đặc biệt bị cắt nhỏ ra. Ví dụ 'Hello world' khoảng 2 token, nhưng 'Xin chào' có thể tới 3-4 token. Mỗi token đều có giá, nên tiếng Việt thường đắt hơn khi dùng API.",
+      "source_pages": [
+        13
+      ],
+      "source_excerpt": "Token: model không đọc 'từ', model đọc mảnh chữ",
+      "confidence": 0.95,
+      "status": "ready",
+      "unique_user_count": 2,
+      "question_count": 3,
+      "representative_questions": [
+        "/tokens",
+        "giải thích về token"
+      ]
+    },
+    {
+      "id": "insight-cluster-04",
+      "topic": "Tại sao model lại 'ảo giác' (hallucination) và có tránh được không?",
+      "common_confusion": "Tại sao AI đôi khi trả lời sai một cách tự tin? Có cách nào để loại bỏ hoàn toàn ảo giác không?",
+      "correct_understanding": "Hallucination là bản chất của LLM vì model tối ưu cho câu nghe hợp lý, không phải tra sự thật. Model học từ dữ liệu và đoán token tiếp theo, nên có thể tạo ra thông tin sai nhưng nghe rất thuyết phục. Không thể loại bỏ hoàn toàn, nhưng có thể giảm thiểu bằng cách cung cấp context chính xác, dùng RAG để tra cứu thông tin, và luôn kiểm chứng kết quả từ nguồn đáng tin cậy.",
+      "source_pages": [
+        20,
+        21
+      ],
+      "source_excerpt": "Giới hạn bẩm sinh: học giả trong bong bóng",
+      "confidence": 0.95,
+      "status": "ready",
+      "unique_user_count": 2,
+      "question_count": 4,
+      "representative_questions": [
+        "Tại sao model lại sai",
+        "Vì sao model vẫn sai"
+      ]
+    },
+    {
+      "id": "insight-cluster-05",
+      "topic": "Làm thế nào để chọn model phù hợp với công việc?",
+      "common_confusion": "Có quá nhiều model, làm sao để biết nên dùng model nào cho công việc cụ thể?",
+      "correct_understanding": "Nên chọn model theo tầng, không theo tên. Tầng 1 là frontier model đắt nhất, chỉ dùng cho việc thực sự khó như suy luận nhiều bước, code phức tạp. Tầng 2 là model rẻ mà mạnh, phù hợp đa số việc hàng ngày. Tầng 3 là self-host hoặc siêu rẻ, dùng khi cần kiểm soát dữ liệu hoặc chi phí quy mô lớn. Hai lỗi thường gặp: dùng frontier cho việc đơn giản gây tốn kém, hoặc dùng model rẻ cho việc khó dẫn đến kết quả tệ. Bắt đầu từ model đủ tốt và đủ rẻ, chỉ nâng tầng khi cần.",
+      "source_pages": [
+        26
+      ],
+      "source_excerpt": "Chọn model theo TẦNG, không chọn theo tên",
+      "confidence": 0.95,
+      "status": "ready",
+      "unique_user_count": 1,
+      "question_count": 2,
+      "representative_questions": [
+        "Chọn model & chi phí token"
+      ]
+    }
+  ],
+  "review_questions": [
+    {
+      "id": "question-01",
+      "type": "multiple_choice",
+      "question": "LLM là viết tắt của cụm từ nào?",
+      "options": [
+        "Large Language Model",
+        "Long Learning Machine",
+        "Linear Language Module",
+        "Large Learning Model"
+      ],
+      "correct_option": 0,
+      "answer": "A. Large Language Model",
+      "explanation": "LLM là viết tắt của Large Language Model, mô hình ngôn ngữ lớn dựa trên kiến trúc Transformer, được luyện trên hàng nghìn tỷ token để học cách đoán token tiếp theo.",
+      "source_pages": [
+        10
+      ],
+      "source_excerpt": "LLM (Large Language Model) là một mô hình ngôn ngữ rất lớn",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "question-02",
+      "type": "multiple_choice",
+      "question": "Cơ chế nào cho phép mỗi token trong câu 'nhìn sang' các token khác để hiểu ngữ cảnh?",
+      "options": [
+        "Tokenization",
+        "Attention",
+        "Context window",
+        "Parameter"
+      ],
+      "correct_option": 1,
+      "answer": "B. Attention",
+      "explanation": "Attention là cơ chế cho phép mỗi token chủ động nhìn lại các token trước đó trong câu, chấm điểm mức độ liên quan, giúp model hiểu ngữ cảnh linh hoạt hơn. Đây là chữ T trong GPT.",
+      "source_pages": [
+        15
+      ],
+      "source_excerpt": "Attention: mỗi từ được 'nhìn sang' những từ quan trọng khác",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "question-03",
+      "type": "multiple_choice",
+      "question": "Khi prompt quá dài, thông tin ở vị trí nào dễ bị model 'quên' nhất?",
+      "options": [
+        "Đầu prompt",
+        "Cuối prompt",
+        "Giữa prompt",
+        "Tất cả đều như nhau"
+      ],
+      "correct_option": 2,
+      "answer": "C. Giữa prompt",
+      "explanation": "Đầu và cuối prompt được chú ý nhiều nhất, đồ ở giữa dễ bị bỏ sót. Hiện tượng này được gọi là 'Lost in the Middle', đã được nghiên cứu bởi Liu et al. (2023).",
+      "source_pages": [
+        14,
+        16
+      ],
+      "source_excerpt": "Context càng dài càng tốn tiền và càng chậm — bàn rộng không có nghĩa là dùng tốt",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "question-04",
+      "type": "multiple_choice",
+      "question": "Đâu là thứ tự đúng các bước huấn luyện LLM từ đầu?",
+      "options": [
+        "SFT → Pre-training → RLHF → Reasoning",
+        "Pre-training → SFT → RLHF → Reasoning",
+        "RLHF → Pre-training → SFT → Reasoning",
+        "Pre-training → RLHF → SFT → Reasoning"
+      ],
+      "correct_option": 1,
+      "answer": "B. Pre-training → SFT → RLHF → Reasoning",
+      "explanation": "Đầu tiên là pre-training: model đọc hàng nghìn tỷ token để học ngôn ngữ và kiến thức. Sau đó SFT: model học cách trả lời theo ví dụ mẫu. Tiếp theo RLHF/DPO: model được uốn nắn bằng phản hồi con người. Cuối cùng là luyện suy luận (reasoning training) từ khoảng 2025.",
+      "source_pages": [
+        18
+      ],
+      "source_excerpt": "LLM được tạo ra như thế nào? — đọc nhiều, được chỉ, được uốn nắn, luyện đề",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "question-05",
+      "type": "multiple_choice",
+      "question": "Khi nào nên dùng temperature = 0?",
+      "options": [
+        "Khi cần câu trả lời sáng tạo, đa dạng",
+        "Khi cần câu trả lời ổn định, có thể lặp lại",
+        "Khi muốn model 'phiêu' hơn",
+        "Khi muốn giảm chi phí token"
+      ],
+      "correct_option": 1,
+      "answer": "B. Khi cần câu trả lời ổn định, có thể lặp lại",
+      "explanation": "Temperature = 0 luôn chọn từ có xác suất cao nhất, cho kết quả ổn định và lặp lại, phù hợp cho code và phân tích. Temperature cao hơn làm phân bố xác suất phẳng ra, tạo đa dạng nhưng dễ lạc đề.",
+      "source_pages": [
+        29
+      ],
+      "source_excerpt": "temperature — 'núm vặn độ liều'",
+      "confidence": 0.95,
+      "status": "ready"
+    }
+  ],
+  "warnings": [],
+  "generated_at": "2026-07-30T00:00:00+00:00"
+}

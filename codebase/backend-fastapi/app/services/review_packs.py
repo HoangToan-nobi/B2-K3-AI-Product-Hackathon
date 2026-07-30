@@ -5,8 +5,9 @@ from typing import Any
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.paths import EVAL_RUNS_DIR, LOCAL_DB_PATH, SHARED_DIR, get_lesson_mapping, get_pack_path, get_pdf_path
+from app.core.paths import EVAL_RUNS_DIR, LOCAL_DB_PATH, SHARED_DIR, get_lesson_mapping, get_pack_path
 from app.repositories.review_packs import ReviewPackRepository
+from app.services.cloud_storage import CloudStorageService
 from app.services.lessons import LessonService
 from app.services.llm import LlmService
 from app.services.pdf_export import generate_review_pack_pdf
@@ -33,6 +34,7 @@ class ReviewPackService:
         self.repository = ReviewPackRepository(session)
         self.lesson_service = LessonService(session)
         self.llm_service = LlmService()
+        self.storage = CloudStorageService()
 
     async def read_local_db(self) -> dict[str, Any]:
         try:
@@ -76,14 +78,37 @@ class ReviewPackService:
         ]
         return visible
 
-    async def create_review_pack(self, lesson_id: str | None, run_pipeline: bool) -> dict[str, Any]:
+    async def create_review_pack(
+        self,
+        lesson_id: str | None,
+        run_pipeline: bool,
+        progress: Any | None = None,
+    ) -> dict[str, Any]:
+        await self._emit_progress(
+            progress,
+            4,
+            "Chuẩn bị ngày học",
+            "VLười đang tìm đúng ngày học và bộ slide Lab Coach đã chọn.",
+        )
         db = await self.read_local_db()
         mapping = await self._lesson_mapping(lesson_id or db["active_lesson_id"])
         if run_pipeline:
-            pack, job = await self._generate_pack_with_ai(mapping)
+            pack, job = await self._generate_pack_with_ai(mapping, progress=progress)
         else:
+            await self._emit_progress(
+                progress,
+                45,
+                "Mở tài liệu có sẵn",
+                "VLười đang mở bản tổng hợp đã tạo trước đó.",
+            )
             pack = await self.read_review_pack(mapping["lesson_id"])
             job = {"mode": "existing_artifact"}
+        await self._emit_progress(
+            progress,
+            96,
+            "Chuẩn bị kết quả",
+            "VLười đang sắp xếp tài liệu để giao diện hiển thị bản mới nhất.",
+        )
         return {
             "pack": pack,
             "job": job,
@@ -126,10 +151,15 @@ class ReviewPackService:
         lesson_id = _pack_lesson_id(pack_id)
         pack = self.filter_pack_for_role(await self.read_review_pack(lesson_id), role)
         bytes_ = generate_review_pack_pdf(pack)
-        output_path = get_pdf_path(pack_id)
-        output_path.parent.mkdir(parents=True, exist_ok=True)
-        output_path.write_bytes(bytes_)
-        return bytes_, f"{pack_id}.pdf", str(output_path)
+        filename = f"{pack_id}.pdf"
+        asset = self.storage.upload_bytes(
+            data=bytes_,
+            filename=filename,
+            folder="exports",
+            mime_type="application/pdf",
+            public_id=filename,
+        )
+        return bytes_, filename, asset.url
 
     def list_artifacts(self, lesson_id: str = "day1-foundation") -> dict[str, str]:
         return {
@@ -197,16 +227,52 @@ class ReviewPackService:
                 "mapping_signals": ["uploaded lesson slide pages from DB"],
             }
 
-    async def _generate_pack_with_ai(self, mapping: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
+    async def _generate_pack_with_ai(
+        self,
+        mapping: dict[str, Any],
+        progress: Any | None = None,
+    ) -> tuple[dict[str, Any], dict[str, Any]]:
         lesson_id = mapping["lesson_id"]
+        await self._emit_progress(
+            progress,
+            12,
+            "Đọc nội dung slide",
+            "VLười đang lấy chữ trên từng trang slide để xác định kiến thức chính.",
+        )
         slide = await self._slide_payload(lesson_id)
         slide_context = self._slide_context(slide)
+        await self._emit_progress(
+            progress,
+            24,
+            "Đọc transcript buổi học",
+            "VLười đang kiểm tra phần lời giảng hoặc ghi chú đi kèm nếu có.",
+        )
         transcript_context = self._safe_transcript_excerpt(lesson_id)
+        await self._emit_progress(
+            progress,
+            36,
+            "Thu thập câu hỏi học viên",
+            "VLười đang gom các câu hỏi thật từ chatlog để biết lớp hay vướng ở đâu.",
+        )
         chat_questions = await self._chat_questions_for_lesson(mapping)
-        chat_context = "\n".join(self._format_chat_context_item(item) for item in chat_questions[:28])
+        await self._emit_progress(
+            progress,
+            48,
+            "Lọc câu hỏi trùng lặp",
+            "VLười đang gộp các câu hỏi giống nhau và giữ lại những câu đại diện nhất.",
+            detail=f"Đã tìm thấy {len(chat_questions)} câu hỏi phù hợp.",
+        )
+        selected_chat_questions = self._select_chat_context_questions(chat_questions)
+        chat_context = "\n".join(self._format_chat_context_item(item) for item in selected_chat_questions)
         generated: dict[str, Any] | None = None
         job: dict[str, Any] = {"mode": "ai_generated"}
         try:
+            await self._emit_progress(
+                progress,
+                62,
+                "Tổng hợp kiến thức trọng tâm",
+                "VLười đang viết lại nội dung ôn tập bằng tiếng Việt có dấu, bám sát slide và câu hỏi của lớp.",
+            )
             generated = await self.llm_service.generate_review_pack(
                 lesson_title=mapping["title"],
                 slide_context=slide_context,
@@ -215,7 +281,19 @@ class ReviewPackService:
             )
         except Exception as exc:
             job = {"mode": "ai_failed_fallback", "error": exc.__class__.__name__}
+            await self._emit_progress(
+                progress,
+                74,
+                "Dùng bản dự phòng",
+                "VLười chưa tạo được bản AI ổn định, nên đang chuẩn bị bản nháp an toàn từ dữ liệu đã có.",
+            )
 
+        await self._emit_progress(
+            progress,
+            82,
+            "Kiểm tra nguồn tham chiếu",
+            "VLười đang gắn số trang slide để Lab Coach dễ kiểm tra lại từng ý.",
+        )
         pack = self._normalize_generated_pack(
             lesson_id=lesson_id,
             title=mapping["title"],
@@ -224,10 +302,28 @@ class ReviewPackService:
             chat_questions=chat_questions,
             slide_pages=slide.get("pages", []),
         )
+        await self._emit_progress(
+            progress,
+            92,
+            "Lưu bản nháp",
+            "VLười đang lưu tài liệu ôn tập để Lab Coach duyệt và xuất PDF khi cần.",
+        )
         output_path = get_pack_path(lesson_id)
         output_path.parent.mkdir(parents=True, exist_ok=True)
         output_path.write_text(json.dumps(pack, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         return pack, job
+
+    @staticmethod
+    async def _emit_progress(
+        progress: Any | None,
+        percent: int,
+        step: str,
+        message: str,
+        detail: str | None = None,
+    ) -> None:
+        if progress is None:
+            return
+        await progress.emit(percent=percent, step=step, message=message, detail=detail)
 
     async def _slide_payload(self, lesson_id: str) -> dict[str, Any]:
         try:
@@ -253,12 +349,12 @@ class ReviewPackService:
             return ""
 
     @staticmethod
-    def _slide_context(slide: dict[str, Any], limit: int = 6500) -> str:
+    def _slide_context(slide: dict[str, Any], limit: int = 24000) -> str:
         chunks = []
         for page in slide.get("pages", []):
             text = re.sub(r"\s+", " ", page.get("text", "")).strip()
             if text:
-                chunks.append(f"[Slide {page['page']}] {text[:900]}")
+                chunks.append(f"[Slide {page['page']}] {text[:1400]}")
         return "\n".join(chunks)[:limit]
 
     async def _chat_questions_for_lesson(self, mapping: dict[str, Any]) -> list[dict[str, Any]]:
@@ -267,11 +363,17 @@ class ReviewPackService:
             runtime_questions = await self.repository.list_student_questions(mapping["lesson_id"])
         except Exception:
             runtime_questions = []
+        if runtime_questions:
+            return self._dedupe_chat_questions(runtime_questions)
         csv_questions = self._csv_chat_questions_for_lesson(mapping)
 
+        return self._dedupe_chat_questions(csv_questions)
+
+    @staticmethod
+    def _dedupe_chat_questions(questions: list[dict[str, Any]]) -> list[dict[str, Any]]:
         seen: set[tuple[int | None, str]] = set()
         merged: list[dict[str, Any]] = []
-        for item in [*runtime_questions, *csv_questions]:
+        for item in questions:
             content = re.sub(r"\s+", " ", str(item.get("content") or "")).strip()
             if len(content) < 8:
                 continue
@@ -319,6 +421,47 @@ class ReviewPackService:
         prefix = f"[Slide {page}] " if page else ""
         return f"- {prefix}{item['content']}"
 
+    @staticmethod
+    def _select_chat_context_questions(questions: list[dict[str, Any]], limit: int = 60) -> list[dict[str, Any]]:
+        selected: list[dict[str, Any]] = []
+        seen_users: set[str] = set()
+        seen_pages: set[int] = set()
+
+        with_page = [item for item in questions if item.get("source_page")]
+        without_page = [item for item in questions if not item.get("source_page")]
+        for item in sorted(with_page, key=lambda value: (int(value.get("source_page") or 999), value.get("user_id") or "")):
+            user_id = str(item.get("user_id") or "")
+            page = int(item.get("source_page") or 0)
+            if user_id in seen_users and page in seen_pages:
+                continue
+            selected.append(item)
+            if user_id:
+                seen_users.add(user_id)
+            seen_pages.add(page)
+            if len(selected) >= limit:
+                return selected
+
+        for item in without_page:
+            user_id = str(item.get("user_id") or "")
+            if user_id and user_id in seen_users:
+                continue
+            selected.append(item)
+            if user_id:
+                seen_users.add(user_id)
+            if len(selected) >= limit:
+                return selected
+
+        selected_keys = {(item.get("source_page"), item.get("content")) for item in selected}
+        for item in questions:
+            key = (item.get("source_page"), item.get("content"))
+            if key in selected_keys:
+                continue
+            selected.append(item)
+            selected_keys.add(key)
+            if len(selected) >= limit:
+                break
+        return selected
+
     def _normalize_generated_pack(
         self,
         *,
@@ -331,14 +474,22 @@ class ReviewPackService:
     ) -> dict[str, Any]:
         fallback = self._fallback_generated(slide_pages, chat_questions)
         data = generated if isinstance(generated, dict) else fallback
-        summary = [self._summary_item(item, index, slide_pages) for index, item in enumerate((data.get("summary") or fallback["summary"])[:6], start=1)]
+        raw_summary = data["summary"] if isinstance(data.get("summary"), list) else fallback["summary"]
+        raw_insights = data["class_insights"] if isinstance(data.get("class_insights"), list) else fallback["class_insights"]
+        raw_questions = data["review_questions"] if isinstance(data.get("review_questions"), list) else fallback["review_questions"]
+        summary = [self._summary_item(item, index, slide_pages) for index, item in enumerate(raw_summary[:6], start=1)]
         insights = [
             self._insight_item(item, index, slide_pages)
-            for index, item in enumerate((data.get("class_insights") or fallback["class_insights"])[:6], start=1)
+            for index, item in enumerate(raw_insights[:6], start=1)
         ]
+        if len(raw_questions) < 3:
+            raw_questions = [
+                *raw_questions,
+                *self._fallback_quiz_items(raw_summary, raw_insights, slide_pages, limit=5 - len(raw_questions)),
+            ]
         questions = [
             self._question_item(item, index, slide_pages)
-            for index, item in enumerate((data.get("review_questions") or fallback["review_questions"])[:6], start=1)
+            for index, item in enumerate(raw_questions[:5], start=1)
         ]
         needs_review = [item["id"] for item in [*summary, *insights, *questions] if item["status"] == "needs_review"]
         return {
@@ -379,14 +530,16 @@ class ReviewPackService:
     def _summary_item(self, item: dict[str, Any], index: int, slide_pages: list[dict[str, Any]]) -> dict[str, Any]:
         pages = self._safe_pages(item.get("source_pages"), slide_pages)
         confidence = float(item.get("confidence") or 0.65)
+        source_excerpt = self._excerpt(pages, slide_pages, item.get("source_excerpt"))
+        is_grounded_in_slide = bool(source_excerpt.strip())
         return {
             "id": f"summary-{index:02d}",
             "title": str(item.get("title") or f"Ý chính {index}")[:160],
             "content": str(item.get("content") or "")[:900],
             "source_pages": pages,
-            "source_excerpt": self._excerpt(pages, slide_pages, item.get("source_excerpt")),
+            "source_excerpt": source_excerpt,
             "confidence": confidence,
-            "status": "ready" if confidence >= 0.72 else "needs_review",
+            "status": "ready" if is_grounded_in_slide else "needs_review",
         }
 
     def _insight_item(self, item: dict[str, Any], index: int, slide_pages: list[dict[str, Any]]) -> dict[str, Any]:
@@ -395,7 +548,7 @@ class ReviewPackService:
         questions = item.get("representative_questions") if isinstance(item.get("representative_questions"), list) else []
         return {
             "id": f"insight-cluster-{index:02d}",
-            "topic": str(item.get("topic") or f"Blindspot {index}")[:160],
+            "topic": str(item.get("topic") or f"Câu hỏi học viên {index}")[:160],
             "common_confusion": str(item.get("common_confusion") or "")[:700],
             "correct_understanding": str(item.get("correct_understanding") or "")[:900],
             "source_pages": pages,
@@ -410,50 +563,253 @@ class ReviewPackService:
     def _question_item(self, item: dict[str, Any], index: int, slide_pages: list[dict[str, Any]]) -> dict[str, Any]:
         pages = self._safe_pages(item.get("source_pages"), slide_pages)
         confidence = float(item.get("confidence") or 0.65)
-        options = item.get("options") if isinstance(item.get("options"), list) and len(item.get("options")) >= 2 else ["Đúng", "Sai"]
-        answer = str(item.get("answer") or options[int(item.get("correct_option") or 0)])
+        source_excerpt = self._excerpt(pages, slide_pages, item.get("source_excerpt"))
+        options = item.get("options") if isinstance(item.get("options"), list) and len(item.get("options")) >= 2 else ["Đúng", "Sai", "Không đủ dữ liệu", "Tất cả đều sai"]
+        correct_option = int(item.get("correct_option") or 0)
+        if correct_option < 0 or correct_option >= len(options):
+            correct_option = 0
+        answer = str(item.get("answer") or options[correct_option])
         return {
             "id": f"question-{index:02d}",
             "type": "multiple_choice",
             "question": str(item.get("question") or f"Câu hỏi {index}")[:260],
             "options": [str(option)[:180] for option in options[:4]],
-            "correct_option": int(item.get("correct_option") or 0),
+            "correct_option": correct_option,
             "answer": answer[:240],
             "explanation": str(item.get("explanation") or "")[:700],
             "source_pages": pages,
-            "source_excerpt": self._excerpt(pages, slide_pages, item.get("source_excerpt")),
+            "source_excerpt": source_excerpt,
             "confidence": confidence,
-            "status": "ready" if confidence >= 0.72 else "needs_review",
+            "status": "ready" if source_excerpt.strip() else "needs_review",
         }
 
     @staticmethod
     def _fallback_generated(slide_pages: list[dict[str, Any]], chat_questions: list[dict[str, Any]]) -> dict[str, Any]:
-        useful_pages = [page for page in slide_pages if page.get("text")][:6]
-        summary = [
-            {
-                "title": f"Nội dung trọng tâm slide {page['page']}",
-                "content": re.sub(r"\s+", " ", page["text"]).strip()[:520],
-                "source_pages": [int(page["page"])],
-                "source_excerpt": re.sub(r"\s+", " ", page["text"]).strip()[:360],
-                "confidence": 0.55,
-            }
-            for page in useful_pages[:5]
-        ]
-        representatives = [item["content"] for item in chat_questions[:5]]
+        summary = ReviewPackService._fallback_summary_from_all_slides(slide_pages)
+        class_insights = ReviewPackService._fallback_insights_from_chat(slide_pages, chat_questions)
+        review_questions = ReviewPackService._fallback_quiz_items(summary, class_insights, slide_pages, limit=5)
+
         return {
             "summary": summary,
-            "class_insights": [
-                {
-                    "topic": "Các câu hỏi học viên cần Lab Coach phân loại",
-                    "common_confusion": "Backend chưa nhận được JSON hợp lệ từ AI nên chỉ gom câu hỏi tiêu biểu để duyệt.",
-                    "correct_understanding": "Lab Coach cần chạy lại DeepSeek hoặc duyệt thủ công dựa trên slide.",
-                    "source_pages": [1],
-                    "source_excerpt": summary[0]["source_excerpt"] if summary else "",
-                    "confidence": 0.4,
-                    "unique_user_count": len({item["user_id"] for item in chat_questions if item.get("user_id")}) or 1,
-                    "question_count": len(chat_questions),
-                    "representative_questions": representatives,
-                }
-            ],
-            "review_questions": [],
+            "class_insights": class_insights,
+            "review_questions": review_questions,
         }
+
+    @staticmethod
+    def _fallback_quiz_items(
+        summary_items: list[dict[str, Any]],
+        insight_items: list[dict[str, Any]],
+        slide_pages: list[dict[str, Any]],
+        limit: int = 5,
+    ) -> list[dict[str, Any]]:
+        quiz_items: list[dict[str, Any]] = []
+        for item in summary_items[: max(0, limit)]:
+            title = str(item.get("title") or "kiến thức trọng tâm").strip()
+            content = re.sub(r"\s+", " ", str(item.get("content") or "")).strip()
+            if not content:
+                continue
+            pages = item.get("source_pages") if isinstance(item.get("source_pages"), list) else [1]
+            quiz_items.append(
+                {
+                    "question": f"Ý nào mô tả đúng nhất về {title}?",
+                    "options": [
+                        content[:170],
+                        "Đây là nội dung logistics của lớp, không liên quan kiến thức bài học.",
+                        "Đây là ví dụ ngoài slide và không cần dùng khi ôn tập.",
+                        "Đây là câu hỏi mở, không có đáp án kiểm chứng từ slide.",
+                    ],
+                    "correct_option": 0,
+                    "answer": content[:220],
+                    "explanation": f"Đáp án đúng vì bám vào mục kiến thức trọng tâm: {content[:300]}",
+                    "source_pages": pages,
+                    "source_excerpt": item.get("source_excerpt") or ReviewPackService._excerpt(pages, slide_pages),
+                    "confidence": 0.78,
+                }
+            )
+            if len(quiz_items) >= limit:
+                return quiz_items
+
+        for item in insight_items[: max(0, limit - len(quiz_items))]:
+            question = re.sub(r"\s+", " ", str(item.get("common_confusion") or item.get("topic") or "")).strip()
+            answer = re.sub(r"\s+", " ", str(item.get("correct_understanding") or "")).strip()
+            if not question or not answer:
+                continue
+            pages = item.get("source_pages") if isinstance(item.get("source_pages"), list) else [1]
+            quiz_items.append(
+                {
+                    "question": f"Khi học viên hỏi: “{question[:140]}”, câu trả lời nào đúng nhất?",
+                    "options": [
+                        answer[:170],
+                        "Nên bỏ qua vì câu hỏi từ chatlog không liên quan bài học.",
+                        "Chỉ cần trả lời theo kinh nghiệm, không cần đối chiếu slide.",
+                        "Không thể trả lời bằng bất kỳ phần nào của bài học.",
+                    ],
+                    "correct_option": 0,
+                    "answer": answer[:220],
+                    "explanation": f"Đáp án đúng vì câu hỏi này đã được giải thích trong phần học viên hay hỏi: {answer[:300]}",
+                    "source_pages": pages,
+                    "source_excerpt": item.get("source_excerpt") or ReviewPackService._excerpt(pages, slide_pages),
+                    "confidence": 0.74,
+                }
+            )
+            if len(quiz_items) >= limit:
+                break
+        return quiz_items[:limit]
+
+    @staticmethod
+    def _fallback_insights_from_chat(
+        slide_pages: list[dict[str, Any]],
+        chat_questions: list[dict[str, Any]],
+        limit: int = 5,
+    ) -> list[dict[str, Any]]:
+        insights: list[dict[str, Any]] = []
+        selected = ReviewPackService._select_chat_context_questions(chat_questions, limit=limit)
+        for index, question in enumerate(selected, start=1):
+            content = re.sub(r"\s+", " ", str(question.get("content") or "")).strip()
+            if not content:
+                continue
+            source_page = question.get("source_page")
+            page = ReviewPackService._page_for_question(slide_pages, source_page)
+            page_number = int(page.get("page") or source_page or 1)
+            excerpt = re.sub(r"\s+", " ", str(page.get("text") or "")).strip()[:500]
+            answer = ReviewPackService._fallback_answer_from_excerpt(content, excerpt)
+            insights.append(
+                {
+                    "topic": content[:160],
+                    "common_confusion": content[:700],
+                    "correct_understanding": answer,
+                    "source_pages": [page_number],
+                    "source_excerpt": excerpt,
+                    "confidence": 0.68,
+                    "unique_user_count": 1,
+                    "question_count": 1,
+                    "representative_questions": [content],
+                }
+            )
+        return insights
+
+    @staticmethod
+    def _page_for_question(slide_pages: list[dict[str, Any]], source_page: Any) -> dict[str, Any]:
+        if str(source_page or "").isdigit():
+            page_number = int(source_page)
+            matched = next((page for page in slide_pages if int(page.get("page") or 0) == page_number), None)
+            if matched:
+                return matched
+        return next((page for page in slide_pages if page.get("text")), {"page": 1, "text": ""})
+
+    @staticmethod
+    def _fallback_answer_from_excerpt(question: str, excerpt: str) -> str:
+        if not excerpt:
+            return (
+                "Trả lời gợi ý: Câu hỏi này cần Lab Coach đối chiếu lại với slide trước khi phát hành.\n"
+                "Giải thích: VLười chưa tìm thấy đoạn slide đủ rõ để tự xác nhận câu trả lời."
+            )
+        compact_excerpt = excerpt[:360].rstrip()
+        return (
+            f"Trả lời gợi ý: Nội dung liên quan nằm ở đoạn slide: {compact_excerpt}.\n"
+            "Giải thích: Đây là câu hỏi thật từ học viên, nên Lab Coach cần kiểm tra xem câu trả lời gợi ý đã bám đúng slide và đủ dễ hiểu chưa."
+        )
+
+    @staticmethod
+    def _fallback_summary_from_all_slides(slide_pages: list[dict[str, Any]]) -> list[dict[str, Any]]:
+        pages = [
+            {
+                "page": int(page.get("page") or 0),
+                "text": re.sub(r"\s+", " ", str(page.get("text") or "")).strip(),
+            }
+            for page in slide_pages
+            if page.get("text")
+        ]
+        if not pages:
+            return []
+
+        theme_specs = [
+            (
+                "Bức tranh AI, GenAI và LLM",
+                ("AI", "Machine Learning", "Deep Learning", "Generative AI", "LLM", "Discriminative", "Agentic"),
+            ),
+            (
+                "LLM vận hành bằng token, context và attention",
+                ("LLM", "Transformer", "token", "context", "attention", "đoán", "xác suất"),
+            ),
+            (
+                "Huấn luyện và căn chỉnh model",
+                ("pre-training", "SFT", "RLHF", "DPO", "tham số", "scaling", "MoE", "luyện suy luận"),
+            ),
+            (
+                "Giới hạn của model và cách kiểm chứng",
+                ("hallucination", "bong bóng", "giới hạn", "sai", "đường tắt", "benchmark", "Chain-of-Thought"),
+            ),
+            (
+                "Từ LLM đến agent và lựa chọn model",
+                ("agent", "tools", "memory", "action", "model", "chi phí", "API", "temperature", "top_p", "prompt"),
+            ),
+        ]
+
+        selected: list[dict[str, Any]] = []
+        used_pages: set[int] = set()
+        for title, keywords in theme_specs:
+            matched = ReviewPackService._pages_matching_theme(pages, keywords, used_pages)
+            if not matched:
+                continue
+            used_pages.update(page["page"] for page in matched)
+            selected.append(
+                {
+                    "title": title,
+                    "content": ReviewPackService._compose_theme_summary(matched),
+                    "source_pages": [page["page"] for page in matched[:4]],
+                    "source_excerpt": matched[0]["text"][:360],
+                    "confidence": 0.78,
+                }
+            )
+            if len(selected) >= 5:
+                break
+
+        if len(selected) < 5:
+            remaining = [page for page in pages if page["page"] not in used_pages]
+            for page in sorted(remaining, key=lambda item: ReviewPackService._fallback_page_score(item), reverse=True):
+                selected.append(
+                    {
+                        "title": ReviewPackService._page_heading(page),
+                        "content": page["text"][:520],
+                        "source_pages": [page["page"]],
+                        "source_excerpt": page["text"][:360],
+                        "confidence": 0.74,
+                    }
+                )
+                if len(selected) >= 5:
+                    break
+
+        return selected
+
+    @staticmethod
+    def _pages_matching_theme(pages: list[dict[str, Any]], keywords: tuple[str, ...], used_pages: set[int]) -> list[dict[str, Any]]:
+        keyword_lowers = tuple(keyword.lower() for keyword in keywords)
+        matches = []
+        for page in pages:
+            text = page["text"].lower()
+            score = sum(1 for keyword in keyword_lowers if keyword in text)
+            if score:
+                matches.append((score, page))
+        matches.sort(key=lambda item: (-item[0], item[1]["page"] in used_pages, item[1]["page"]))
+        return [page for _, page in matches[:3]]
+
+    @staticmethod
+    def _fallback_page_score(page: dict[str, Any]) -> int:
+        text = page["text"].lower()
+        keywords = ("llm", "token", "context", "attention", "agent", "model", "prompt", "cost", "chi phí", "api")
+        return sum(2 for keyword in keywords if keyword in text) + min(len(text) // 180, 6)
+
+    @staticmethod
+    def _page_heading(page: dict[str, Any]) -> str:
+        text = re.sub(r"^\[Slide\s+\d+\]\s*", "", page["text"]).strip()
+        heading = re.split(r"(?<=[?.!])\s+| {2,}", text, maxsplit=1)[0].strip()
+        return heading[:120] or f"Ý chính từ slide {page['page']}"
+
+    @staticmethod
+    def _compose_theme_summary(pages: list[dict[str, Any]]) -> str:
+        excerpts = []
+        for page in pages:
+            text = re.sub(r"^\[Slide\s+\d+\]\s*", "", page["text"]).strip()
+            excerpts.append(text[:220])
+        return " ".join(excerpts)[:760]

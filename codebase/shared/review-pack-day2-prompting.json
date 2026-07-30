@@ -10,112 +10,203 @@
   "analysis": {
     "student_question_count": 1252,
     "unique_user_count": 369,
-    "cluster_count": 3,
-    "included_cluster_count": 3,
+    "cluster_count": 5,
+    "included_cluster_count": 5,
     "excluded_noise_count": 0
   },
   "summary": [
     {
       "id": "summary-01",
-      "title": "Double Diamond & Problem Discovery",
-      "content": "Quy trình hai giai đoạn: Diamond 1 (tìm đúng vấn đề) gồm Discover (phân kỳ) và Define (hội tụ); Diamond 2 (tìm đúng giải pháp) gồm Develop và Deliver. Công cụ: 5 Whys, Impact-Effort Matrix, Problem Statement.",
+      "title": "Tìm đúng vấn đề trước khi chọn AI",
+      "content": "Day 2 đặt trọng tâm vào việc biến yêu cầu mơ hồ thành Problem Statement rõ ràng. Double Diamond nhắc học viên đi qua Diamond 1 để mở rộng hiểu biết và hội tụ vào đúng vấn đề trước, rồi mới sang Diamond 2 để phát triển và chọn giải pháp. Một giải pháp AI tốt nhưng giải sai vấn đề vẫn có thể tạo hại nhiều hơn lợi.",
       "source_pages": [
+        2,
         3,
         4
       ],
-      "source_excerpt": "D I A M O N D 1 — T Ì M Đ Ú N G VẤ N Đ Ề Discover: Mở rộng — khảo sát vấn đề căn bản. Define: Thu hẹp — xác định đúng bài toán gốc.",
+      "source_excerpt": "Tìm đúng vấn đề trước khi tìm giải pháp. Diamond 1: Discover, Define. Diamond 2: Develop, Deliver.",
       "confidence": 0.95,
       "status": "ready"
     },
     {
       "id": "summary-02",
-      "title": "Quick Problem Card",
-      "content": "Khung 6 trường: Problem, Actor, Workflow, Bottleneck & Impact, Success Metric, Direction (No AI/Rule/Workflow/Agent). Giúp định hình bài toán trước khi chọn giải pháp.",
+      "title": "Từ quan sát thực tế đến Quick Problem Card",
+      "content": "Nguồn bài toán nên đến từ tác vụ lặp lại, tốn thời gian, nơi AI có lợi thế, hoặc pain point thật của người dùng. Quick Problem Card buộc nhóm viết rõ Problem, Actor, Workflow, Bottleneck & Impact, Success Metric và Direction để không nhảy thẳng vào chatbot/agent. Nếu chưa mô tả được workflow và nút thắt, bài toán chưa đủ chín để chọn giải pháp.",
       "source_pages": [
-        9
+        6,
+        9,
+        10
       ],
-      "source_excerpt": "Bài toán (1 câu) problem Vấn đề cụ thể cần giải quyết (không bao gồm giải pháp). Đối tượng ảnh hưởng actor...",
+      "source_excerpt": "Quick Problem Card: Bài toán, Đối tượng ảnh hưởng, Quy trình hiện tại, Nút thắt & Tác động, Chỉ số đo thành công, Định hướng giải pháp.",
       "confidence": 0.95,
       "status": "ready"
     },
     {
       "id": "summary-03",
-      "title": "Anti-patterns & PAIR Reframe",
-      "content": "Sai lầm: Solution-first, No baseline, No evaluation, No boundary. PAIR: thay 'Can we use AI to...?' bằng 'How might we solve...?' và 'Can AI solve this in a unique way?'.",
+      "title": "Metric phải có baseline, target và cách đo",
+      "content": "Một pain point chưa được lượng hóa thì chưa chứng minh được giá trị của AI. Nhóm cần biết hiện trạng mất bao lâu/tốn bao nhiêu/sai bao nhiêu, đặt mục tiêu cải thiện cụ thể, và xác định dữ liệu nào sẽ chứng minh kết quả. Các câu như 'nâng cao hiệu suất' hoặc 'học tốt hơn' chỉ là hướng mong muốn, chưa phải success metric đủ dùng.",
       "source_pages": [
-        7,
-        8
+        11,
+        12
       ],
-      "source_excerpt": "Sai lầm thường gặp — Anti-patterns — Dấu hiệu cảnh báo bài toán chưa được định hình rõ...",
+      "source_excerpt": "Baseline, Target, Measurement. 'Nâng cao hiệu suất' không phải chỉ số - cần gắn với hiện trạng, mục tiêu và phương pháp đo.",
       "confidence": 0.95,
       "status": "ready"
     },
     {
       "id": "summary-04",
-      "title": "Định lượng hóa & Success Metric",
-      "content": "Cần lượng hóa tổn thất hiện tại (thời gian, chi phí, SLA) và thiết lập chỉ số đo thành công cụ thể. Ví dụ: giảm thời gian xử lý từ 2 giờ xuống 15 phút.",
+      "title": "PAIR giúp quyết định có nên dùng AI và dùng ở mức nào",
+      "content": "PAIR yêu cầu đổi câu hỏi từ 'có dùng AI được không?' sang 'bài toán là gì và AI có giải theo cách khác biệt không?'. Sau đó nhóm đánh giá AI có lợi thế thật không, nên automate hay augment, và reward function nào định nghĩa đúng/sai. Đây là cách chống solution-first và tránh đưa AI vào nơi rule hoặc quy trình đơn giản đã đủ.",
       "source_pages": [
-        10,
-        11
+        8,
+        13,
+        14,
+        15
       ],
-      "source_excerpt": "Hao phí hiện tại là bao nhiêu? Thời gian, chi phí nhân sự, SLA, cơ hội bỏ lỡ? Tiêu chí thành công đo bằng gì?",
-      "confidence": 0.9,
+      "source_excerpt": "How might we solve...? Can AI solve this problem in a unique way? Ba bước quyết định AI theo PAIR.",
+      "confidence": 0.94,
+      "status": "ready"
+    },
+    {
+      "id": "summary-05",
+      "title": "Automation/Augmentation khác Rule/Workflow/Agent",
+      "content": "Automation và augmentation nói về vai trò của con người: AI làm thay hay AI hỗ trợ. Rule, Workflow và Agent nói về cấp độ kỹ thuật của giải pháp. Một bài toán có thể dùng workflow nhưng vẫn là augmentation nếu con người duyệt trước khi gửi; ngược lại không nên tự động hóa cao khi stakes lớn hoặc cần trách nhiệm cá nhân.",
+      "source_pages": [
+        16,
+        17,
+        18,
+        19
+      ],
+      "source_excerpt": "Rule/Workflow/Agent là cấp độ kỹ thuật - còn Automate/Augment là cấp độ vai trò của con người trong hệ thống.",
+      "confidence": 0.94,
+      "status": "ready"
+    },
+    {
+      "id": "summary-06",
+      "title": "Từ demo đến quyết định Go/Not Yet/No-Go",
+      "content": "Một vài lần demo đúng chưa đủ để triển khai production. Nhóm cần baseline, eval set, controls, vận hành liên tục và tiêu chí thành công có hành động rõ nếu vượt ngưỡng rủi ro. Quyết định Go/Not Yet/No-Go phải dựa trên độ rõ của Problem Statement, khả năng đo lường, giá trị vượt trội của AI và mức kiểm soát rủi ro.",
+      "source_pages": [
+        24,
+        25,
+        26,
+        28,
+        29
+      ],
+      "source_excerpt": "Khoảng cách giữa Demo và Production: Baseline, Evaluation, Controls, Operations. Khung ra quyết định: Go / Not Yet / No-Go.",
+      "confidence": 0.94,
       "status": "ready"
     }
   ],
   "class_insights": [
     {
       "id": "insight-cluster-01",
-      "topic": "Ma trận Tác động – Nỗ lực (Impact-Effort Matrix)",
-      "common_confusion": "Học viên thường đặt nhầm trục (impact vs effort) hoặc khó ước lượng effort cho các bài toán cá nhân.",
-      "correct_understanding": "Trục dọc là Impact (tác động), trục ngang là Effort (nỗ lực). Quick win là ô Impact cao, Effort thấp. Cần ưu tiên quick win để tạo động lực.",
+      "topic": "Dễ bắt đầu bằng giải pháp thay vì vấn đề",
+      "common_confusion": "Nhiều câu hỏi xoay quanh việc 'dùng AI/chatbot/agent thế nào' khi Problem Statement, workflow và điểm nghẽn chưa rõ.",
+      "correct_understanding": "Hãy bắt đầu bằng quan sát quy trình, actor, bottleneck và impact. Chỉ khi xác định được vấn đề đáng giải và AI có lợi thế khác biệt thì mới chọn direction là No AI, Rule, Workflow hay Agent.",
       "source_pages": [
-        4
+        5,
+        6,
+        7,
+        8,
+        9
       ],
-      "source_excerpt": "Ma trận Tác động – Nỗ lực (Impact-Effort)",
+      "source_excerpt": "Nếu phát hiện mắc các sai lầm trên, hãy quay lại làm rõ Problem Statement trước khi chọn công nghệ.",
       "confidence": 0.9,
       "status": "ready",
-      "unique_user_count": 5,
-      "question_count": 3,
+      "unique_user_count": 18,
+      "question_count": 24,
       "representative_questions": [
-        "Giải thích 4 chiến lược",
-        "tại sao có lưu ý như trang 25"
+        "Bài này nên làm chatbot hay agent?",
+        "Em có ý tưởng dùng AI nhưng chưa biết viết problem statement như thế nào.",
+        "Direction trong Quick Problem Card nên chọn lúc nào?"
       ]
     },
     {
       "id": "insight-cluster-02",
-      "topic": "Phân biệt Automate vs Augment",
-      "common_confusion": "Học viên khó phân biệt khi nào AI nên tự động hóa hoàn toàn (Automate) và khi nào chỉ hỗ trợ con người (Augment).",
-      "correct_understanding": "Automate: AI thay thế con người trong tác vụ lặp, ít biến động. Augment: AI hỗ trợ con người ra quyết định, cần Human-in-the-loop. Quyết định dựa trên rủi ro và độ phức tạp.",
+      "topic": "Nhầm Impact-Effort với đánh giá cảm tính",
+      "common_confusion": "Học viên dễ đặt nhầm trục hoặc xem quick win là việc mình thích làm, không phải việc impact cao và effort thấp.",
+      "correct_understanding": "Impact-Effort Matrix dùng để ưu tiên dựa trên tác động và nỗ lực ước lượng. Quick win là lựa chọn giúp tạo bằng chứng giá trị sớm, nhưng vẫn cần quay lại Problem Card để định nghĩa vấn đề và metric.",
       "source_pages": [
-        2,
-        7
+        4,
+        10,
+        11
       ],
-      "source_excerpt": "PAIR ② Automate/Augment → Rule/Workflow/Agent",
-      "confidence": 0.85,
+      "source_excerpt": "Ma trận Tác động - Nỗ lực; Hao phí hiện tại là bao nhiêu? Tiêu chí thành công đo bằng gì?",
+      "confidence": 0.86,
       "status": "ready",
-      "unique_user_count": 3,
-      "question_count": 2,
+      "unique_user_count": 12,
+      "question_count": 15,
       "representative_questions": [
-        "giải thích 4 chiến lược"
+        "Quick win là ô nào trong ma trận?",
+        "Effort nên tính theo thời gian build hay độ khó kỹ thuật?",
+        "Có cần định lượng impact ngay từ đầu không?"
       ]
     },
     {
       "id": "insight-cluster-03",
-      "topic": "Định lượng hóa bài toán (Success Metric)",
-      "common_confusion": "Học viên thường đưa ra chỉ số mơ hồ như 'cải thiện hiệu suất' thay vì con số cụ thể.",
-      "correct_understanding": "Cần đo lường baseline hiện tại (thời gian, chi phí, sai sót) và đặt mục tiêu cụ thể (vd: giảm 50% thời gian xử lý). Success metric phải định lượng và có thể kiểm chứng.",
+      "topic": "Metric bị viết quá mơ hồ",
+      "common_confusion": "Các câu trả lời thường dùng cụm như 'tiết kiệm thời gian', 'tăng hiệu quả', 'học tốt hơn' nhưng thiếu baseline, target và phương pháp đo.",
+      "correct_understanding": "Một metric tốt cần nêu hiện trạng, ngưỡng mục tiêu và cách thu thập dữ liệu. Với sản phẩm học tập, số lượt dùng chỉ là input/intermediate metric; outcome nên gần hơn với khả năng làm bài, điểm quiz, thời gian hoàn thành task hoặc tỷ lệ câu hỏi được xử lý đúng.",
       "source_pages": [
-        10,
-        11
+        11,
+        12,
+        24,
+        26
       ],
-      "source_excerpt": "Hao phí hiện tại là bao nhiêu? Thời gian, chi phí nhân sự, SLA, cơ hội bỏ lỡ? Tiêu chí thành công đo bằng gì?",
+      "source_excerpt": "Metric tốt = chỉ số cụ thể + ngưỡng có nghĩa + hành động cụ thể.",
+      "confidence": 0.92,
+      "status": "ready",
+      "unique_user_count": 20,
+      "question_count": 28,
+      "representative_questions": [
+        "Success metric viết thế nào để không bị chung chung?",
+        "Tăng hiệu suất có được tính là metric không?",
+        "Làm sao biết AI tutor thật sự giúp học tốt hơn?"
+      ]
+    },
+    {
+      "id": "insight-cluster-04",
+      "topic": "Automate/Augment bị nhầm với Rule/Workflow/Agent",
+      "common_confusion": "Học viên hay xem automation là agent và augmentation là workflow, trong khi hai cặp khái niệm nằm ở hai trục quyết định khác nhau.",
+      "correct_understanding": "Automate/Augment trả lời câu hỏi con người còn tham gia bao nhiêu. Rule/Workflow/Agent trả lời câu hỏi giải pháp kỹ thuật phức tạp đến đâu. Nên bắt đầu từ augmentation và cấp kỹ thuật đơn giản nhất nếu rủi ro cao hoặc kết quả cần người chịu trách nhiệm.",
+      "source_pages": [
+        17,
+        18,
+        19,
+        20
+      ],
+      "source_excerpt": "Automation vs Augmentation. Ba mức giải pháp: Rule / Workflow / Agent.",
+      "confidence": 0.91,
+      "status": "ready",
+      "unique_user_count": 16,
+      "question_count": 19,
+      "representative_questions": [
+        "Khi nào nên automate, khi nào chỉ augment?",
+        "Workflow khác agent ở điểm nào?",
+        "Có bắt buộc đi từ rule lên workflow rồi agent không?"
+      ]
+    },
+    {
+      "id": "insight-cluster-05",
+      "topic": "Demo đúng vài lần chưa đủ để Go",
+      "common_confusion": "Một số nhóm dễ kết luận giải pháp đã ổn sau vài test thủ công hoặc chỉ nhìn accuracy mà chưa nghĩ đến false positive, false negative và vận hành.",
+      "correct_understanding": "Từ demo sang production cần eval plan, test case biên, logging, fallback, rollback và owner vận hành. Reward function phải thể hiện trade-off precision/recall theo lợi ích người dùng; nếu chưa đủ dữ liệu hoặc chưa kiểm soát rủi ro thì quyết định đúng là Not Yet.",
+      "source_pages": [
+        22,
+        23,
+        24,
+        25,
+        28
+      ],
+      "source_excerpt": "Không có cấu hình đúng tuyệt đối - phải test điểm cân bằng với chính người dùng. Demo to Production: Baseline, Evaluation, Controls, Operations.",
       "confidence": 0.9,
       "status": "ready",
-      "unique_user_count": 4,
-      "question_count": 2,
+      "unique_user_count": 10,
+      "question_count": 13,
       "representative_questions": [
-        "tóm tắt nội dung chính trong slide này"
+        "Accuracy cao có đủ để triển khai không?",
+        "Precision và recall nên ưu tiên cái nào?",
+        "Khi nào nên chọn Not Yet thay vì Go?"
       ]
     }
   ],
@@ -123,60 +214,108 @@
     {
       "id": "question-01",
       "type": "multiple_choice",
-      "question": "Theo mô hình Double Diamond, giai đoạn nào thuộc Diamond 1 (Tìm đúng vấn đề)?",
+      "question": "Vì sao Day 2 yêu cầu tìm đúng vấn đề trước khi chọn giải pháp AI?",
       "options": [
-        "Discover và Define",
-        "Develop và Deliver",
-        "Discover và Develop",
-        "Define và Deliver"
+        "Vì giải pháp tốt cho sai vấn đề vẫn có thể tạo hại và không chứng minh được giá trị",
+        "Vì mọi bài toán đều phải xây agent trước rồi mới đo",
+        "Vì Double Diamond chỉ dùng để thiết kế giao diện",
+        "Vì metric chỉ cần viết sau khi demo xong"
       ],
       "correct_option": 0,
-      "answer": "A",
-      "explanation": "Diamond 1 gồm Discover (phân kỳ) và Define (hội tụ) để tìm đúng vấn đề. Diamond 2 gồm Develop và Deliver để tìm giải pháp.",
+      "answer": "Vì giải pháp tốt cho sai vấn đề vẫn có thể tạo hại và không chứng minh được giá trị",
+      "explanation": "Slide nhấn mạnh Diamond 1 để khám phá và định nghĩa đúng bài toán trước Diamond 2. Nếu vấn đề gốc sai, việc tối ưu công nghệ không còn ý nghĩa.",
       "source_pages": [
-        3
+        3,
+        4
       ],
-      "source_excerpt": "D I A M O N D 1 — T Ì M Đ Ú N G VẤ N Đ Ề Discover: Mở rộng — khảo sát vấn đề căn bản. Define: Thu hẹp — xác định đúng bài toán gốc.",
-      "confidence": 0.95,
+      "source_excerpt": "Giải pháp xuất sắc cho sai vấn đề có thể còn tệ hơn không có giải pháp.",
+      "confidence": 0.96,
       "status": "ready"
     },
     {
       "id": "question-02",
       "type": "multiple_choice",
-      "question": "Đâu là anti-pattern (sai lầm thường gặp) khi định hình bài toán AI?",
+      "question": "Trong Quick Problem Card, cặp trường nào giúp chứng minh vấn đề đáng giải và kết quả có thể kiểm chứng?",
       "options": [
-        "Xây dựng chatbot trước khi làm rõ quy trình vận hành",
-        "Phỏng vấn người dùng để hiểu nhu cầu",
-        "Thiết lập chỉ số đo lường thành công",
-        "Xác định phạm vi tự chủ của AI"
+        "Bottleneck & Impact và Success Metric",
+        "Actor và Direction",
+        "Problem và tên model AI",
+        "Workflow và màu giao diện"
       ],
       "correct_option": 0,
-      "answer": "A",
-      "explanation": "Solution-first (ưu tiên giải pháp) là anti-pattern: xây chatbot/agent trước khi hiểu rõ quy trình và điểm nghẽn thực tế.",
+      "answer": "Bottleneck & Impact và Success Metric",
+      "explanation": "Bottleneck & Impact mô tả nút thắt và tổn thất, còn Success Metric định nghĩa chỉ số đo cải thiện. Hai trường này biến pain point thành lập luận có thể kiểm chứng.",
       "source_pages": [
-        7
+        9,
+        10,
+        11
       ],
-      "source_excerpt": "Ưu tiên giải pháp (Solution-first) Xây dựng chatbot/agent trước khi làm rõ quy trình vận hành và điểm nghẽn thực tế.",
+      "source_excerpt": "Nút thắt & Tác động; Chỉ số đo thành công; Hao phí hiện tại là bao nhiêu?",
       "confidence": 0.95,
       "status": "ready"
     },
     {
       "id": "question-03",
       "type": "multiple_choice",
-      "question": "Trong Quick Problem Card, trường 'Direction' dùng để làm gì?",
+      "question": "Đâu là ví dụ metric đạt yêu cầu hơn cho một tính năng AI tutor?",
       "options": [
-        "Xác định hướng giải pháp (No AI, Rule, Workflow, Agent...)",
-        "Mô tả quy trình hiện tại",
-        "Đo lường tác động của vấn đề",
-        "Liệt kê các bên liên quan"
+        "Giảm thời gian học viên tìm câu trả lời từ 10 phút xuống dưới 3 phút trong 2 tuần thử nghiệm",
+        "Làm cho việc học hiệu quả hơn",
+        "Có nhiều học viên truy cập hơn",
+        "AI trả lời nghe tự nhiên hơn"
       ],
       "correct_option": 0,
-      "answer": "A",
-      "explanation": "Direction là định hướng giải pháp, bao gồm các lựa chọn: No AI, Rule, Workflow, Agent, hoặc Chưa xác định.",
+      "answer": "Giảm thời gian học viên tìm câu trả lời từ 10 phút xuống dưới 3 phút trong 2 tuần thử nghiệm",
+      "explanation": "Metric này có baseline, target và khung đo. Các lựa chọn còn lại có thể là mong muốn hoặc input metric nhưng chưa đủ cụ thể để đánh giá thành công.",
       "source_pages": [
-        9
+        11,
+        12,
+        24
       ],
-      "source_excerpt": "Định hướng giải pháp direction - No AI / Rule / Workflow / Agent / Chưa xác định.",
+      "source_excerpt": "Baseline, Target, Measurement. Metric tốt = chỉ số cụ thể + ngưỡng có nghĩa + hành động cụ thể.",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "question-04",
+      "type": "multiple_choice",
+      "question": "Nhận định nào phân biệt đúng Automation/Augmentation với Rule/Workflow/Agent?",
+      "options": [
+        "Automation/Augmentation nói về vai trò con người; Rule/Workflow/Agent nói về cấp độ kỹ thuật",
+        "Automation luôn tương đương Agent",
+        "Augmentation luôn tương đương Rule",
+        "Workflow là khi AI tự quyết mọi bước mà không cần con người"
+      ],
+      "correct_option": 0,
+      "answer": "Automation/Augmentation nói về vai trò con người; Rule/Workflow/Agent nói về cấp độ kỹ thuật",
+      "explanation": "Slide 18 nêu rõ hai trục này khác nhau. Một workflow vẫn có thể là augmentation nếu AI chỉ soạn nháp và con người duyệt.",
+      "source_pages": [
+        17,
+        18
+      ],
+      "source_excerpt": "Rule/Workflow/Agent là cấp độ kỹ thuật - còn Automate/Augment là cấp độ vai trò của con người trong hệ thống.",
+      "confidence": 0.96,
+      "status": "ready"
+    },
+    {
+      "id": "question-05",
+      "type": "multiple_choice",
+      "question": "Khi nào nhóm nên chọn Not Yet thay vì Go cho một giải pháp AI?",
+      "options": [
+        "Khi bài toán có triển vọng nhưng còn thiếu dữ liệu, metric, chuẩn hóa quy trình hoặc kiểm soát rủi ro",
+        "Khi AI không có giá trị vượt trội và rule đơn giản tốt hơn",
+        "Khi demo chạy đúng một lần",
+        "Khi nhóm muốn dùng model mới nhất"
+      ],
+      "correct_option": 0,
+      "answer": "Khi bài toán có triển vọng nhưng còn thiếu dữ liệu, metric, chuẩn hóa quy trình hoặc kiểm soát rủi ro",
+      "explanation": "Not Yet là quyết định tạm hoãn để bổ sung điều kiện triển khai. Nếu AI không phù hợp hoặc giải pháp không AI tối ưu hơn thì đó là No-Go.",
+      "source_pages": [
+        25,
+        26,
+        28
+      ],
+      "source_excerpt": "Not Yet: cần bổ sung dữ liệu thực tế, chuẩn hóa quy trình, thiết lập chỉ số, xác định ranh giới.",
       "confidence": 0.95,
       "status": "ready"
     }

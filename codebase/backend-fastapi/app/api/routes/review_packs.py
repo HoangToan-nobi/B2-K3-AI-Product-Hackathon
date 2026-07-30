@@ -1,10 +1,14 @@
+import asyncio
+import threading
+
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import JSONResponse, Response
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.deps import get_request_role
-from app.core.database import get_db_session
+from app.core.database import AsyncSessionLocal, get_db_session
 from app.schemas.review_packs import CreateReviewPackRequest
+from app.services.progress import create_progress_job
 from app.services.review_packs import ReviewPackService
 
 
@@ -58,6 +62,40 @@ async def create_review_pack(
         return JSONResponse({"error": "Cannot create review pack"}, status_code=500)
 
 
+@router.post("/jobs")
+async def create_review_pack_job(
+    request: Request,
+    role: str = Depends(get_request_role),
+) -> JSONResponse:
+    if role != "labcoach":
+        return JSONResponse({"error": "Lab Coach role required"}, status_code=403)
+    raw_body = await request.body()
+    body = CreateReviewPackRequest.model_validate_json(raw_body) if raw_body else CreateReviewPackRequest()
+    job = create_progress_job("Tạo tài liệu ôn tập")
+
+    async def run_job() -> None:
+        try:
+            if AsyncSessionLocal is None:
+                service = ReviewPackService(None)
+                result = await service.create_review_pack(body.lesson_id, body.run_pipeline, progress=job)
+                artifacts = service.list_artifacts(result["pack"]["lesson"]["id"])
+            else:
+                async with AsyncSessionLocal() as session:
+                    service = ReviewPackService(session)
+                    result = await service.create_review_pack(body.lesson_id, body.run_pipeline, progress=job)
+                    artifacts = service.list_artifacts(result["pack"]["lesson"]["id"])
+            await job.complete({**result, "artifacts": artifacts})
+        except ValueError as exc:
+            await job.fail(str(exc))
+        except FileNotFoundError:
+            await job.fail("Thiếu dữ liệu pipeline để tạo tài liệu. Hãy ingest lại slide rồi thử lại.")
+        except Exception:
+            await job.fail("Không tạo được tài liệu tổng hợp. Hãy kiểm tra VLười hoặc API key.")
+
+    threading.Thread(target=lambda: asyncio.run(run_job()), daemon=True).start()
+    return JSONResponse({"job_id": job.id, "events_url": f"/api/progress/{job.id}/events"})
+
+
 @router.get("/{pack_id}")
 async def get_review_pack(
     pack_id: str,
@@ -107,13 +145,13 @@ async def export_review_pack_pdf(
 ) -> Response:
     service = ReviewPackService(session)
     try:
-        bytes_, filename, path = await service.export_review_pack_pdf(pack_id, role)
+        bytes_, filename, artifact_url = await service.export_review_pack_pdf(pack_id, role)
         return Response(
             bytes_,
             media_type="application/pdf",
             headers={
                 "Content-Disposition": f'attachment; filename="{filename}"',
-                "X-Artifact-Path": path,
+                "X-Artifact-Url": artifact_url,
             },
         )
     except Exception:

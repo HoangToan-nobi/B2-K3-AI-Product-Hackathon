@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "pack_id": "pack-day5-product-001",
-  "status": "needs_review",
+  "status": "ready",
   "lesson": {
     "id": "day5-product",
     "title": "AI Product Hackathon (Day 5)",
@@ -11,115 +11,106 @@
     "student_question_count": 1252,
     "unique_user_count": 369,
     "cluster_count": 3,
-    "included_cluster_count": 2,
+    "included_cluster_count": 3,
     "excluded_noise_count": 0
   },
   "summary": [
     {
       "id": "summary-01",
-      "title": "Chọn bài toán AI đúng",
-      "content": "Trước khi code, cần xác định bài toán có ý nghĩa thực tiễn và thuyết phục team đi theo hướng đúng. Sai lầm phổ biến là làm rồi mới thấy sai, gây lãng phí.",
+      "title": "AI Product khác Software Product",
+      "content": "Software truyền thống có input ổn định, logic xác định, output đúng/sai rõ. AI product có input, output và process đều bất định. Cùng một yêu cầu có thể cho kết quả khác nhau theo model, context và dữ liệu. Product không chỉ viết tính năng, phải thiết kế ngưỡng chấp nhận, fallback, correction, logging và người chịu trách nhiệm.",
       "source_pages": [
-        2,
-        3,
         4
       ],
-      "source_excerpt": "Suy cho cùng, chuyện này quan trọng hơn chuyện các bạn biết sử dụng công cụ gì. Tại vì nhiều người đi một đoạn rồi mới thấy hoá ra mình đi sai, đến lúc quay về làm lại từ đầu thì cảm giác rất là khó khăn.",
+      "source_excerpt": "AI PRODUCT # SOFTWARE PRODUCT ... Software truyền thống sửa bug. AI product quản trị phân phối lỗi.",
       "confidence": 0.95,
       "status": "ready"
     },
     {
       "id": "summary-02",
-      "title": "Bảy phần lý thuyết của buổi học",
-      "content": "Buổi học gồm: AI landscape, anti-pattern, AI product life cycle, các component của AI system, khung chọn mức độ ứng dụng AI, problem statement, và discovery workshop.",
+      "title": "Ba lớp bất định: Input, Output, Process",
+      "content": "AI bất định ở ba lớp: input uncertainty (user hỏi rất bản), output uncertainty (câu trả lời không có), process uncertainty (cách model xử lý không rõ).",
       "source_pages": [
         4
       ],
-      "source_excerpt": "Nội dung cả bài, nếu các bạn học từ bây giờ cho đến chiều, có bảy phần lý thuyết. Phần một là AI landscape... Sau đó là các anti-pattern... Rồi chúng ta nói về AI product life cycle...",
-      "confidence": 0.9,
+      "source_excerpt": "BA LỚP BẤT ĐỊNH ... AI bất định ở ba lớp: input, output và process.",
+      "confidence": 0.95,
       "status": "ready"
     },
     {
       "id": "summary-03",
-      "title": "Đôi khi không làm gì tốt hơn làm sai",
-      "content": "Trong thực tế, đôi khi không làm gì còn tốt hơn làm rồi nhận ra sai, tùy trường hợp. Ví dụ AWS phát hành 40 chức năng/ngày, Google gấp ba, nên chọn lọc rất quan trọng.",
+      "title": "Production Gap: Drift",
+      "content": "Ngay cả khi không đổi code, product vẫn có thể đổi hành vi do model update, context drift, user drift, prompt drift. Vì vậy AI product cần eval, version log và fallback ngay từ prototype đầu tiên.",
       "source_pages": [
-        5,
-        6
+        5
       ],
-      "source_excerpt": "trên thực tế, đôi khi không làm gì sẽ còn tốt hơn là làm, để rồi nhận ra chúng ta sai — nó sẽ tuỳ vào từng trường hợp nhé.",
-      "confidence": 0.85,
+      "source_excerpt": "PRODUCTION GAP ... Ngay cả khi không đổi code, product vẫn có thể đổi hành vi.",
+      "confidence": 0.95,
       "status": "ready"
     },
     {
       "id": "summary-04",
-      "title": "Định nghĩa workflow",
-      "content": "Workflow là quy trình làm việc từ khởi phát ý tưởng đến hoàn thành sản phẩm và nhận phản hồi, giúp mọi người trong team phối hợp.",
+      "title": "Automation vs Augmentation",
+      "content": "Automation và augmentation không phải hơn-kém. Augmentation: AI tăng năng lực con người, quyết định cuối. Automation: AI tự hành động trong phạm vi đã định. Augmentation thường là bước đúng để giảm rủi ro, thu dữ liệu thật trước khi tăng tự động hóa.",
       "source_pages": [
-        7,
-        8
+        7
       ],
-      "source_excerpt": "[Học viên]: theo em, workflow chính là một quá trình bắt đầu từ khi mình khởi phát ý tưởng đến khi mình hoàn thành sản phẩm và đưa được nhận xét về sản phẩm.",
-      "confidence": 0.8,
+      "source_excerpt": "AUTOMATION / AUGMENTATION ... Automation và augmentation không phải hơn-kém.",
+      "confidence": 0.95,
       "status": "ready"
     }
   ],
   "class_insights": [
     {
       "id": "insight-cluster-01",
-      "topic": "Chọn bài toán AI",
-      "common_confusion": "Học viên thường bắt tay vào làm ngay mà không xác định bài toán có ý nghĩa thực tiễn hay không, dẫn đến lãng phí thời gian.",
-      "correct_understanding": "Cần có khung nền tảng lý thuyết để đánh giá bài toán trước khi code, bao gồm việc xác định giá trị thực tiễn và thuyết phục team.",
+      "topic": "Demo chạy được ≠ Product có giá trị",
+      "common_confusion": "Nhiều học viên nghĩ demo chạy được là đủ, không hiểu tại sao user không dùng.",
+      "correct_understanding": "Demo là khả năng kỹ thuật, product là giá trị trong bối cảnh thật. Cần thiết kế cho lúc AI sai, và cắt vừa đủ scope để chứng minh giá trị.",
       "source_pages": [
-        2,
-        3,
-        4
+        2
       ],
-      "source_excerpt": "Cho nên câu hỏi đặt ra là: giả sử các bạn là người làm startup... thì cái sản phẩm các bạn đang định làm... nó có ý nghĩa thực tiễn hay không?",
+      "source_excerpt": "DEMO LA KHA NANG KY THUAT - PRODUCT LA GIA TRI TRONG BOI CANH THAT",
       "confidence": 0.9,
       "status": "ready",
-      "unique_user_count": 5,
-      "question_count": 3,
+      "unique_user_count": 3,
+      "question_count": 2,
       "representative_questions": [
-        "Làm thế nào để biết bài toán có ý nghĩa thực tiễn?",
-        "Làm sao thuyết phục team chọn hướng A thay vì B?",
-        "Nếu không có khung lý thuyết thì dễ sai như thế nào?"
+        "Tại sao demo chạy được mà không ai dùng?",
+        "Làm sao biết product có giá trị thật?"
       ]
     },
     {
       "id": "insight-cluster-02",
-      "topic": "Anti-pattern trong AI product",
-      "common_confusion": "Học viên chưa rõ anti-pattern là gì và tại sao cần tránh.",
-      "correct_understanding": "Anti-pattern là những cách làm sai lầm thường gặp khi phát triển sản phẩm AI, cần nhận diện để tránh lãng phí.",
+      "topic": "Phân biệt Automation và Augmentation",
+      "common_confusion": "Học viên thường nghĩ automation là mục tiêu cao nhất, augmentation là tạm thời.",
+      "correct_understanding": "Augmentation không phải bản kém của automation. Nó thường là bước đúng để giảm rủi ro, thu dữ liệu thật và học trước khi tăng tự động hóa.",
       "source_pages": [
-        4
+        7
       ],
-      "source_excerpt": "Sau đó là các anti-pattern, tức là những cái cần tránh.",
-      "confidence": 0.7,
-      "status": "needs_review",
+      "source_excerpt": "augmentation khong phai ban kém cua automation. No thuong la buoc dung de giam rui ro, thu du lieu that va hoc truoc khi tang tu dong hoa.",
+      "confidence": 0.9,
+      "status": "ready",
       "unique_user_count": 2,
       "question_count": 1,
       "representative_questions": [
-        "Anti-pattern là gì?"
+        "Khi nào nên dùng automation, khi nào augmentation?"
       ]
     },
     {
       "id": "insight-cluster-03",
-      "topic": "Workflow trong quản lý sinh viên",
-      "common_confusion": "Học viên có thể chưa phân biệt workflow với quy trình chung.",
-      "correct_understanding": "Workflow là một quy trình làm việc cụ thể, ví dụ quy trình tuyển sinh, đăng ký học trong trường đại học.",
+      "topic": "Task Boundary: Chọn đúng task để AI làm",
+      "common_confusion": "Học viên thường hỏi 'product này automate được không?' thay vì tách thành task.",
+      "correct_understanding": "Nên tách workflow thành 4-6 task nhỏ, chỉ tập trung vào một task AI có giá trị nhất. Task hẹp, câu trả lời ổn định thì có thể conditional automation; task mở thì nên augment.",
       "source_pages": [
-        7,
         8
       ],
-      "source_excerpt": "[Học viên]: ví dụ về một trường đại học về quản lý sinh viên: bước đầu tiên là tuyển sinh, các bước tiếp theo là các học kỳ, các bài kiểm tra, và cuối cùng đầu ra là điểm và tốt nghiệp.",
-      "confidence": 0.8,
+      "source_excerpt": "Dung hoi 'product nay automate duoc khong?' Hay tach thanh task.",
+      "confidence": 0.9,
       "status": "ready",
       "unique_user_count": 2,
-      "question_count": 2,
+      "question_count": 1,
       "representative_questions": [
-        "Workflow là gì?",
-        "Cho ví dụ workflow trong trường học?"
+        "Làm sao biết task nào nên AI làm?"
       ]
     }
   ],
@@ -127,72 +118,64 @@
     {
       "id": "question-01",
       "type": "multiple_choice",
-      "question": "Theo bài giảng, điều gì quan trọng hơn việc biết sử dụng công cụ AI?",
+      "question": "Điểm khác biệt cốt lõi giữa AI product và software product truyền thống là gì?",
       "options": [
-        "Chọn đúng bài toán và biết nên làm gì, không làm gì",
-        "Code thật nhanh",
-        "Có nhiều dữ liệu",
-        "Dùng model mới nhất"
+        "AI product không có bug",
+        "AI product có input, output và process đều bất định",
+        "AI product không cần testing",
+        "AI product luôn chính xác hơn"
       ],
-      "correct_option": 0,
-      "answer": "Chọn đúng bài toán và biết nên làm gì, không làm gì",
-      "explanation": "Giảng viên nhấn mạnh việc chọn đúng bài toán quan trọng hơn công cụ, vì nếu chọn sai sẽ mất thời gian làm lại.",
+      "correct_option": 1,
+      "answer": "B",
+      "explanation": "Software truyền thống có input ổn định, logic xác định, output đúng/sai rõ. AI product có input, output và process đều bất định, cùng yêu cầu có thể cho kết quả khác nhau.",
       "source_pages": [
-        2
+        4
       ],
-      "source_excerpt": "Suy cho cùng, chuyện này quan trọng hơn chuyện các bạn biết sử dụng công cụ gì.",
+      "source_excerpt": "AI PRODUCT # SOFTWARE PRODUCT ... Input ổn định > logic xác định > output đúng/sai rõ.",
       "confidence": 0.95,
       "status": "ready"
     },
     {
       "id": "question-02",
       "type": "multiple_choice",
-      "question": "Buổi học chiều nay gồm bao nhiêu phần lý thuyết?",
+      "question": "Khi nào nên chọn Augmentation thay vì Automation?",
       "options": [
-        "5",
-        "6",
-        "7",
-        "8"
+        "Khi muốn giảm rủi ro và thu dữ liệu thật",
+        "Khi AI có độ chính xác 100%",
+        "Khi không có người dùng",
+        "Khi cần tiết kiệm chi phí tối đa"
       ],
-      "correct_option": 2,
-      "answer": "7",
-      "explanation": "Bài giảng nêu rõ có bảy phần lý thuyết: AI landscape, anti-pattern, AI product life cycle, component, khung chọn mức độ AI, problem statement, discovery workshop.",
+      "correct_option": 0,
+      "answer": "A",
+      "explanation": "Augmentation giúp giảm rủi ro, thu dữ liệu thật và học trước khi tăng tự động hóa. Nó thường là bước đúng trước khi chuyển sang automation.",
       "source_pages": [
-        4
+        7
       ],
-      "source_excerpt": "Nội dung cả bài, nếu các bạn học từ bây giờ cho đến chiều, có bảy phần lý thuyết.",
-      "confidence": 0.9,
+      "source_excerpt": "augmentation khong phai ban kém cua automation. No thuong la buoc dung de giam rui ro, thu du lieu that va hoc truoc khi tang tu dong hoa.",
+      "confidence": 0.95,
       "status": "ready"
     },
     {
       "id": "question-03",
       "type": "multiple_choice",
-      "question": "Ví dụ về tốc độ phát hành chức năng của AWS năm 2019 là bao nhiêu chức năng mỗi ngày?",
+      "question": "Theo slide, 'Production Gap' đề cập đến hiện tượng gì?",
       "options": [
-        "20",
-        "40",
-        "100",
-        "365"
+        "Sự khác biệt giữa môi trường dev và production",
+        "Sản phẩm không đáp ứng nhu cầu thị trường",
+        "AI model bị drift dù không đổi code",
+        "Lỗi do nhà phát triển"
       ],
-      "correct_option": 1,
-      "answer": "40",
-      "explanation": "Giảng viên dẫn số liệu: trung bình một ngày đội ngũ AWS phát hành khoảng 40 chức năng.",
+      "correct_option": 2,
+      "answer": "C",
+      "explanation": "Production Gap là hiện tượng ngay cả khi không đổi code, product vẫn có thể đổi hành vi do model update, context drift, user drift, prompt drift.",
       "source_pages": [
-        6
+        5
       ],
-      "source_excerpt": "vào năm 2019... trung bình một ngày, đội ngũ của AWS platform phát hành ra khoảng 40 chức năng.",
+      "source_excerpt": "PRODUCTION GAP ... Ngay cả khi không đổi code, product vẫn có thể đổi hành vi.",
       "confidence": 0.95,
       "status": "ready"
     }
   ],
-  "warnings": [
-    {
-      "code": "LOW_CONFIDENCE",
-      "message": "Một số mục cần Lab Coach đối chiếu slide trước khi phát hành.",
-      "item_ids": [
-        "insight-cluster-02"
-      ]
-    }
-  ],
+  "warnings": [],
   "generated_at": "2026-07-30T00:00:00+00:00"
 }

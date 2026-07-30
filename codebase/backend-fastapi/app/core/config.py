@@ -20,6 +20,11 @@ class Settings(BaseSettings):
         default="http://localhost:3000", alias="BACKEND_CORS_ORIGINS"
     )
     upload_dir: str = Field(default="uploads", alias="UPLOAD_DIR")
+    cloudinary_cloud_name: str | None = Field(default=None, alias="CLOUDINARY_CLOUD_NAME")
+    cloudinary_api_key: str | None = Field(default=None, alias="CLOUDINARY_API_KEY")
+    cloudinary_api_secret: str | None = Field(default=None, alias="CLOUDINARY_API_SECRET")
+    cloudinary_url: str | None = Field(default=None, alias="CLOUDINARY_URL")
+    cloudinary_folder: str = Field(default="vluoi", alias="CLOUDINARY_FOLDER")
 
     model_config = SettingsConfigDict(env_file=(PIPELINE_ENV, BACKEND_ROOT / ".env"), extra="ignore")
 
