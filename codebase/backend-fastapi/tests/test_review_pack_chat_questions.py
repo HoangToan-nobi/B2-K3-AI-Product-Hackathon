@@ -297,6 +297,62 @@ def test_fallback_quiz_uses_summary_and_student_question_topics():
     assert any("học viên hỏi" in item["question"] for item in quiz)
 
 
+def test_fallback_quiz_does_not_copy_long_agenda_into_answer_options():
+    slide_pages = [
+        {
+            "page": 2,
+            "text": "AI IN ACTION - Day 1 Agenda. Từ LLM đến AI Agent. Chọn model và chi phí token.",
+        }
+    ]
+    summary = [
+        {
+            "title": "Từ LLM đến agent và lựa chọn model",
+            "content": (
+                "AI IN ACTION - Day 1 Agenda N • Bức tranh AI & các tầng của AI • Lịch sử AI 70 năm • "
+                "Bên trong LLM: cơ chế vận hành • Từ LLM đến AI Agent • Landscape: model hôm nay & "
+                "cuộc đua hiện tại • Chọn model & chi phí token"
+            ),
+            "source_pages": [2],
+            "source_excerpt": "Từ LLM đến AI Agent. Chọn model và chi phí token.",
+        }
+    ]
+
+    quiz = ReviewPackService._fallback_quiz_items(summary, [], slide_pages, limit=1)
+
+    assert quiz[0]["options"][0] == "Từ LLM đến agent và lựa chọn model là một ý trọng tâm cần nắm theo slide."
+    assert len(quiz[0]["options"][0]) < 120
+    assert "Agenda N • Bức tranh" not in quiz[0]["answer"]
+    assert "Agenda N • Bức tranh" not in quiz[0]["explanation"]
+
+
+def test_question_item_compacts_llm_quiz_fields():
+    service = ReviewPackService(None)
+    item = {
+        "question": "Ý nào mô tả đúng nhất về Từ LLM đến agent và lựa chọn model?",
+        "options": [
+            "AI IN ACTION - Day 1 Agenda N • Bức tranh AI & các tầng của AI • Lịch sử AI 70 năm • Bên trong LLM: cơ chế vận hành • Từ LLM đến AI Agent",
+            "Đây là nội dung logistics của lớp, không liên quan kiến thức bài học.",
+            "Đây là ví dụ ngoài slide và không cần dùng khi ôn tập.",
+            "Đây là câu hỏi mở, không có đáp án kiểm chứng từ slide.",
+        ],
+        "correct_option": 0,
+        "answer": "A. AI IN ACTION - Day 1 Agenda N • Bức tranh AI & các tầng của AI • Lịch sử AI 70 năm • Bên trong LLM: cơ chế vận hành",
+        "explanation": "Đáp án đúng vì bám vào mục kiến thức trọng tâm: AI IN ACTION - Day 1 Agenda N • Bức tranh AI & các tầng của AI.",
+        "source_pages": [2],
+        "source_excerpt": "Từ LLM đến AI Agent. Chọn model và chi phí token.",
+        "confidence": 0.8,
+    }
+
+    normalized = service._question_item(item, 1, slide_pages=[{"page": 2, "text": item["source_excerpt"]}])
+
+    assert all(len(option) <= 118 for option in normalized["options"])
+    assert normalized["answer"] == normalized["options"][0]
+    assert normalized["answer"] == "Từ LLM đến AI Agent."
+    assert "AI IN ACTION" not in normalized["answer"]
+    assert "•" not in normalized["answer"]
+    assert len(normalized["explanation"]) <= 240
+
+
 def test_fallback_insights_are_student_question_answer_cards():
     slide_pages = [
         {

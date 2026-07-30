@@ -473,7 +473,7 @@ a { color: var(--accent); text-decoration: none; }
   height: 26px;
   border-radius: 50%;
   background: var(--subtle-control-bg);
-  color: #a9b8d3;
+  color: var(--text-3);
   font-size: 18px;
   line-height: 1;
   display: grid;
@@ -504,13 +504,13 @@ a { color: var(--accent); text-decoration: none; }
 .progress-message,
 .progress-detail {
   margin: 0;
-  color: var(--muted);
+  color: var(--text-2);
   font-size: 14px;
   line-height: 1.55;
 }
 
 .progress-detail {
-  color: #a9b8d3;
+  color: var(--text-3);
 }
 
 .progress-log {
@@ -520,7 +520,7 @@ a { color: var(--accent); text-decoration: none; }
 }
 
 .progress-log span {
-  color: #93a2bc;
+  color: var(--text-3);
   font-size: 12px;
   line-height: 1.45;
 }

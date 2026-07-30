@@ -111,7 +111,7 @@ Nguyên tắc bắt buộc:
 - Nội dung phải theo bố cục tài liệu ôn tập dễ đọc:
   1) Lý thuyết trọng tâm: mỗi mục có title là câu/nhóm khái niệm nổi bật, content là 2-3 câu giải thích liền mạch, không gạch đầu dòng con.
   2) Cả lớp thường hỏi: mỗi mục có topic ở dạng câu hỏi học viên hay hỏi, common_confusion ghi câu hỏi tiêu biểu, correct_understanding ghi câu trả lời và giải thích bằng 2-4 câu chắc ý.
-  3) Quiz nhanh: tạo 3-5 câu trắc nghiệm từ phần Lý thuyết trọng tâm và Cả lớp thường hỏi. Mỗi câu có 4 lựa chọn cụ thể, answer là đầy đủ nội dung đáp án đúng kèm tiền tố A/B/C/D nếu tự nhiên, explanation giải thích vì sao đúng và nhắc lại ý liên quan trong slide/câu hỏi hay gặp.
+  3) Quiz nhanh: tạo 3-5 câu trắc nghiệm từ phần Lý thuyết trọng tâm và Cả lớp thường hỏi. Mỗi câu chỉ kiểm tra MỘT ý cụ thể. Mỗi lựa chọn phải là một câu/ngữ ngắn dưới 22 từ, không copy nguyên agenda, không copy đoạn slide dài, không dùng ký hiệu bullet. answer chỉ ghi đúng nội dung đáp án đúng, không lặp lại cả câu hỏi. explanation dài 1-2 câu, giải thích vì sao đúng bằng ý ngắn gọn từ slide.
 - Title của summary nên giống heading trong tài liệu: rõ chủ đề, có thể dùng dấu phẩy/chấm giữa các khái niệm, ví dụ "Token, Context, Attention — ba khái niệm nền".
 - Không nhồi quá nhiều khái niệm vào một mục; mỗi mục nên xử lý một cụm kiến thức có quan hệ trực tiếp.
 - Không viết tiếng Việt không dấu. Không dùng LaTeX escape như \\( hoặc \\).
@@ -136,8 +136,9 @@ Schema:
                         f"CHATLOG ẨN DANH:\n{chat_context}\n\n"
                         "Hãy tạo đúng cấu trúc nội dung cho PDF gồm: "
                         "5-6 mục lý thuyết trọng tâm, top 5-10 mục cả lớp thường hỏi nếu chatlog có đủ dữ liệu, 3-5 câu quiz nhanh. "
-                        "Văn phong như tài liệu ôn tập chính thức: câu ngắn vừa phải, thuật ngữ rõ, "
-                        "không markdown, không bullet trong content/common_confusion/correct_understanding."
+                        "Văn phong như tài liệu ôn tập chính thức: câu ngắn vừa phải, thuật ngữ rõ. "
+                        "Riêng quiz phải ngắn: mỗi option dưới 22 từ, answer là ý đúng cô đọng, explanation 1-2 câu; "
+                        "không markdown, không bullet trong content/common_confusion/correct_understanding/options/answer/explanation."
                     ),
                 },
             ],

@@ -113,7 +113,7 @@ function dayNumber(index: number): string {
 
 export default function Home() {
   const [role, setRole] = useState<AppRole>("student");
-  const [theme, setTheme] = useState<AppTheme>("dark");
+  const [theme, setTheme] = useState<AppTheme>("light");
   const [screen, setScreen] = useState<Screen>("home");
   const [coachAction, setCoachAction] = useState<CoachAction>("menu");
   const [lessons, setLessons] = useState<LessonOption[]>([]);
@@ -229,9 +229,16 @@ export default function Home() {
     setSelectedDeckId("");
   };
 
+  const focusLessonMaterial = (lessonId: string, deckId?: string) => {
+    setSelectedLessonId(lessonId);
+    setOpenLessonId(lessonId);
+    setCoachAction("menu");
+    setSelectedDeckId(deckId || "");
+  };
+
   const openSlideReader = (lessonId: string, deckId?: string) => {
     setSelectedLessonId(lessonId);
-    if (deckId) setSelectedDeckId(deckId);
+    setSelectedDeckId(deckId || "");
     setScreen("reader");
     setCoachAction("menu");
   };
@@ -556,6 +563,7 @@ export default function Home() {
                 lessons={lessons}
                 selectedLessonId={selectedLessonId}
                 openLessonId={openLessonId}
+                selectedDeckId={selectedDeckId}
                 selectedLesson={selectedLesson}
                 pack={pack}
                 loadingPack={loadingPack}
@@ -569,6 +577,7 @@ export default function Home() {
                 downloading={downloading}
                 uploading={uploading}
                 onSelectDay={selectDay}
+                onFocusMaterial={focusLessonMaterial}
                 onOpenReader={openSlideReader}
                 onCoachAction={setCoachAction}
                 onGenerate={generatePack}
@@ -825,6 +834,7 @@ function CourseWorkspace({
   lessons,
   selectedLessonId,
   openLessonId,
+  selectedDeckId,
   selectedLesson,
   pack,
   loadingPack,
@@ -838,6 +848,7 @@ function CourseWorkspace({
   downloading,
   uploading,
   onSelectDay,
+  onFocusMaterial,
   onOpenReader,
   onCoachAction,
   onGenerate,
@@ -853,6 +864,7 @@ function CourseWorkspace({
   lessons: LessonOption[];
   selectedLessonId: string;
   openLessonId: string;
+  selectedDeckId: string;
   selectedLesson?: LessonOption;
   pack: ReviewPack | null;
   loadingPack: boolean;
@@ -866,6 +878,7 @@ function CourseWorkspace({
   downloading: boolean;
   uploading: boolean;
   onSelectDay: (lessonId: string) => void;
+  onFocusMaterial: (lessonId: string, deckId?: string) => void;
   onOpenReader: (lessonId: string, deckId?: string) => void;
   onCoachAction: (action: CoachAction) => void;
   onGenerate: () => void;
@@ -928,7 +941,7 @@ function CourseWorkspace({
               role={role}
               pack={lesson.id === selectedLessonId ? pack : null}
               onSelect={() => onSelectDay(lesson.id)}
-              onOpenReader={(deckId) => onOpenReader(lesson.id, deckId)}
+              onFocusMaterial={(deckId) => onFocusMaterial(lesson.id, deckId)}
               onDelete={() => onDeleteLesson(lesson.id)}
               onAddSlide={(formData) => onAddSlide(lesson.id, formData)}
               onDeleteSlide={(deckId) => onDeleteSlide(lesson.id, deckId)}
@@ -979,7 +992,7 @@ function CourseWorkspace({
               questions={readyQuestions}
               downloading={downloading}
               onDownload={onDownload}
-              onOpenReader={() => selectedLesson && onOpenReader(selectedLesson.id)}
+              onOpenReader={() => selectedLesson && onOpenReader(selectedLesson.id, selectedDeckId || undefined)}
               onOpenReviewPack={onOpenReviewPack}
             />
           ) : (
@@ -990,14 +1003,16 @@ function CourseWorkspace({
               loading={loadingPack}
               processing={processing}
               downloading={downloading}
-              uploading={uploading}
               sortedInsights={sortedInsights}
               needsReviewCount={needsReviewCount}
+              summary={readySummary}
+              insights={readyInsights}
+              questions={readyQuestions}
               onAction={onCoachAction}
               onGenerate={onGenerate}
               onUpdate={onUpdate}
               onDownload={onDownload}
-              onUpload={onUpload}
+              onOpenReader={() => selectedLesson && onOpenReader(selectedLesson.id, selectedDeckId || undefined)}
               onOpenReviewPack={onOpenReviewPack}
             />
           )}
@@ -1015,7 +1030,7 @@ function DayAccordion({
   role,
   pack,
   onSelect,
-  onOpenReader,
+  onFocusMaterial,
   onDelete,
   onAddSlide,
   onDeleteSlide,
@@ -1027,7 +1042,7 @@ function DayAccordion({
   role: AppRole;
   pack: ReviewPack | null;
   onSelect: () => void;
-  onOpenReader: (deckId?: string) => void;
+  onFocusMaterial: (deckId?: string) => void;
   onDelete: () => void;
   onAddSlide: (formData: FormData) => void;
   onDeleteSlide: (deckId: string) => void;
@@ -1083,7 +1098,7 @@ function DayAccordion({
                   className="material-row"
                   id={`deck-btn-${deck.id}`}
                   type="button"
-                  onClick={() => onOpenReader(deck.id)}
+                  onClick={() => onFocusMaterial(deck.id)}
                 >
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
@@ -1118,7 +1133,7 @@ function DayAccordion({
               className="material-row"
               id={`slide-fallback-${lesson.id}`}
               type="button"
-              onClick={() => onOpenReader()}
+              onClick={() => onFocusMaterial()}
             >
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
@@ -1190,31 +1205,100 @@ function StudentPackPanel({
 
   return (
     <>
-      <PanelHead title="Tài liệu học tập" text={lesson.title} />
+      <MaterialActionsPanel
+        role="student"
+        lesson={lesson}
+        pack={pack}
+        downloading={downloading}
+        onOpenReader={onOpenReader}
+        onOpenReviewPack={onOpenReviewPack}
+        onDownload={onDownload}
+      />
+      <StudyPackMiniPreview
+        pack={pack}
+        summary={summary}
+        insights={insights}
+        questions={questions}
+        emptyText="Lab Coach sẽ phát hành sau khi tạo và duyệt nội dung."
+      />
+    </>
+  );
+}
+
+function MaterialActionsPanel({
+  role,
+  lesson,
+  pack,
+  processing = false,
+  downloading,
+  needsReviewCount = 0,
+  onOpenReader,
+  onOpenReviewPack,
+  onDownload,
+  onGenerate,
+  onReview,
+}: {
+  role: AppRole;
+  lesson?: LessonOption;
+  pack: ReviewPack | null;
+  processing?: boolean;
+  downloading: boolean;
+  needsReviewCount?: number;
+  onOpenReader: () => void;
+  onOpenReviewPack: () => void;
+  onDownload: () => void;
+  onGenerate?: () => void;
+  onReview?: () => void;
+}) {
+  return (
+    <>
+      <PanelHead title={role === "labcoach" ? "Tài liệu & thao tác" : "Tài liệu học tập"} text={lesson?.title || "Chọn một ngày học"} />
       <div className="panel-quick-actions">
-        <button className="btn primary" id="open-reader-btn" type="button" onClick={onOpenReader}>
-          Xem slide + hỏi trợ lý
+        <button className="btn primary" id={`${role}-open-reader-btn`} type="button" disabled={!lesson} onClick={onOpenReader}>
+          {role === "labcoach" ? "Xem chi tiết slide" : "Xem slide + hỏi trợ lý"}
         </button>
-        {pack && (
-          <button className="btn accent" id="open-review-pack-btn" type="button" onClick={onOpenReviewPack}>
-            Xem tài liệu tổng hợp
-          </button>
-        )}
-        {pack && (
-          <button className="btn ghost" id="download-pdf-btn" type="button" disabled={downloading} onClick={onDownload}>
-            {downloading ? "Đang xuất..." : "Tải PDF tổng hợp"}
-          </button>
+        <button className="btn accent" id={`${role}-open-review-pack-btn`} type="button" disabled={!pack} onClick={onOpenReviewPack}>
+          {role === "labcoach" ? "Xem chi tiết tài liệu tổng hợp" : "Xem tài liệu tổng hợp"}
+        </button>
+        <button className="btn ghost" id={`${role}-download-pdf-btn`} type="button" disabled={!pack || downloading} onClick={onDownload}>
+          {downloading ? "Đang xuất..." : "Tải PDF tổng hợp"}
+        </button>
+        {role === "labcoach" && (
+          <>
+            <button className="btn ghost" id="coach-create-pack" type="button" disabled={processing || !lesson} onClick={onGenerate}>
+              {processing ? "Đang tạo..." : pack ? "Tạo lại tài liệu tổng hợp" : "Tạo tài liệu tổng hợp"}
+            </button>
+            <button className="btn ghost" id="coach-review-pack" type="button" disabled={!pack} onClick={onReview}>
+              {needsReviewCount > 0 ? `Duyệt ${needsReviewCount} câu hỏi cần kiểm tra` : "Kiểm tra câu hỏi chatlog"}
+            </button>
+          </>
         )}
       </div>
-      {!pack ? (
-        <EmptyState title="Chưa có tài liệu tổng hợp" text="Lab Coach sẽ phát hành sau khi tạo và duyệt nội dung." />
-      ) : (
-        <>
-          <MiniStats values={[["Ý chính", summary.length], ["Hay hỏi", insights.length], ["Quiz", questions.length]]} />
-          <Section title="Kiến thức trọng tâm">{summary.slice(0, 4).map((item) => <StudySummary key={item.id} item={item} />)}</Section>
-          <Section title="Câu hỏi hay gặp">{insights.slice(0, 3).map((item) => <StudyInsight key={item.id} item={item} />)}</Section>
-        </>
-      )}
+    </>
+  );
+}
+
+function StudyPackMiniPreview({
+  pack,
+  summary,
+  insights,
+  questions,
+  emptyText,
+}: {
+  pack: ReviewPack | null;
+  summary: SummaryItem[];
+  insights: ClassInsight[];
+  questions: ReviewQuestion[];
+  emptyText: string;
+}) {
+  if (!pack) {
+    return <EmptyState title="Chưa có tài liệu tổng hợp" text={emptyText} />;
+  }
+  return (
+    <>
+      <MiniStats values={[["Ý chính", summary.length], ["Hay hỏi", insights.length], ["Quiz", questions.length]]} />
+      <Section title="Kiến thức trọng tâm">{summary.slice(0, 4).map((item) => <StudySummary key={item.id} item={item} />)}</Section>
+      <Section title="Câu hỏi hay gặp">{insights.slice(0, 3).map((item) => <StudyInsight key={item.id} item={item} />)}</Section>
     </>
   );
 }
@@ -1226,14 +1310,16 @@ function CoachPanel({
   loading,
   processing,
   downloading,
-  uploading,
   sortedInsights,
   needsReviewCount,
+  summary,
+  insights,
+  questions,
   onAction,
   onGenerate,
   onUpdate,
   onDownload,
-  onUpload,
+  onOpenReader,
   onOpenReviewPack,
 }: {
   lesson?: LessonOption;
@@ -1242,14 +1328,16 @@ function CoachPanel({
   loading: boolean;
   processing: boolean;
   downloading: boolean;
-  uploading: boolean;
   sortedInsights: ClassInsight[];
   needsReviewCount: number;
+  summary: SummaryItem[];
+  insights: ClassInsight[];
+  questions: ReviewQuestion[];
   onAction: (action: CoachAction) => void;
   onGenerate: () => void;
   onUpdate: (itemId: string, action: "approve" | "drop") => void;
   onDownload: () => void;
-  onUpload: (formData: FormData) => void;
+  onOpenReader: () => void;
   onOpenReviewPack: () => void;
 }) {
   if (loading) return <PanelLoading title="Đang kiểm tra tài liệu" />;
@@ -1315,45 +1403,26 @@ function CoachPanel({
   }
   return (
     <>
-      <PanelHead title="Thao tác với slide" text={lesson?.title || "Chọn một ngày học"} />
-      <div className="coach-menu">
-        <button id="coach-view-pack" type="button" onClick={onOpenReviewPack} disabled={!pack}>
-          <div className="coach-menu-icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-              <circle cx="12" cy="12" r="3" />
-            </svg>
-          </div>
-          <div>
-            Xem chi tiết tài liệu tổng hợp
-            <span>{pack ? "Mở trang tài liệu riêng" : "Chưa có"}</span>
-          </div>
-        </button>
-        <button id="coach-create-pack" type="button" onClick={() => onAction("summary")}>
-          <div className="coach-menu-icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M12 20h9" />
-              <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
-            </svg>
-          </div>
-          <div>
-            {pack ? "Tạo lại tài liệu tổng hợp" : "Tạo file ôn tập cho học viên"}
-            <span>Slide + câu hỏi hay gặp từ chatlog</span>
-          </div>
-        </button>
-        <button id="coach-review-pack" type="button" onClick={() => onAction("review")} disabled={!pack}>
-          <div className="coach-menu-icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="9 11 12 14 22 4" />
-              <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
-            </svg>
-          </div>
-          <div>
-            Duyệt nội dung chatlog
-            <span>{needsReviewCount} mục cần duyệt</span>
-          </div>
-        </button>
-      </div>
+      <MaterialActionsPanel
+        role="labcoach"
+        lesson={lesson}
+        pack={pack}
+        processing={processing}
+        downloading={downloading}
+        needsReviewCount={needsReviewCount}
+        onOpenReader={onOpenReader}
+        onOpenReviewPack={onOpenReviewPack}
+        onDownload={onDownload}
+        onGenerate={() => onAction("summary")}
+        onReview={() => onAction("review")}
+      />
+      <StudyPackMiniPreview
+        pack={pack}
+        summary={summary}
+        insights={insights}
+        questions={questions}
+        emptyText="Tạo tài liệu tổng hợp để học viên có bản ôn tập và quiz nhanh."
+      />
     </>
   );
 }

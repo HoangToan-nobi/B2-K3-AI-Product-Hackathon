@@ -17,67 +17,73 @@
   "summary": [
     {
       "id": "summary-01",
-      "title": "Bức tranh AI, GenAI và LLM",
-      "content": "AI, ML, Deep Learning, GenAI, LLM — nằm ở đâu trong cùng một hệ? từ rộng đến hẹp ARTIFICIAL INTELLIGENCE AI — chiếc ô lớn nhất: mọi hệ thống có yếu tố “thông minh”. MACHINE LEARNING Machine learning — học từ dữ liệu thay Ba nhóm AI chính: phân loại · sinh nội dung · hành động Discriminative AI Generative AI Agentic AI Giỏi phân loại, dự đoán: lọc spam, phát hiện gian lận, nhận diện ảnh. Sinh ra thứ mới: văn bản, ảnh, code. Nhận mục tiêu  AI IN ACTION - Day 1 AI & LLM Foundation C Bạn đang dùng AI mỗi ngày — nhưng thực sự bên trong nó đang làm gì?",
+      "title": "AI, ML, Deep Learning, GenAI, LLM — các tầng từ rộng đến hẹp",
+      "content": "AI là chiếc ô lớn nhất bao trùm mọi hệ thống thông minh. Machine Learning là nhánh học từ dữ liệu thay vì luật tay. Deep Learning dùng mạng nơ-ron nhiều tầng tự học đặc trưng. Generative AI sinh nội dung mới như văn bản, ảnh, code. LLM là model nền chuyên ngôn ngữ, là engine chung cho cả Generative và Agentic AI.",
       "source_pages": [
         3,
-        4,
-        1
+        4
       ],
-      "source_excerpt": "[Slide 3] AI, ML, Deep Learning, GenAI, LLM — nằm ở đâu trong cùng một hệ? từ rộng đến hẹp ARTIFICIAL INTELLIGENCE AI — chiếc ô lớn nhất: mọi hệ thống có yếu tố “thông minh”. MACHINE LEARNING Machine learning — học từ dữ liệu thay vì viết DEEP LEARNING luật tay. GENERATIVE AI Deep learning — mạng nơ-ron nhiều tầng tự học đặc trưng. O N Generative AI — sinh n",
-      "confidence": 0.78,
+      "source_excerpt": "AI — chiếc ô lớn nhất: mọi hệ thống có yếu tố “thông minh”. Machine learning — học từ dữ liệu thay vì viết luật tay. Deep learning — mạng nơ-ron nhiều tầng tự học đặc trưng. Generative AI — sinh nội dung mới: văn bản, ảnh, code. LLM — model nền chuyên ngôn ngữ, tim của làn sóng hiện nay.",
+      "confidence": 0.95,
       "status": "ready"
     },
     {
       "id": "summary-02",
-      "title": "LLM vận hành bằng token, context và attention",
-      "content": "Sinh văn bản = đoán → nối vào câu → đoán tiếp K A A C Mỗi token mới được nối vào ngữ cảnh, rồi model chạy lại từ đầu — vòng lặp predict → append → rerun Transformers, the tech behind LLMs - 3Blue1Brown RLHF: ba bước uốn cỗ máy đoán token thành trợ lý biết nghe lời ① Model viết nhiều câu trả lời ② Người chấm xếp hạng ③ Huấn luyện theo điểm «Cùng một câu hỏi» Trả lời B 1 O N LLM ↓ Trả lời D 2 A TH ↓ LLM câu trả lời vừa v Giới hạn bẩm sinh: học giả trong bong bóng Bong bóng thời gian Nói chắc như đúng rồi Bàn làm việc có hạn Model bị \"đóng băng\" tại ngày ngừng đọc. Chuyện sau đó nó không biết — trừ khi Model tối ưu cho câu nghe hợp lý, kh",
+      "title": "LLM là bộ não ngôn ngữ, không phải chatbot",
+      "content": "LLM (Large Language Model) là mô hình ngôn ngữ lớn dựa trên Transformer, được luyện trên hàng nghìn tỷ token để đoán token tiếp theo. Nó là bộ não nền dùng chung cho nhiều việc: tóm tắt, viết code, dịch thuật. Chatbot chỉ là một lớp áo sản phẩm đóng gói quanh LLM. Model hiện nay chủ yếu là decoder-only, có thể dùng MoE, và trải qua các bước căn chỉnh như SFT, RLHF/DPO.",
       "source_pages": [
-        12,
-        19,
-        20
+        10
       ],
-      "source_excerpt": "[Slide 12] Sinh văn bản = đoán → nối vào câu → đoán tiếp K A A C Mỗi token mới được nối vào ngữ cảnh, rồi model chạy lại từ đầu — vòng lặp predict → append → rerun Transformers, the tech behind LLMs - 3Blue1Brown",
-      "confidence": 0.78,
+      "source_excerpt": "LLM (Large Language Model) là một mô hình ngôn ngữ rất lớn, dựa trên kiến trúc Transformer, được luyện trên hàng nghìn tỷ mảnh chữ để học cách đoán mảnh chữ tiếp theo trong ngữ cảnh. Chatbot chỉ là một dạng sản phẩm đóng gói quanh bộ não đó — lớp áo bên ngoài. LLM = bộ não ngôn ngữ dùng chung cho mọi việc.",
+      "confidence": 0.95,
       "status": "ready"
     },
     {
       "id": "summary-03",
-      "title": "Huấn luyện và căn chỉnh model",
-      "content": "LLM là gì? — một bộ não nền, không phải một chatbot LLM (Large Language Model) là một mô hình ngôn ngữ rất lớn, 💬 Chatbot thường dựa trên kiến trúc Transformer, được luyện trên hàng nghìn tỷ mảnh chữ để học cách đoán mản LLM được tạo ra như thế nào? — đọc nhiều, được chỉ, được uốn nắn, luyện đề K A A C ① Pre-training — \"đọc cả thư viện\": học tiếng nói và kiến thức từ hàng nghìn tỷ token. ② SFT — \"được chỉ cách trả lời\": học theo ví dụ mẫ Tham số (parameter): những \"khớp nối\" model học được Sau khi luyện xong, những gì model \"biết\" nằm trong các con số cố định bên trong gọi là tham số — hãy hình dung như khớp nối thần kinh: luyện càng kỹ, các khớp nối càn",
+      "title": "Token, Context, Attention — ba khái niệm nền tảng",
+      "content": "Token là mảnh chữ nhỏ nhất model đọc, có thể là từ hoặc một phần từ; tiếng Việt, code, JSON tốn token hơn tiếng Anh. Context là lượng chữ model nhìn được mỗi lần, như bàn làm việc có hạn; context càng dài càng tốn tiền và chậm, thông tin ở giữa dễ bị bỏ sót. Attention là cơ chế cho phép mỗi token chủ động nhìn sang các token khác và chấm điểm mức độ liên quan, giúp model hiểu ngữ cảnh linh hoạt.",
       "source_pages": [
-        10,
-        18,
-        17
+        13,
+        14,
+        15
       ],
-      "source_excerpt": "[Slide 10] LLM là gì? — một bộ não nền, không phải một chatbot LLM (Large Language Model) là một mô hình ngôn ngữ rất lớn, 💬 Chatbot thường dựa trên kiến trúc Transformer, được luyện trên hàng nghìn tỷ mảnh chữ để học cách đoán mảnh chữ tiếp theo trong 1 model nền N O 📝 (LLM) Tóm tắt tài liệu ngữ cảnh. A T ⟵ 💻 Viết code Nhờ được luyện đủ rộng, nó trở thành m",
-      "confidence": 0.78,
+      "source_excerpt": "Model không nhìn từ nguyên vẹn. Nó cắt văn bản thành các mảnh nhỏ gọi là token. Mỗi lần trả lời, model chỉ nhìn được một lượng chữ có hạn — gọi là context. Attention cho phép mỗi token chủ động “quay đầu” nhìn lại các token trước đó trong câu và chấm điểm mức độ liên quan.",
+      "confidence": 0.95,
       "status": "ready"
     },
     {
       "id": "summary-04",
-      "title": "Giới hạn của model và cách kiểm chứng",
-      "content": "Giới hạn bẩm sinh: học giả trong bong bóng Bong bóng thời gian Nói chắc như đúng rồi Bàn làm việc có hạn Model bị \"đóng băng\" tại ngày ngừng đọc. Chuyện sau đó nó không biết — trừ khi Model tối ưu cho câu nghe hợp lý, kh Vì sao model vẫn sai: nó rất giỏi học vẹt đường tắt 1 Phân loại spam 2 Câu chủ quan vs khách quan 3 Suy luận ngôn ngữ (MNLI) Model thực chất đã học: Model thực chất đã học: Model thực chất đã học: “đếm số hyperlink trong Chain-of-Thought: chỉ thêm \"giấy nháp\", từ sai thành đúng Bài toán: \"Có 5 quả bóng tennis. Mua thêm 2 hộp, mỗi hộp 3 quả. Hỏi tổng cộng có bao nhiêu quả?\" Không có nháp — trả lời ngay Có giấy nháp — \"hãy nghĩ từng bước\" ",
+      "title": "Quản context để điều khiển sự chú ý của model",
+      "content": "Đặt điều quan trọng ở đầu và cuối prompt vì đó là vùng được chú ý nhiều nhất; thông tin ở giữa dễ bị bỏ sót. Giữ context sạch, không có rác. Khi chat dài, tóm tắt lại thay vì kéo theo mọi thứ. Với tài liệu dài, dùng RAG để lấy đoạn liên quan nhét vào context. Agent mạnh không nhờ context khổng lồ mà nhờ tools lấy đúng thứ vào bàn làm việc đúng lúc.",
       "source_pages": [
-        20,
-        21,
-        22
+        16
       ],
-      "source_excerpt": "[Slide 20] Giới hạn bẩm sinh: học giả trong bong bóng Bong bóng thời gian Nói chắc như đúng rồi Bàn làm việc có hạn Model bị \"đóng băng\" tại ngày ngừng đọc. Chuyện sau đó nó không biết — trừ khi Model tối ưu cho câu nghe hợp lý, không phải tra sự thật — nên có thể tự tin mà sai N Context có trần; quá dài vừa tốn tiền vừa dễ bỏ sót thông tin ở giữa. bạn cung",
-      "confidence": 0.78,
+      "source_excerpt": "Đầu và cuối prompt được chú ý nhiều nhất; đồ ở giữa dễ bị bỏ sót. Context rác = attention rác. Khi chat dài, tóm tắt lại thay vì kéo theo mọi thứ. Tài liệu dài: lấy đoạn liên quan nhét vào context (RAG). Agent mạnh không phải vì context khổng lồ — mà vì nó có tools để lấy đúng thứ vào bàn làm việc đúng lúc.",
+      "confidence": 0.95,
       "status": "ready"
     },
     {
       "id": "summary-05",
-      "title": "Từ LLM đến agent và lựa chọn model",
-      "content": "AI IN ACTION - Day 1 Agenda N • Bức tranh AI & các tầng của AI • Lịch sử AI 70 năm • Bên trong LLM: cơ chế vận hành • Từ LLM đến AI Agent - • Landscape: model hôm nay & cuộc đua hiện tại • Chọn model & chi phí token T I  Giải phẫu một agent: 5 bộ phận là một vòng lặp ① Goal mục tiêu cần đạt ghi / đọc Memory sổ tay ghi nhớ các bước ② Reasoning bộ não LLM chia bước O N vòng lặp T I agent A C quan sát kết quả → lặp lại I IN ④ Action ③ Tools Hiểu attention để dùng AI hiệu quả: quản context = quản sự chú ý Attention có hạn và có \"điểm mù\". Vì vậy, cách bạn bày context quyết định model chú ý vào đâu: 1 Đặt điều quan trọng đầu – cuối 2 Giữ bàn làm việc sạch 3 T",
+      "title": "Quy trình tạo LLM: Pre-training, SFT, RLHF/DPO, luyện suy luận",
+      "content": "Pre-training: model đọc hàng nghìn tỷ token để học tiếng nói và kiến thức. SFT: model học theo ví dụ mẫu để trả lời như trợ lý. RLHF/DPO: model được uốn nắn bằng phản hồi của con người để an toàn và dễ chịu hơn. Luyện suy luận (từ ~2025): model luyện toán/code có đáp án kiểm chứng, biết làm nháp trước khi trả lời.",
       "source_pages": [
-        2,
-        24,
-        16
+        18,
+        19
       ],
-      "source_excerpt": "[Slide 2] AI IN ACTION - Day 1 Agenda N • Bức tranh AI & các tầng của AI • Lịch sử AI 70 năm • Bên trong LLM: cơ chế vận hành • Từ LLM đến AI Agent - • Landscape: model hôm nay & cuộc đua hiện tại • Chọn model & chi phí token T I • Gọi API lần đầu • Tổng kết — những ý để mang về AI & LLM Foundation Từ \"nghe AI\" đến \"gọi AI\" trong một ngày",
-      "confidence": 0.78,
+      "source_excerpt": "Pre-training — đọc cả thư viện. SFT — được chỉ cách trả lời. RLHF/DPO — được uốn nắn. Luyện suy luận — giải đề tự chấm (từ ~2025).",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "summary-06",
+      "title": "Giới hạn bẩm sinh của LLM: bong bóng thời gian, hallucination, context hạn chế",
+      "content": "Model bị đóng băng tại ngày ngừng đọc (knowledge cutoff), không biết chuyện sau đó. Model tối ưu cho câu nghe hợp lý, không phải sự thật, nên có thể tự tin mà sai (hallucination). Context có trần, quá dài vừa tốn tiền vừa dễ bỏ sót thông tin ở giữa. Đây là bản chất của cỗ máy đoán token, cần prompt tốt, context sạch, RAG, tools và kiểm chứng.",
+      "source_pages": [
+        20,
+        21
+      ],
+      "source_excerpt": "Model bị đóng băng tại ngày ngừng đọc. Model tối ưu cho câu nghe hợp lý, không phải sự thật — nên có thể tự tin mà sai (hallucination). Context có trần; quá dài vừa tốn tiền vừa dễ bỏ sót thông tin ở giữa.",
+      "confidence": 0.95,
       "status": "ready"
     }
   ],
@@ -86,14 +92,14 @@
       "id": "insight-cluster-01",
       "topic": "Những câu hỏi liên quan đến RLHF",
       "common_confusion": "Học viên thường hỏi theo nhiều cách, ví dụ: rlhf khác gì bình thường; giải thích qua về RLHF; rlhf là gì.",
-      "correct_understanding": "**RLHF khác gì so với huấn luyện thông thường?** Theo tài liệu slide, quy trình phát triển LLM gồm nhiều bước: **Pre-training → Căn chỉnh (SFT, RLHF/DPO) → Luyện suy luận**. - **Huấn luyện thông thường (Pre-training):** Mô hình học từ hàng nghìn tỷ mảnh chữ, chỉ có một nhiệm vụ duy nhất là **đoán mảnh chữ tiếp theo**. Nó học ngữ pháp, kiến thức, nhưng chưa biết cách trả lời hữu ích hay an toàn. - **RLHF (Reinforcement Learning from Human Feedback):** Là bước **căn chỉnh sau pre-training**. Mô hình được huấn luyện thêm dựa trên **phản hồi của con người** (ví dụ: đánh giá câu trả lời nào hay hơn) để học cách ưu tiên những câu trả lời hữu ích, trung thực và an toàn hơn. **Tóm lại:** Pre-training dạy mô hình *biết nói*, còn RLHF dạy mô hình *nói đúng ý người dùng* và *nói có trách nhiệm*.",
+      "correct_understanding": "RLHF khác gì so với huấn luyện thông thường? Dựa trên slide, quy trình phát triển LLM gồm các bước: 1. Pre-training – huấn luyện nền tảng (học đoán từ tiếp theo trên dữ liệu lớn). 2. Căn chỉnh (Alignment) – gồm các bước như SFT (Supervised Fine-Tuning) và RLHF/DPO. 3. Luyện suy luận (Reasoning training) – từ khoảng 2025. Sự khác biệt chính: - Huấn luyện thông thường (Pre-training + SFT): Mô hình học từ dữ liệu có sẵn (văn bản, câu hỏi – đáp án mẫu). Mục tiêu là bắt chước cách con người viết, nhưng chưa chắc đã ưu tiên sự hữu ích, an toàn hay trung thực. - RLHF (Reinforcement Learning from Human Feedback): Dùng phản hồi của con người để dạy mô hình ưu tiên câu trả lời tốt hơn. Mô hình học qua phần thưởng (reward) do người đánh giá, giúp nó chọn lối trả lời an toàn, hữu ích hơn, thay vì chỉ sao chép dữ liệu. Tóm lại: SFT dạy mô hình biết trả lời, RLHF dạy mô hình biết chọn câu trả lời tốt",
       "source_pages": [
         10,
         4,
         7,
         8
       ],
-      "source_excerpt": "[Slide 10] LLM là gì? — một bộ não nền, không phải một chatbot LLM (Large Language Model) là một mô hình ngôn ngữ rất lớn, 💬 Chatbot thường dựa trên kiến trúc Transformer, được luyện trên hàng nghìn tỷ mảnh chữ để học cách đoán mảnh chữ tiếp theo trong 1 model nền N O 📝 (LLM) Tóm tắt tài liệu ngữ cảnh. A T ⟵ 💻 Viết code Nhờ được luyện đủ rộng, nó trở thành một nền chung: thay vì mỗi việc train một model riêng, cùng một model làm được rất nhiều việc. H A 🌐 Dịch & phân tích Chatbot chỉ là một dạng",
+      "source_excerpt": "RLHF/DPO — được uốn nắn: học theo phản hồi con người, an toàn và dễ chịu hơn. Cỗ máy đoán token + điểm xếp hạng của con người → trợ lý helpful · harmless · honest.",
       "confidence": 0.82,
       "status": "ready",
       "unique_user_count": 1,
@@ -108,11 +114,12 @@
       "id": "insight-cluster-02",
       "topic": "Câu hỏi về Sinh / Van",
       "common_confusion": "sinh văn bản là như nào?",
-      "correct_understanding": "Sinh văn bản là quá trình AI tự động tạo ra nội dung chữ viết (câu, đoạn văn, bài báo, code, v.v.) dựa trên yêu cầu hoặc dữ liệu đầu vào. Ví dụ: Khi bạn hỏi AI một câu hỏi, nó sẽ \"sinh\" ra câu trả lời bằng cách dự đoán từng chữ một cách hợp lý, dựa trên những gì nó đã học từ hàng tỷ văn bản trước đó.",
+      "correct_understanding": "Sinh văn bản là quá trình lặp lại 3 bước: 1. Đoán từ tiếp theo: Dựa vào ngữ cảnh hiện tại, model tính xác suất cho mọi từ trong từ vựng (ví dụ: \"land\" 22%, \"forest\" 9%...) 2. Chọn một từ: Dựa vào phân bố xác suất đó, model chọn một token 3. Nối vào câu: Token vừa chọn được thêm vào ngữ cảnh, tạo thành câu mới Sau đó, model chạy lại từ đầu với ngữ cảnh đã được mở rộng, và tiếp tục lặp lại vòng: đoán → nối → chạy lại → đoán tiếp.",
       "source_pages": [
-        1
+        11,
+        12
       ],
-      "source_excerpt": "[Slide 1] AI IN ACTION - Day 1 AI & LLM Foundation C Bạn đang dùng AI mỗi ngày — nhưng thực sự bên trong nó đang làm gì?",
+      "source_excerpt": "Với mọi ngữ cảnh, model chấm điểm MỌI từ trong từ vựng — “land” 22%, “forest” 9%… — rồi chọn theo xác suất đó. Mỗi token mới được nối vào ngữ cảnh, rồi model chạy lại từ đầu — vòng lặp predict → append → rerun.",
       "confidence": 0.82,
       "status": "ready",
       "unique_user_count": 1,
@@ -125,11 +132,12 @@
       "id": "insight-cluster-03",
       "topic": "Câu hỏi về LLM / Agent",
       "common_confusion": "llm khác gì với agent~",
-      "correct_understanding": "**LLM (Large Language Model)** là mô hình ngôn ngữ lớn, có khả năng hiểu và sinh văn bản dựa trên dữ liệu đã học. LLM chỉ xử lý đầu vào và trả về đầu ra văn bản, không tự thực hiện hành động hay tương tác với môi trường bên ngoài. **Agent** là hệ thống có khả năng tự chủ, có thể nhận biết môi trường, đưa ra quyết định và thực hiện hành động để đạt mục tiêu. Agent có thể sử dụng LLM như một thành phần để xử lý ngôn ngữ, nhưng còn có thêm các module như lập kế hoạch, ghi nhớ, và gọi công cụ bên ngoài. **Tóm lại:** LLM là bộ não xử lý ngôn ngữ, Agent là hệ thống thông minh có thể hành động. Agent có thể dùng LLM, nhưng LLM không phải là Agent.",
+      "correct_understanding": "LLM (Level 0) chỉ là bộ não suy luận thuần túy: - Không có công cụ, không có dữ liệu mới. - Chỉ trả lời dựa trên kiến thức có sẵn trong quá trình huấn luyện. Agent (Level 1 trở lên) là LLM được đặt vào vòng làm việc có mục tiêu và hành động: - Có kết nối với công cụ bên ngoài (search web, API, database). - Biết lập kế hoạch, chia mục tiêu thành nhiều bước. - Tự kiểm tra kết quả từng bước và lặp lại cho đến khi hoàn thành. Tóm lại: Agent = LLM + Goal + Tools + Memory + Action (chạy thành vòng lặp).",
       "source_pages": [
-        1
+        23,
+        24
       ],
-      "source_excerpt": "[Slide 1] AI IN ACTION - Day 1 AI & LLM Foundation C Bạn đang dùng AI mỗi ngày — nhưng thực sự bên trong nó đang làm gì?",
+      "source_excerpt": "Agent không phải “một loại model khác” — đó là LLM được đặt vào vòng làm việc có mục tiêu và hành động. Agent = Goal + Reasoning + Tools + Memory + Action — chạy thành vòng lặp cho tới khi xong việc.",
       "confidence": 0.82,
       "status": "ready",
       "unique_user_count": 1,
@@ -143,111 +151,102 @@
     {
       "id": "question-01",
       "type": "multiple_choice",
-      "question": "Ý nào mô tả đúng nhất về Bức tranh AI, GenAI và LLM?",
+      "question": "LLM thuộc tầng nào trong hệ thống phân cấp AI?",
       "options": [
-        "AI, ML, Deep Learning, GenAI, LLM — nằm ở đâu trong cùng một hệ? từ rộng đến hẹp ARTIFICIAL INTELLIGENCE AI — chiếc ô lớn nhất: mọi hệ thống có yếu tố “thông minh”. MACHI",
-        "Đây là nội dung logistics của lớp, không liên quan kiến thức bài học.",
-        "Đây là ví dụ ngoài slide và không cần dùng khi ôn tập.",
-        "Đây là câu hỏi mở, không có đáp án kiểm chứng từ slide."
+        "AI",
+        "Machine Learning",
+        "Deep Learning",
+        "Generative AI"
       ],
-      "correct_option": 0,
-      "answer": "AI, ML, Deep Learning, GenAI, LLM — nằm ở đâu trong cùng một hệ? từ rộng đến hẹp ARTIFICIAL INTELLIGENCE AI — chiếc ô lớn nhất: mọi hệ thống có yếu tố “thông minh”. MACHINE LEARNING Machine learning — học từ dữ liệu thay",
-      "explanation": "Đáp án đúng vì bám vào mục kiến thức trọng tâm: AI, ML, Deep Learning, GenAI, LLM — nằm ở đâu trong cùng một hệ? từ rộng đến hẹp ARTIFICIAL INTELLIGENCE AI — chiếc ô lớn nhất: mọi hệ thống có yếu tố “thông minh”. MACHINE LEARNING Machine learning — học từ dữ liệu thay Ba nhóm AI chính: phân loại · sinh nội dung · hành động Discriminative AI Gener",
+      "correct_option": 3,
+      "answer": "Generative AI",
+      "explanation": "LLM là model nền chuyên ngôn ngữ, nằm trong nhánh Generative AI của Deep Learning.",
       "source_pages": [
-        3,
-        4,
-        1
+        3
       ],
-      "source_excerpt": "[Slide 3] AI, ML, Deep Learning, GenAI, LLM — nằm ở đâu trong cùng một hệ? từ rộng đến hẹp ARTIFICIAL INTELLIGENCE AI — chiếc ô lớn nhất: mọi hệ thống có yếu tố “thông minh”. MACHINE LEARNING Machine learning — học từ dữ liệu thay vì viết DEEP LEARNING luật tay. GENERATIVE AI Deep learning — mạng nơ-ron nhiều tầng tự học đặc trưng. O N Generative AI — sinh n",
-      "confidence": 0.78,
+      "source_excerpt": "LLM — model nền chuyên ngôn ngữ, tim của làn sóng hiện nay.",
+      "confidence": 0.95,
       "status": "ready"
     },
     {
       "id": "question-02",
       "type": "multiple_choice",
-      "question": "Ý nào mô tả đúng nhất về LLM vận hành bằng token, context và attention?",
+      "question": "Cơ chế nào cho phép mỗi token trong Transformer nhìn sang các token khác và chấm điểm mức độ liên quan?",
       "options": [
-        "Sinh văn bản = đoán → nối vào câu → đoán tiếp K A A C Mỗi token mới được nối vào ngữ cảnh, rồi model chạy lại từ đầu — vòng lặp predict → append → rerun Transformers, the",
-        "Đây là nội dung logistics của lớp, không liên quan kiến thức bài học.",
-        "Đây là ví dụ ngoài slide và không cần dùng khi ôn tập.",
-        "Đây là câu hỏi mở, không có đáp án kiểm chứng từ slide."
+        "Tokenization",
+        "Context window",
+        "Attention",
+        "Parameter"
       ],
-      "correct_option": 0,
-      "answer": "Sinh văn bản = đoán → nối vào câu → đoán tiếp K A A C Mỗi token mới được nối vào ngữ cảnh, rồi model chạy lại từ đầu — vòng lặp predict → append → rerun Transformers, the tech behind LLMs - 3Blue1Brown RLHF: ba bước uốn ",
-      "explanation": "Đáp án đúng vì bám vào mục kiến thức trọng tâm: Sinh văn bản = đoán → nối vào câu → đoán tiếp K A A C Mỗi token mới được nối vào ngữ cảnh, rồi model chạy lại từ đầu — vòng lặp predict → append → rerun Transformers, the tech behind LLMs - 3Blue1Brown RLHF: ba bước uốn cỗ máy đoán token thành trợ lý biết nghe lời ① Model viết nhiều câu trả lời ② Ng",
+      "correct_option": 2,
+      "answer": "Attention",
+      "explanation": "Attention cho phép mỗi token chủ động quay đầu nhìn lại các token trước và chấm điểm mức độ liên quan, giúp model hiểu ngữ cảnh linh hoạt.",
       "source_pages": [
-        12,
-        19,
-        20
+        15
       ],
-      "source_excerpt": "[Slide 12] Sinh văn bản = đoán → nối vào câu → đoán tiếp K A A C Mỗi token mới được nối vào ngữ cảnh, rồi model chạy lại từ đầu — vòng lặp predict → append → rerun Transformers, the tech behind LLMs - 3Blue1Brown",
-      "confidence": 0.78,
+      "source_excerpt": "Attention cho phép mỗi token chủ động “quay đầu” nhìn lại các token trước đó trong câu và chấm điểm mức độ liên quan.",
+      "confidence": 0.95,
       "status": "ready"
     },
     {
       "id": "question-03",
       "type": "multiple_choice",
-      "question": "Ý nào mô tả đúng nhất về Huấn luyện và căn chỉnh model?",
+      "question": "Bước nào trong quy trình tạo LLM dùng phản hồi của con người để uốn nắn model?",
       "options": [
-        "LLM là gì? — một bộ não nền, không phải một chatbot LLM (Large Language Model) là một mô hình ngôn ngữ rất lớn, 💬 Chatbot thường dựa trên kiến trúc Transformer, được luyệ",
-        "Đây là nội dung logistics của lớp, không liên quan kiến thức bài học.",
-        "Đây là ví dụ ngoài slide và không cần dùng khi ôn tập.",
-        "Đây là câu hỏi mở, không có đáp án kiểm chứng từ slide."
+        "Pre-training",
+        "SFT",
+        "RLHF/DPO",
+        "Luyện suy luận"
       ],
-      "correct_option": 0,
-      "answer": "LLM là gì? — một bộ não nền, không phải một chatbot LLM (Large Language Model) là một mô hình ngôn ngữ rất lớn, 💬 Chatbot thường dựa trên kiến trúc Transformer, được luyện trên hàng nghìn tỷ mảnh chữ để học cách đoán mản",
-      "explanation": "Đáp án đúng vì bám vào mục kiến thức trọng tâm: LLM là gì? — một bộ não nền, không phải một chatbot LLM (Large Language Model) là một mô hình ngôn ngữ rất lớn, 💬 Chatbot thường dựa trên kiến trúc Transformer, được luyện trên hàng nghìn tỷ mảnh chữ để học cách đoán mản LLM được tạo ra như thế nào? — đọc nhiều, được chỉ, được uốn nắn, luyện đề K A ",
+      "correct_option": 2,
+      "answer": "RLHF/DPO",
+      "explanation": "RLHF/DPO là bước uốn nắn model bằng phản hồi của con người, giúp model an toàn và dễ chịu hơn.",
       "source_pages": [
-        10,
         18,
-        17
+        19
       ],
-      "source_excerpt": "[Slide 10] LLM là gì? — một bộ não nền, không phải một chatbot LLM (Large Language Model) là một mô hình ngôn ngữ rất lớn, 💬 Chatbot thường dựa trên kiến trúc Transformer, được luyện trên hàng nghìn tỷ mảnh chữ để học cách đoán mảnh chữ tiếp theo trong 1 model nền N O 📝 (LLM) Tóm tắt tài liệu ngữ cảnh. A T ⟵ 💻 Viết code Nhờ được luyện đủ rộng, nó trở thành m",
-      "confidence": 0.78,
+      "source_excerpt": "RLHF/DPO — được uốn nắn: học theo phản hồi con người, an toàn và dễ chịu hơn.",
+      "confidence": 0.95,
       "status": "ready"
     },
     {
       "id": "question-04",
       "type": "multiple_choice",
-      "question": "Ý nào mô tả đúng nhất về Giới hạn của model và cách kiểm chứng?",
+      "question": "Khi gọi API, loại token nào đắt hơn?",
       "options": [
-        "Giới hạn bẩm sinh: học giả trong bong bóng Bong bóng thời gian Nói chắc như đúng rồi Bàn làm việc có hạn Model bị \"đóng băng\" tại ngày ngừng đọc. Chuyện sau đó nó không b",
-        "Đây là nội dung logistics của lớp, không liên quan kiến thức bài học.",
-        "Đây là ví dụ ngoài slide và không cần dùng khi ôn tập.",
-        "Đây là câu hỏi mở, không có đáp án kiểm chứng từ slide."
+        "Input token",
+        "Output token",
+        "Bằng nhau",
+        "Không tính phí"
       ],
-      "correct_option": 0,
-      "answer": "Giới hạn bẩm sinh: học giả trong bong bóng Bong bóng thời gian Nói chắc như đúng rồi Bàn làm việc có hạn Model bị \"đóng băng\" tại ngày ngừng đọc. Chuyện sau đó nó không biết — trừ khi Model tối ưu cho câu nghe hợp lý, kh",
-      "explanation": "Đáp án đúng vì bám vào mục kiến thức trọng tâm: Giới hạn bẩm sinh: học giả trong bong bóng Bong bóng thời gian Nói chắc như đúng rồi Bàn làm việc có hạn Model bị \"đóng băng\" tại ngày ngừng đọc. Chuyện sau đó nó không biết — trừ khi Model tối ưu cho câu nghe hợp lý, kh Vì sao model vẫn sai: nó rất giỏi học vẹt đường tắt 1 Phân loại spam 2 Câu chủ ",
+      "correct_option": 1,
+      "answer": "Output token",
+      "explanation": "Output token đắt gấp 3-5 lần input token vì model phải tự sinh từng token, vừa chậm vừa tốn compute.",
       "source_pages": [
-        20,
-        21,
-        22
+        27
       ],
-      "source_excerpt": "[Slide 20] Giới hạn bẩm sinh: học giả trong bong bóng Bong bóng thời gian Nói chắc như đúng rồi Bàn làm việc có hạn Model bị \"đóng băng\" tại ngày ngừng đọc. Chuyện sau đó nó không biết — trừ khi Model tối ưu cho câu nghe hợp lý, không phải tra sự thật — nên có thể tự tin mà sai N Context có trần; quá dài vừa tốn tiền vừa dễ bỏ sót thông tin ở giữa. bạn cung",
-      "confidence": 0.78,
+      "source_excerpt": "Vé ra — output: ×3–5. Chữ MODEL viết ra — nó phải tự sinh từng mảnh một, vừa chậm vừa tốn.",
+      "confidence": 0.95,
       "status": "ready"
     },
     {
       "id": "question-05",
       "type": "multiple_choice",
-      "question": "Ý nào mô tả đúng nhất về Từ LLM đến agent và lựa chọn model?",
+      "question": "Nên đặt thông tin quan trọng ở đâu trong prompt để model chú ý nhất?",
       "options": [
-        "AI IN ACTION - Day 1 Agenda N • Bức tranh AI & các tầng của AI • Lịch sử AI 70 năm • Bên trong LLM: cơ chế vận hành • Từ LLM đến AI Agent - • Landscape: model hôm nay & c",
-        "Đây là nội dung logistics của lớp, không liên quan kiến thức bài học.",
-        "Đây là ví dụ ngoài slide và không cần dùng khi ôn tập.",
-        "Đây là câu hỏi mở, không có đáp án kiểm chứng từ slide."
+        "Đầu prompt",
+        "Giữa prompt",
+        "Cuối prompt",
+        "Đầu và cuối prompt"
       ],
-      "correct_option": 0,
-      "answer": "AI IN ACTION - Day 1 Agenda N • Bức tranh AI & các tầng của AI • Lịch sử AI 70 năm • Bên trong LLM: cơ chế vận hành • Từ LLM đến AI Agent - • Landscape: model hôm nay & cuộc đua hiện tại • Chọn model & chi phí token T I ",
-      "explanation": "Đáp án đúng vì bám vào mục kiến thức trọng tâm: AI IN ACTION - Day 1 Agenda N • Bức tranh AI & các tầng của AI • Lịch sử AI 70 năm • Bên trong LLM: cơ chế vận hành • Từ LLM đến AI Agent - • Landscape: model hôm nay & cuộc đua hiện tại • Chọn model & chi phí token T I Giải phẫu một agent: 5 bộ phận là một vòng lặp ① Goal mục tiêu cần đạt ghi / đọc",
+      "correct_option": 3,
+      "answer": "Đầu và cuối prompt",
+      "explanation": "Đầu và cuối prompt được chú ý nhiều nhất; thông tin ở giữa dễ bị bỏ sót.",
       "source_pages": [
-        2,
-        24,
         16
       ],
-      "source_excerpt": "[Slide 2] AI IN ACTION - Day 1 Agenda N • Bức tranh AI & các tầng của AI • Lịch sử AI 70 năm • Bên trong LLM: cơ chế vận hành • Từ LLM đến AI Agent - • Landscape: model hôm nay & cuộc đua hiện tại • Chọn model & chi phí token T I • Gọi API lần đầu • Tổng kết — những ý để mang về AI & LLM Foundation Từ \"nghe AI\" đến \"gọi AI\" trong một ngày",
-      "confidence": 0.78,
+      "source_excerpt": "Đầu và cuối prompt được chú ý nhiều nhất; đồ ở giữa dễ bị bỏ sót.",
+      "confidence": 0.95,
       "status": "ready"
     }
   ],

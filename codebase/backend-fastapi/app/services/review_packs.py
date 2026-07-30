@@ -679,20 +679,74 @@ class ReviewPackService:
         correct_option = int(item.get("correct_option") or 0)
         if correct_option < 0 or correct_option >= len(options):
             correct_option = 0
-        answer = strip_markdown_text(item.get("answer") or options[correct_option])
+        clean_options = [self._concise_quiz_text(option, max_chars=118) for option in options[:4]]
+        while len(clean_options) < 4:
+            clean_options.append(["Không đúng trọng tâm slide.", "Chỉ là thông tin logistics.", "Không có căn cứ trong slide.", "Là câu hỏi mở không kiểm chứng."][len(clean_options)])
+        if self._looks_like_agenda_line(clean_options[correct_option]):
+            clean_options[correct_option] = self._summary_quiz_answer(
+                self._quiz_subject_from_question(item.get("question") or f"Câu hỏi {index}"),
+                source_excerpt,
+            )
+        answer = self._concise_quiz_text(item.get("answer") or clean_options[correct_option], max_chars=140)
+        if len(answer) > 120 or answer.lower().startswith(("a.", "b.", "c.", "d.")) or self._looks_like_agenda_line(answer):
+            answer = clean_options[correct_option]
         return {
             "id": f"question-{index:02d}",
             "type": "multiple_choice",
-            "question": strip_markdown_text(item.get("question") or f"Câu hỏi {index}")[:260],
-            "options": [strip_markdown_text(option)[:180] for option in options[:4]],
+            "question": self._concise_quiz_text(item.get("question") or f"Câu hỏi {index}", max_chars=180),
+            "options": clean_options,
             "correct_option": correct_option,
-            "answer": answer[:240],
-            "explanation": strip_markdown_text(item.get("explanation") or "")[:700],
+            "answer": answer,
+            "explanation": self._concise_quiz_text(item.get("explanation") or "", max_chars=240),
             "source_pages": pages,
             "source_excerpt": strip_markdown_text(source_excerpt),
             "confidence": confidence,
             "status": "ready" if source_excerpt.strip() else "needs_review",
         }
+
+    @staticmethod
+    def _concise_quiz_text(value: Any, max_chars: int = 120) -> str:
+        text = strip_markdown_text(value)
+        text = re.sub(r"\s*[•·]\s*", "; ", text)
+        text = re.sub(r"\s+", " ", text).strip(" ;")
+        if not text:
+            return ""
+        sentences = [part.strip(" ;") for part in re.split(r"(?<=[.!?])\s+", text) if part.strip(" ;")]
+        if sentences and len(sentences[0]) <= max_chars:
+            return sentences[0]
+        for separator in ("; ", ". ", ": ", " - ", " — ", ", "):
+            if separator in text:
+                candidate = text.split(separator, 1)[0].strip(" ;")
+                if 18 <= len(candidate) <= max_chars:
+                    return candidate
+        if len(text) <= max_chars:
+            return text
+        truncated = text[:max_chars].rsplit(" ", 1)[0].strip(" ;,.-")
+        return truncated or text[:max_chars].strip()
+
+    @staticmethod
+    def _summary_quiz_answer(title: str, content: str) -> str:
+        concise = ReviewPackService._concise_quiz_text(content, max_chars=112)
+        title_clean = strip_markdown_text(title).strip(" .")
+        if concise and not ReviewPackService._looks_like_agenda_line(concise):
+            return concise
+        if title_clean:
+            return f"{title_clean} là một ý trọng tâm cần nắm theo slide."
+        return "Đây là ý trọng tâm được nêu trực tiếp trong slide."
+
+    @staticmethod
+    def _looks_like_agenda_line(text: str) -> bool:
+        lowered = text.lower()
+        agenda_markers = ("agenda", "ai in action", "bức tranh", "lịch sử ai", "landscape")
+        return "•" in text or sum(marker in lowered for marker in agenda_markers) >= 2
+
+    @staticmethod
+    def _quiz_subject_from_question(question: Any) -> str:
+        text = strip_markdown_text(question)
+        match = re.search(r"về\s+(.+?)(?:\?|$)", text, flags=re.I)
+        if match:
+            return match.group(1).strip(" .?")
+        return ReviewPackService._concise_quiz_text(text, max_chars=90)
 
     @staticmethod
     def _safe_pages_optional(value: Any, slide_pages: list[dict[str, Any]]) -> list[int]:
@@ -1042,18 +1096,19 @@ class ReviewPackService:
             if not content:
                 continue
             pages = item.get("source_pages") if isinstance(item.get("source_pages"), list) else [1]
+            answer = ReviewPackService._summary_quiz_answer(title, content)
             quiz_items.append(
                 {
-                    "question": f"Ý nào mô tả đúng nhất về {title}?",
+                    "question": f"Ý nào mô tả đúng nhất về {ReviewPackService._concise_quiz_text(title, max_chars=90)}?",
                     "options": [
-                        content[:170],
-                        "Đây là nội dung logistics của lớp, không liên quan kiến thức bài học.",
-                        "Đây là ví dụ ngoài slide và không cần dùng khi ôn tập.",
-                        "Đây là câu hỏi mở, không có đáp án kiểm chứng từ slide.",
+                        answer,
+                        "Đây chỉ là nội dung logistics của lớp.",
+                        "Đây là ví dụ ngoài slide, không cần ôn.",
+                        "Đây là câu hỏi mở, không có đáp án từ slide.",
                     ],
                     "correct_option": 0,
-                    "answer": content[:220],
-                    "explanation": f"Đáp án đúng vì bám vào mục kiến thức trọng tâm: {content[:300]}",
+                    "answer": answer,
+                    "explanation": f"Đáp án đúng vì đây là ý chính trong phần {ReviewPackService._concise_quiz_text(title, max_chars=80)}.",
                     "source_pages": pages,
                     "source_excerpt": item.get("source_excerpt") or ReviewPackService._excerpt(pages, slide_pages),
                     "confidence": 0.78,
@@ -1068,18 +1123,19 @@ class ReviewPackService:
             if not question or not answer:
                 continue
             pages = item.get("source_pages") if isinstance(item.get("source_pages"), list) else [1]
+            concise_answer = ReviewPackService._concise_quiz_text(answer, max_chars=118)
             quiz_items.append(
                 {
-                    "question": f"Khi học viên hỏi: “{question[:140]}”, câu trả lời nào đúng nhất?",
+                    "question": f"Khi học viên hỏi về “{ReviewPackService._concise_quiz_text(question, max_chars=90)}”, câu trả lời nào đúng nhất?",
                     "options": [
-                        answer[:170],
+                        concise_answer,
                         "Nên bỏ qua vì câu hỏi từ chatlog không liên quan bài học.",
                         "Chỉ cần trả lời theo kinh nghiệm, không cần đối chiếu slide.",
                         "Không thể trả lời bằng bất kỳ phần nào của bài học.",
                     ],
                     "correct_option": 0,
-                    "answer": answer[:220],
-                    "explanation": f"Đáp án đúng vì câu hỏi này đã được giải thích trong phần học viên hay hỏi: {answer[:300]}",
+                    "answer": concise_answer,
+                    "explanation": "Đáp án đúng vì bám vào câu trả lời đã được tổng hợp từ slide cho nhóm câu hỏi này.",
                     "source_pages": pages,
                     "source_excerpt": item.get("source_excerpt") or (ReviewPackService._excerpt(pages, slide_pages) if pages else ""),
                     "confidence": 0.74,
