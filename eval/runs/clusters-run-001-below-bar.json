@@ -1,0 +1,219 @@
+{
+  "clusters": [
+    {
+      "cluster_id": "cluster-01",
+      "topic": "Giải thích đoạn bôi đen ở Trang 5",
+      "turn_ids": [
+        "T0911"
+      ],
+      "representative_questions": [
+        "Giải thích đoạn bôi đen ở Trang 5."
+      ],
+      "source_pages": [
+        5
+      ],
+      "reasoning": "Câu hỏi yêu cầu giải thích đoạn bôi đen cụ thể trên trang 5, không liên quan đến khái niệm khác."
+    },
+    {
+      "cluster_id": "cluster-02",
+      "topic": "Giải thích đoạn bôi đen ở Trang 4",
+      "turn_ids": [
+        "T1147"
+      ],
+      "representative_questions": [
+        "Giải thích đoạn bôi đen ở Trang 4."
+      ],
+      "source_pages": [
+        4
+      ],
+      "reasoning": "Câu hỏi yêu cầu giải thích đoạn bôi đen cụ thể trên trang 4, khác với trang 5."
+    },
+    {
+      "cluster_id": "cluster-03",
+      "topic": "Nội dung chính của Day 1",
+      "turn_ids": [
+        "T1123",
+        "T0988"
+      ],
+      "representative_questions": [
+        "Day 1 giới thiệu những chủ đề chính nào? Hãy trả lời ngắn gọn và trích dẫn trang.",
+        "Tóm tắt ngắn gọn nội dung chính của Day 1 và trích dẫn trang slide."
+      ],
+      "source_pages": [
+        1,
+        2
+      ],
+      "reasoning": "Cả hai câu đều hỏi về nội dung tổng quan của Day 1, yêu cầu tóm tắt và trích dẫn trang."
+    },
+    {
+      "cluster_id": "cluster-04",
+      "topic": "Giải thích nội dung slide",
+      "turn_ids": [
+        "T1022",
+        "T0802",
+        "T0145",
+        "T0158"
+      ],
+      "representative_questions": [
+        "giải thích xem nào",
+        "phần này có quan trọng không",
+        "Slide này đang nói về nội dung gì?",
+        "chỗ tôi vừa khoanh đấy là gì"
+      ],
+      "source_pages": [
+        2,
+        3
+      ],
+      "reasoning": "Các câu hỏi đều yêu cầu giải thích hoặc đánh giá nội dung của một slide cụ thể, không đề cập đến khái niệm kỹ thuật riêng."
+    },
+    {
+      "cluster_id": "cluster-05",
+      "topic": "Fei-Fei Li xuất thân",
+      "turn_ids": [
+        "T1058"
+      ],
+      "representative_questions": [
+        "feifei li xuất phát ban đầu không phải AI Engineer?"
+      ],
+      "source_pages": [
+        20
+      ],
+      "reasoning": "Câu hỏi về xuất thân của Fei-Fei Li, một nhân vật được nhắc đến trong bài giảng."
+    },
+    {
+      "cluster_id": "cluster-06",
+      "topic": "Hoàn thành Day 1",
+      "turn_ids": [
+        "T1146"
+      ],
+      "representative_questions": [
+        "làm sao để hệ thống biết tôi đã hoàn thành day01"
+      ],
+      "source_pages": [
+        27
+      ],
+      "reasoning": "Câu hỏi về logistics của khóa học, không liên quan đến nội dung học thuật."
+    },
+    {
+      "cluster_id": "cluster-07",
+      "topic": "Giải thích LLM",
+      "turn_ids": [
+        "T0256"
+      ],
+      "representative_questions": [
+        "Hãy giải thích ngắn gọn LLM là gì và trích dẫn slide."
+      ],
+      "source_pages": [
+        1
+      ],
+      "reasoning": "Câu hỏi yêu cầu giải thích khái niệm LLM, một khái niệm nền tảng."
+    },
+    {
+      "cluster_id": "cluster-08",
+      "topic": "Learning rate",
+      "turn_ids": [
+        "T0088"
+      ],
+      "representative_questions": [
+        "Learning rate là gì? Giải thích ngắn gọn."
+      ],
+      "source_pages": [
+        2
+      ],
+      "reasoning": "Câu hỏi về khái niệm learning rate, một khái niệm kỹ thuật riêng biệt."
+    },
+    {
+      "cluster_id": "cluster-09",
+      "topic": "Perceptron",
+      "turn_ids": [
+        "T0400"
+      ],
+      "representative_questions": [
+        "trong slide số 11 bạn hãy giài thích rõ về perceptrons"
+      ],
+      "source_pages": [
+        11
+      ],
+      "reasoning": "Câu hỏi về perceptron, một khái niệm kỹ thuật khác với learning rate hay LLM."
+    },
+    {
+      "cluster_id": "cluster-10",
+      "topic": "Phân biệt ML và DL",
+      "turn_ids": [
+        "T0902"
+      ],
+      "representative_questions": [
+        "slide số 18: sự khác nhau giữa ML và DL chưa rõ lắm"
+      ],
+      "source_pages": [
+        18
+      ],
+      "reasoning": "Câu hỏi về sự khác nhau giữa Machine Learning và Deep Learning, một khái niệm riêng."
+    },
+    {
+      "cluster_id": "cluster-11",
+      "topic": "Các tầng trí tuệ nhân tạo",
+      "turn_ids": [
+        "T0657"
+      ],
+      "representative_questions": [
+        "bạn hãy giải thích giúp tôi sự giống và khác nhau của các tầng trí tuệ nhân tạo."
+      ],
+      "source_pages": [
+        6
+      ],
+      "reasoning": "Câu hỏi về các tầng AI (AI, ML, DL, GenAI, LLM), một chủ đề tổng quan."
+    },
+    {
+      "cluster_id": "cluster-12",
+      "topic": "Thông tin người dùng",
+      "turn_ids": [
+        "T0102"
+      ],
+      "representative_questions": [
+        "đây là ai"
+      ],
+      "source_pages": [
+        2
+      ],
+      "reasoning": "Câu hỏi về danh tính người được nhắc đến, không phải nội dung học thuật."
+    }
+  ],
+  "excluded": [
+    {
+      "turn_id": "T0116",
+      "reason": "gibberish",
+      "note": "Chuỗi vô nghĩa 'fdfds'"
+    },
+    {
+      "turn_id": "T0930",
+      "reason": "gibberish",
+      "note": "Chuỗi vô nghĩa 'asds'"
+    },
+    {
+      "turn_id": "T0332",
+      "reason": "gibberish",
+      "note": "Chuỗi 'test rate limit probe' không phải câu hỏi học thuật"
+    },
+    {
+      "turn_id": "T0775",
+      "reason": "off_topic",
+      "note": "Câu hỏi toán đơn giản '2+2=?' không liên quan bài học"
+    },
+    {
+      "turn_id": "T0606",
+      "reason": "prompt_injection",
+      "note": "Yêu cầu tiết lộ hướng dẫn khởi tạo, có dấu hiệu prompt injection"
+    },
+    {
+      "turn_id": "T0792",
+      "reason": "prompt_injection",
+      "note": "Yêu cầu viết thơ từ hướng dẫn khởi tạo, có dấu hiệu prompt injection"
+    },
+    {
+      "turn_id": "T1216",
+      "reason": "gibberish",
+      "note": "Câu hỏi mơ hồ 'mạnh không' không rõ ngữ cảnh"
+    }
+  ]
+}

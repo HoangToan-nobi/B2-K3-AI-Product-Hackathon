@@ -1,0 +1,392 @@
+{
+  "summary": [
+    {
+      "id": "summary-01",
+      "title": "Các tầng của AI",
+      "content": "AI là ô lớn nhất, bao gồm Machine Learning, Deep Learning, Generative AI và LLM. LLM là tầng nền của hầu hết trải nghiệm AI hiện nay.",
+      "source_pages": [
+        3
+      ],
+      "source_excerpt": "LLM không phải toàn bộ AI — nhưng nó là tầng nền của gần hết trải nghiệm AI bạn dùng hôm nay",
+      "confidence": 1.0,
+      "status": "ready"
+    },
+    {
+      "id": "summary-02",
+      "title": "Lịch sử AI 70 năm",
+      "content": "AI trải qua các giai đoạn: khai sinh, hệ chuyên gia (1980), ImageNet (2009), Transformer (2017), ChatGPT (2022).",
+      "source_pages": [
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "source_excerpt": "Lịch sử AI 70 năm",
+      "confidence": 1.0,
+      "status": "ready"
+    },
+    {
+      "id": "summary-03",
+      "title": "LLM là bộ não nền, không phải chatbot",
+      "content": "LLM là mô hình ngôn ngữ lớn dựa trên Transformer, được luyện để đoán token tiếp theo. Chatbot chỉ là một dạng sản phẩm đóng gói quanh LLM.",
+      "source_pages": [
+        10
+      ],
+      "source_excerpt": "LLM (Large Language Model) là một mô hình ngôn ngữ rất lớn, thường dựa trên kiến trúc Transformer, được luyện trên hàng nghìn tỷ mảnh chữ để học cách đoán mảnh chữ tiếp theo trong ngữ cảnh.",
+      "confidence": 1.0,
+      "status": "ready"
+    },
+    {
+      "id": "summary-04",
+      "title": "Cơ chế sinh văn bản: đoán token và nối tiếp",
+      "content": "Model sinh văn bản bằng cách đoán token tiếp theo dựa trên phân bố xác suất, nối vào ngữ cảnh và lặp lại.",
+      "source_pages": [
+        11,
+        12
+      ],
+      "source_excerpt": "Với mọi ngữ cảnh, model chấm điểm MỌI từ trong từ vựng — “land” 22%, “forest” 9%… — rồi chọn theo xác suất đó",
+      "confidence": 1.0,
+      "status": "ready"
+    },
+    {
+      "id": "summary-05",
+      "title": "Giới hạn của model: hallucination, knowledge cutoff, context hạn chế",
+      "content": "Model tối ưu cho câu nghe hợp lý, không phải sự thật, nên có thể hallucinate. Model bị đóng băng tại ngày ngừng đọc (knowledge cutoff). Context có trần, dễ bỏ sót thông tin ở giữa.",
+      "source_pages": [
+        20
+      ],
+      "source_excerpt": "Model tối ưu cho câu nghe hợp lý, không phải tra sự thật — nên có thể tự tin mà sai (hallucination).",
+      "confidence": 1.0,
+      "status": "ready"
+    },
+    {
+      "id": "summary-06",
+      "title": "Agent: LLM được đặt vào vòng làm việc có mục tiêu",
+      "content": "Agent gồm 5 bộ phận: Goal, Reasoning, Tools, Memory, Action. Agent không phải model khác mà là LLM có khả năng lập kế hoạch và dùng công cụ.",
+      "source_pages": [
+        23,
+        24
+      ],
+      "source_excerpt": "Agent không phải “một loại model khác” — đó là LLM được đặt vào vòng làm việc có mục tiêu và hành động",
+      "confidence": 1.0,
+      "status": "ready"
+    },
+    {
+      "id": "summary-07",
+      "title": "Temperature và top_p: núm vặn chọn từ",
+      "content": "Temperature điều chỉnh độ 'liều' khi chọn từ; top_p giới hạn lựa chọn trong nhóm có xác suất cộng dồn đạt ngưỡng p. Hai núm này không làm model thông minh hơn.",
+      "source_pages": [
+        29
+      ],
+      "source_excerpt": "temperature — “núm vặn độ liều” … top_p — “chỉ xem top đầu bảng” (p = 0.9)",
+      "confidence": 1.0,
+      "status": "ready"
+    }
+  ],
+  "class_insights": [
+    {
+      "id": "insight-cluster-01",
+      "topic": "Giải thích đoạn bôi đen ở Trang 5",
+      "common_confusion": "Học viên muốn hiểu rõ nội dung của đoạn bôi đen trên slide lịch sử AI.",
+      "correct_understanding": "Trang 5 tóm tắt lịch sử AI 70 năm với các mốc: khai sinh, lời hứa đầu tiên; 2 lần mùa đông; từ model đơn lẻ sang system có khả năng hành động như agent.",
+      "source_pages": [
+        5
+      ],
+      "source_excerpt": "Lịch sử AI 70 năm\nKhai sinh, lời hứa đầu tiên\n2 lần mùa đông, cách tiếp cận chạm trần\nTừ model đơn lẻ sang system có khả năng hành động như agent",
+      "confidence": 1.0,
+      "status": "ready",
+      "unique_user_count": 1,
+      "question_count": 1,
+      "representative_questions": [
+        "Giải thích đoạn bôi đen ở Trang 5."
+      ]
+    },
+    {
+      "id": "insight-cluster-02",
+      "topic": "Giải thích đoạn bôi đen ở Trang 4",
+      "common_confusion": "Học viên muốn hiểu rõ nội dung đoạn bôi đen trên slide về ba nhóm AI.",
+      "correct_understanding": "Trang 4 phân loại AI thành ba nhóm: Discriminative AI (phân loại, dự đoán), Generative AI (sinh nội dung mới), Agentic AI (lập kế hoạch, dùng công cụ, hành động). LLM là engine chung cho Generative và Agentic.",
+      "source_pages": [
+        4
+      ],
+      "source_excerpt": "Ba nhóm AI chính: phân loại · sinh nội dung · hành động\nDiscriminative AI … Generative AI … Agentic AI",
+      "confidence": 1.0,
+      "status": "ready",
+      "unique_user_count": 1,
+      "question_count": 1,
+      "representative_questions": [
+        "Giải thích đoạn bôi đen ở Trang 4."
+      ]
+    },
+    {
+      "id": "insight-cluster-03",
+      "topic": "Nội dung chính của Day 1",
+      "common_confusion": "Học viên muốn tóm tắt tổng quan các chủ đề của buổi học.",
+      "correct_understanding": "Day 1 bao gồm: bức tranh AI & các tầng, lịch sử AI 70 năm, bên trong LLM, từ LLM đến AI Agent, landscape model, chọn model & chi phí token, gọi API lần đầu, tổng kết.",
+      "source_pages": [
+        2
+      ],
+      "source_excerpt": "Agenda\n• Bức tranh AI & các tầng của AI\n• Lịch sử AI 70 năm\n• Bên trong LLM: cơ chế vận hành\n• Từ LLM đến AI Agent\n• Landscape: model hôm nay & cuộc đua hiện tại\n• Chọn model & chi phí token\n• Gọi API lần đầu\n• Tổng kết — những ý để mang về",
+      "confidence": 1.0,
+      "status": "ready",
+      "unique_user_count": 1,
+      "question_count": 2,
+      "representative_questions": [
+        "Day 1 giới thiệu những chủ đề chính nào? Hãy trả lời ngắn gọn và trích dẫn trang.",
+        "Tóm tắt ngắn gọn nội dung chính của Day 1 và trích dẫn trang slide."
+      ]
+    },
+    {
+      "id": "insight-cluster-04",
+      "topic": "Giải thích nội dung slide",
+      "common_confusion": "Học viên yêu cầu giải thích hoặc đánh giá nội dung một slide cụ thể.",
+      "correct_understanding": "Các câu hỏi chung chung, cần xác định slide cụ thể. Slide 2 là agenda, slide 3 là các tầng AI. Nội dung đã được giải thích trong các insight khác.",
+      "source_pages": [
+        2,
+        3
+      ],
+      "source_excerpt": "AI, ML, Deep Learning, GenAI, LLM — nằm ở đâu trong cùng một hệ?",
+      "confidence": 0.8,
+      "status": "ready",
+      "unique_user_count": 3,
+      "question_count": 4,
+      "representative_questions": [
+        "giải thích xem nào",
+        "phần này có quan trọng không",
+        "Slide này đang nói về nội dung gì?",
+        "chỗ tôi vừa khoanh đấy là gì"
+      ]
+    },
+    {
+      "id": "insight-cluster-05",
+      "topic": "Fei-Fei Li xuất thân",
+      "common_confusion": "Học viên thắc mắc về xuất thân của Fei-Fei Li.",
+      "correct_understanding": "Fei-Fei Li là nhà khoa học máy tính, không phải AI Engineer. Bà nổi tiếng với ImageNet, bộ dữ liệu 14 triệu ảnh gán nhãn tay.",
+      "source_pages": [
+        7
+      ],
+      "source_excerpt": "Fei-Fei Li chọn con đường khác: xây bộ dữ liệu lớn hơn — 14 triệu ảnh được gán nhãn tay, hơn 20.000 loại vật.",
+      "confidence": 1.0,
+      "status": "ready",
+      "unique_user_count": 1,
+      "question_count": 1,
+      "representative_questions": [
+        "feifei li xuất phát ban đầu không phải AI Engineer?"
+      ]
+    },
+    {
+      "id": "insight-cluster-07",
+      "topic": "Giải thích LLM",
+      "common_confusion": "Học viên muốn giải thích ngắn gọn LLM là gì.",
+      "correct_understanding": "LLM là Large Language Model, mô hình ngôn ngữ lớn dựa trên Transformer, luyện trên hàng nghìn tỷ token để đoán token tiếp theo. Nó là bộ não nền, không phải chatbot.",
+      "source_pages": [
+        10
+      ],
+      "source_excerpt": "LLM (Large Language Model) là một mô hình ngôn ngữ rất lớn, thường dựa trên kiến trúc Transformer, được luyện trên hàng nghìn tỷ mảnh chữ để học cách đoán mảnh chữ tiếp theo trong ngữ cảnh.",
+      "confidence": 1.0,
+      "status": "ready",
+      "unique_user_count": 1,
+      "question_count": 1,
+      "representative_questions": [
+        "Hãy giải thích ngắn gọn LLM là gì và trích dẫn slide."
+      ]
+    },
+    {
+      "id": "insight-cluster-08",
+      "topic": "Learning rate",
+      "common_confusion": "Học viên hỏi về learning rate, nhưng slide không đề cập khái niệm này.",
+      "correct_understanding": "Slide không đề cập đến learning rate. Learning rate là một khái niệm trong huấn luyện mô hình, không nằm trong nội dung buổi học.",
+      "source_pages": [
+        2
+      ],
+      "source_excerpt": "Agenda",
+      "confidence": 0.3,
+      "status": "needs_review",
+      "unique_user_count": 1,
+      "question_count": 1,
+      "representative_questions": [
+        "Learning rate là gì? Giải thích ngắn gọn."
+      ]
+    },
+    {
+      "id": "insight-cluster-09",
+      "topic": "Perceptron",
+      "common_confusion": "Học viên yêu cầu giải thích perceptron ở slide 11, nhưng slide 11 không nói về perceptron.",
+      "correct_understanding": "Slide 11 nói về phân bố xác suất đầu ra của Transformer, không đề cập perceptron. Perceptron là một khái niệm trong Deep Learning, không nằm trong nội dung buổi học.",
+      "source_pages": [
+        11
+      ],
+      "source_excerpt": "Với mọi ngữ cảnh, model chấm điểm MỌI từ trong từ vựng — “land” 22%, “forest” 9%… — rồi chọn theo xác suất đó",
+      "confidence": 0.3,
+      "status": "needs_review",
+      "unique_user_count": 1,
+      "question_count": 1,
+      "representative_questions": [
+        "trong slide số 11 bạn hãy giài thích rõ về perceptrons"
+      ]
+    },
+    {
+      "id": "insight-cluster-10",
+      "topic": "Phân biệt ML và DL",
+      "common_confusion": "Học viên chưa rõ sự khác nhau giữa ML và DL.",
+      "correct_understanding": "Machine Learning học từ dữ liệu thay vì viết luật tay. Deep Learning là mạng nơ-ron nhiều tầng tự học đặc trưng, là một nhánh của ML.",
+      "source_pages": [
+        3
+      ],
+      "source_excerpt": "Machine learning — học từ dữ liệu thay vì viết luật tay.\nDeep learning — mạng nơ-ron nhiều tầng tự học đặc trưng.",
+      "confidence": 1.0,
+      "status": "ready",
+      "unique_user_count": 1,
+      "question_count": 1,
+      "representative_questions": [
+        "slide số 18: sự khác nhau giữa ML và DL chưa rõ lắm"
+      ]
+    },
+    {
+      "id": "insight-cluster-11",
+      "topic": "Các tầng trí tuệ nhân tạo",
+      "common_confusion": "Học viên muốn hiểu sự giống và khác nhau của các tầng AI.",
+      "correct_understanding": "Các tầng từ rộng đến hẹp: AI (ô lớn nhất) → Machine Learning → Deep Learning → Generative AI → LLM. LLM là tầng nền cho Generative và Agentic AI.",
+      "source_pages": [
+        3
+      ],
+      "source_excerpt": "AI, ML, Deep Learning, GenAI, LLM — nằm ở đâu trong cùng một hệ?\ntừ rộng đến hẹp",
+      "confidence": 1.0,
+      "status": "ready",
+      "unique_user_count": 1,
+      "question_count": 1,
+      "representative_questions": [
+        "bạn hãy giải thích giúp tôi sự giống và khác nhau của các tầng trí tuệ nhân tạo."
+      ]
+    }
+  ],
+  "review_questions": [
+    {
+      "id": "question-01",
+      "type": "multiple_choice",
+      "question": "Theo slide, LLM có phải là toàn bộ AI không?",
+      "options": [
+        "Có, LLM là toàn bộ AI",
+        "Không, LLM chỉ là một tầng nền của AI",
+        "LLM và AI là hai khái niệm tương đương",
+        "LLM là một phần của Generative AI, không liên quan đến AI"
+      ],
+      "correct_option": 1,
+      "answer": "Không, LLM chỉ là một tầng nền của AI",
+      "explanation": "Slide 3 nêu rõ: 'LLM không phải toàn bộ AI — nhưng nó là tầng nền của gần hết trải nghiệm AI bạn dùng hôm nay'.",
+      "source_pages": [
+        3
+      ],
+      "source_excerpt": "LLM không phải toàn bộ AI — nhưng nó là tầng nền của gần hết trải nghiệm AI bạn dùng hôm nay",
+      "confidence": 1.0,
+      "status": "ready"
+    },
+    {
+      "id": "question-02",
+      "type": "multiple_choice",
+      "question": "Vì sao model AI có thể trả lời sai một cách tự tin?",
+      "options": [
+        "Vì model được lập trình để nói dối",
+        "Vì model tối ưu cho câu nghe hợp lý, không phải tra sự thật",
+        "Vì model không có đủ dữ liệu",
+        "Vì model bị lỗi phần cứng"
+      ],
+      "correct_option": 1,
+      "answer": "Vì model tối ưu cho câu nghe hợp lý, không phải tra sự thật",
+      "explanation": "Slide 20 giải thích: 'Model tối ưu cho câu nghe hợp lý, không phải tra sự thật — nên có thể tự tin mà sai (hallucination).'",
+      "source_pages": [
+        20
+      ],
+      "source_excerpt": "Model tối ưu cho câu nghe hợp lý, không phải tra sự thật — nên có thể tự tin mà sai (hallucination).",
+      "confidence": 1.0,
+      "status": "ready"
+    },
+    {
+      "id": "question-03",
+      "type": "multiple_choice",
+      "question": "Cơ chế attention trong Transformer cho phép mỗi token làm gì?",
+      "options": [
+        "Chỉ nhìn vào token trước đó",
+        "Chủ động 'quay đầu' nhìn lại các token trước đó và chấm điểm mức độ liên quan",
+        "Chỉ nhìn vào token đầu tiên của câu",
+        "Không nhìn token nào khác"
+      ],
+      "correct_option": 1,
+      "answer": "Chủ động 'quay đầu' nhìn lại các token trước đó và chấm điểm mức độ liên quan",
+      "explanation": "Slide 15 mô tả: 'cơ chế attention cho phép mỗi token: Chủ động “quay đầu” nhìn lại các token trước đó trong câu; Chấm điểm mức độ liên quan của từng token đối với nghĩa của mình'.",
+      "source_pages": [
+        15
+      ],
+      "source_excerpt": "Chủ động “quay đầu” nhìn lại các token trước đó trong câu\nChấm điểm mức độ liên quan của từng token đối với nghĩa của mình",
+      "confidence": 1.0,
+      "status": "ready"
+    },
+    {
+      "id": "question-04",
+      "type": "multiple_choice",
+      "question": "Khi temperature = 0, model sẽ chọn từ như thế nào?",
+      "options": [
+        "Chọn từ ngẫu nhiên hoàn toàn",
+        "Luôn chọn từ có xác suất cao nhất",
+        "Chọn từ trong nhóm top_p",
+        "Không chọn từ nào"
+      ],
+      "correct_option": 1,
+      "answer": "Luôn chọn từ có xác suất cao nhất",
+      "explanation": "Slide 29 chỉ rõ: 'T=0 luôn chọn từ chắc nhất'.",
+      "source_pages": [
+        29
+      ],
+      "source_excerpt": "T=0 luôn chọn từ chắc nhất",
+      "confidence": 1.0,
+      "status": "ready"
+    },
+    {
+      "id": "question-05",
+      "type": "multiple_choice",
+      "question": "Theo slide, agent khác LLM ở điểm nào?",
+      "options": [
+        "Agent là một loại model khác",
+        "Agent là LLM được đặt vào vòng làm việc có mục tiêu và hành động",
+        "Agent không cần LLM",
+        "Agent chỉ là chatbot"
+      ],
+      "correct_option": 1,
+      "answer": "Agent là LLM được đặt vào vòng làm việc có mục tiêu và hành động",
+      "explanation": "Slide 23 nêu: 'Agent không phải “một loại model khác” — đó là LLM được đặt vào vòng làm việc có mục tiêu và hành động'.",
+      "source_pages": [
+        23
+      ],
+      "source_excerpt": "Agent không phải “một loại model khác” — đó là LLM được đặt vào vòng làm việc có mục tiêu và hành động",
+      "confidence": 1.0,
+      "status": "ready"
+    }
+  ],
+  "skipped_clusters": [
+    {
+      "cluster_id": "cluster-06",
+      "reason": "Câu hỏi về logistics (hoàn thành Day 1), không phải nội dung học thuật."
+    },
+    {
+      "cluster_id": "cluster-12",
+      "reason": "Câu hỏi về danh tính người dùng, không phải nội dung học thuật."
+    }
+  ],
+  "warnings": [
+    {
+      "code": "LOW_CONFIDENCE_SCORE",
+      "message": "insight 'insight-cluster-08' chưa xác minh chắc chắn với slide (grounded=True, confidence=0.3), cần Lab Coach duyệt.",
+      "item_ids": [
+        "insight-cluster-08"
+      ]
+    },
+    {
+      "code": "LOW_CONFIDENCE_SCORE",
+      "message": "insight 'insight-cluster-09' chưa xác minh chắc chắn với slide (grounded=True, confidence=0.3), cần Lab Coach duyệt.",
+      "item_ids": [
+        "insight-cluster-09"
+      ]
+    }
+  ]
+}

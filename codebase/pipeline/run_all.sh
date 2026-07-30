@@ -32,9 +32,12 @@ python3 05_build_pack.py "$LESSON_ID" "$LESSON_TITLE" "$MAX_PAGE" \
   ../shared/generated-$LESSON_ID.json ../shared/review-pack-$LESSON_ID.json
 
 echo "== 6/7 Chay golden set =="
+# Luu y: doi ten output (bien RUN_OUT) truoc khi chay lai neu muon giu ban truoc do lam bang
+# chung lich su thay vi bi ghi de — xem eval/evaluation-rubric.md muc "Lich su luot chay".
+RUN_OUT=${RUN_OUT:-../../eval/runs/run-002.json}
 python3 06_run_eval.py ../../eval/golden-set.json ../shared/questions-$LESSON_ID.json \
   ../shared/clusters-$LESSON_ID.json ../shared/generated-$LESSON_ID.json \
-  ../../eval/runs/run-001.json
+  "$RUN_OUT"
 
 echo "== 7/7 Xuat sang frontend =="
 python3 07_export_frontend_data.py ../shared/review-pack-$LESSON_ID.json ../frontend/real-data.js

@@ -32,6 +32,13 @@ Nguyen tac bat buoc:
    de X nhung trang do khong noi ve X, trong khi X nam o trang khac) — PHAI sua source_pages ve \
    dung trang chua noi dung, VA bat buoc dat confidence duoi 0.6 (khong duoc cho ready) vi hoc \
    vien co the da nham trang, can Lab Coach xac nhan lai.
+4b. QUAN TRONG: neu MOT cluster gom nhieu cau hoi hoi ve NHIEU KHAI NIEM KHAC NHAU (vi du 1 cau \
+    hoi ve "perceptron", 1 cau khac hoi ve "ML vs DL" — du ca hai deu la "chua ro khai niem nen \
+    tang"), TUYET DOI KHONG duoc tron cau tra loi cua khai niem CO trong slide voi dinh nghia tu \
+    nghi ra cho khai niem KHONG co trong slide, du dinh nghia do dung ve mat kien thuc thuc te. \
+    Voi tung khai niem trong cluster: neu co trong slide thi tra loi kem source_excerpt cua \
+    dung khai niem do; neu khong co thi correct_understanding phai noi ro "slide khong de cap \
+    <ten khai niem>" cho DUNG khai niem do, khong duoc lang le bo qua roi chi tra loi phan de.
 5. Cau hoi tu kiem tra (review_questions) phai co dap an suy ra truc tiep tu source_excerpt.
 6. Sinh DUNG 5 review_questions theo thu tu bat buoc sau, khong duoc doi thu tu hay bo qua:
    - 1 cau tu summary item dau tien (summary[0])

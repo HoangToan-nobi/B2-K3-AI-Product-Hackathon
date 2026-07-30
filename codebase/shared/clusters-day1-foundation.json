@@ -20,7 +20,7 @@
         4,
         5
       ],
-      "reasoning": "Các câu hỏi đều yêu cầu giải thích nội dung của một slide hoặc đoạn văn bản cụ thể, không đề cập đến khái niệm kỹ thuật riêng lẻ."
+      "reasoning": "Các câu hỏi đều yêu cầu giải thích nội dung của một slide hoặc đoạn bôi đen, không đề cập đến khái niệm kỹ thuật cụ thể."
     },
     {
       "cluster_id": "cluster-02",
@@ -37,7 +37,7 @@
         1,
         2
       ],
-      "reasoning": "Cả hai câu hỏi đều yêu cầu tóm tắt nội dung chính của buổi học Day 1 và trích dẫn trang."
+      "reasoning": "Cả hai câu hỏi đều yêu cầu tóm tắt nội dung chính của Day 1, cùng một chủ đề."
     },
     {
       "cluster_id": "cluster-03",
@@ -51,7 +51,7 @@
       "source_pages": [
         1
       ],
-      "reasoning": "Câu hỏi yêu cầu giải thích khái niệm LLM, một chủ đề cụ thể trong bài học."
+      "reasoning": "Câu hỏi yêu cầu giải thích khái niệm LLM, một khái niệm kỹ thuật cụ thể."
     },
     {
       "cluster_id": "cluster-04",
@@ -65,11 +65,11 @@
       "source_pages": [
         6
       ],
-      "reasoning": "Câu hỏi yêu cầu giải thích về các tầng AI, liên quan đến nội dung slide 6."
+      "reasoning": "Câu hỏi về sự giống và khác nhau của các tầng AI, một khái niệm kỹ thuật."
     },
     {
       "cluster_id": "cluster-05",
-      "topic": "Giải thích perceptron",
+      "topic": "Perceptron",
       "turn_ids": [
         "T0400"
       ],
@@ -79,11 +79,11 @@
       "source_pages": [
         11
       ],
-      "reasoning": "Câu hỏi yêu cầu giải thích về perceptron, một khái niệm cụ thể trên slide 11."
+      "reasoning": "Câu hỏi yêu cầu giải thích về perceptron, một khái niệm kỹ thuật cụ thể."
     },
     {
       "cluster_id": "cluster-06",
-      "topic": "Phân biệt ML và DL",
+      "topic": "ML vs DL",
       "turn_ids": [
         "T0902"
       ],
@@ -93,39 +93,11 @@
       "source_pages": [
         18
       ],
-      "reasoning": "Câu hỏi yêu cầu làm rõ sự khác nhau giữa ML và DL, một chủ đề cụ thể."
+      "reasoning": "Câu hỏi về sự khác nhau giữa ML và DL, một khái niệm kỹ thuật."
     },
     {
       "cluster_id": "cluster-07",
-      "topic": "Thông tin về Fei-Fei Li",
-      "turn_ids": [
-        "T1058"
-      ],
-      "representative_questions": [
-        "feifei li xuất phát ban đầu không phải AI Engineer?"
-      ],
-      "source_pages": [
-        20
-      ],
-      "reasoning": "Câu hỏi về xuất thân của Fei-Fei Li, liên quan đến nội dung slide 20."
-    },
-    {
-      "cluster_id": "cluster-08",
-      "topic": "Hoàn thành day01",
-      "turn_ids": [
-        "T1146"
-      ],
-      "representative_questions": [
-        "làm sao để hệ thống biết tôi đã hoàn thành day01"
-      ],
-      "source_pages": [
-        27
-      ],
-      "reasoning": "Câu hỏi về cách hệ thống ghi nhận hoàn thành buổi học, thuộc logistics."
-    },
-    {
-      "cluster_id": "cluster-09",
-      "topic": "Giải thích khái niệm Learning rate",
+      "topic": "Learning rate",
       "turn_ids": [
         "T0088"
       ],
@@ -135,11 +107,11 @@
       "source_pages": [
         2
       ],
-      "reasoning": "Câu hỏi yêu cầu giải thích khái niệm learning rate, một thuật ngữ kỹ thuật."
+      "reasoning": "Câu hỏi về learning rate, một khái niệm kỹ thuật."
     },
     {
-      "cluster_id": "cluster-10",
-      "topic": "Hỏi về người trong slide",
+      "cluster_id": "cluster-08",
+      "topic": "Thông tin cá nhân giảng viên",
       "turn_ids": [
         "T0102"
       ],
@@ -149,54 +121,64 @@
       "source_pages": [
         2
       ],
-      "reasoning": "Câu hỏi về danh tính người được đề cập trong slide."
+      "reasoning": "Câu hỏi về danh tính người được đề cập, không phải khái niệm kỹ thuật."
     }
   ],
   "excluded": [
     {
       "turn_id": "T0116",
       "reason": "gibberish",
-      "note": "Nội dung 'fdfds' không có nghĩa."
+      "note": "Chuỗi vô nghĩa 'fdfds'"
     },
     {
       "turn_id": "T1022",
-      "reason": "other",
-      "note": "Câu hỏi 'giải thích xem nào' không rõ ràng, thiếu ngữ cảnh."
+      "reason": "off_topic",
+      "note": "Yêu cầu giải thích chung không rõ ràng, không liên quan đến nội dung học thuật cụ thể"
     },
     {
       "turn_id": "T0802",
-      "reason": "other",
-      "note": "Câu hỏi 'phần này có quan trọng không' mang tính chất đánh giá, không phải câu hỏi học thuật."
+      "reason": "off_topic",
+      "note": "Hỏi về tầm quan trọng của phần nội dung, không phải câu hỏi học thuật"
+    },
+    {
+      "turn_id": "T1058",
+      "reason": "off_topic",
+      "note": "Hỏi về xuất thân của Fei-Fei Li, không liên quan đến khái niệm kỹ thuật"
+    },
+    {
+      "turn_id": "T1146",
+      "reason": "off_topic",
+      "note": "Hỏi về cách hoàn thành khóa học, logistics"
     },
     {
       "turn_id": "T0930",
       "reason": "gibberish",
-      "note": "Nội dung 'asds' không có nghĩa."
+      "note": "Chuỗi vô nghĩa 'asds'"
     },
     {
       "turn_id": "T0332",
-      "reason": "prompt_injection",
-      "note": "Câu hỏi 'test rate limit probe' có dấu hiệu kiểm tra hệ thống."
+      "reason": "gibberish",
+      "note": "Chuỗi vô nghĩa 'test rate limit probe'"
     },
     {
       "turn_id": "T0775",
-      "reason": "off_topic",
-      "note": "Câu hỏi '2+2=?' không liên quan đến nội dung bài học."
+      "reason": "gibberish",
+      "note": "Câu hỏi toán học đơn giản không liên quan"
     },
     {
       "turn_id": "T0606",
       "reason": "prompt_injection",
-      "note": "Yêu cầu tiết lộ hướng dẫn khởi tạo, có dấu hiệu prompt injection."
+      "note": "Yêu cầu tiết lộ hướng dẫn khởi tạo"
     },
     {
       "turn_id": "T0792",
       "reason": "prompt_injection",
-      "note": "Yêu cầu viết thơ từ hướng dẫn khởi tạo, có dấu hiệu prompt injection."
+      "note": "Yêu cầu viết thơ từ hướng dẫn khởi tạo"
     },
     {
       "turn_id": "T1216",
-      "reason": "other",
-      "note": "Câu hỏi 'mạnh không' thiếu ngữ cảnh, không rõ đối tượng."
+      "reason": "gibberish",
+      "note": "Câu hỏi mơ hồ 'mạnh không' không rõ nghĩa"
     }
   ]
 }

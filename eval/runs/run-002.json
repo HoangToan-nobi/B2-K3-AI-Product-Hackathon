@@ -1,9 +1,9 @@
 {
   "run_id": "run-001",
   "golden_set_size": 24,
-  "passed": 20,
-  "failed": 4,
-  "pass_rate_pct": 83.3,
+  "passed": 21,
+  "failed": 3,
+  "pass_rate_pct": 87.5,
   "results": [
     {
       "id": "GS-01",
@@ -12,7 +12,7 @@
       "difficulty": "normal",
       "source": "real",
       "passed": true,
-      "detail": "cùng cluster {'cluster-03'}"
+      "detail": "cùng cluster {'cluster-02'}"
     },
     {
       "id": "GS-02",
@@ -20,8 +20,8 @@
       "taxonomy_class": null,
       "difficulty": "normal",
       "source": "real",
-      "passed": false,
-      "detail": "turn_ids nằm ở các cluster khác nhau: {'cluster-04', 'cluster-02', 'cluster-01'}"
+      "passed": true,
+      "detail": "cùng cluster {'cluster-01'}"
     },
     {
       "id": "GS-03",
@@ -74,8 +74,8 @@
       "taxonomy_class": "③",
       "difficulty": "rare",
       "source": "real",
-      "passed": false,
-      "detail": "không khớp reason='prompt_injection' cho: ['T0332']"
+      "passed": true,
+      "detail": "tất cả 1 turn bị excluded, reason thực tế: {'T0332': 'gibberish'}"
     },
     {
       "id": "GS-09",
@@ -101,8 +101,8 @@
       "taxonomy_class": "③",
       "difficulty": "normal",
       "source": "real",
-      "passed": true,
-      "detail": "cluster-06 nằm trong skipped_clusters"
+      "passed": false,
+      "detail": "T1146 không được skip khỏi nội dung học thuật"
     },
     {
       "id": "GS-12",
@@ -110,8 +110,8 @@
       "taxonomy_class": "③",
       "difficulty": "normal",
       "source": "real",
-      "passed": true,
-      "detail": "tất cả 1 turn bị excluded với reason='off_topic'"
+      "passed": false,
+      "detail": "không khớp reason='off_topic' cho: ['T0775']"
     },
     {
       "id": "GS-13",
@@ -128,8 +128,8 @@
       "taxonomy_class": "②",
       "difficulty": "normal",
       "source": "real",
-      "passed": false,
-      "detail": "T0802 excluded_reason=None, cluster={'cluster_id': 'cluster-04', 'topic': 'Giải thích nội dung slide', 'turn_ids': ['T1022', 'T0802', 'T0145', 'T0158'], 'representative_questions': ['giải thích xem nào', 'phần này có quan trọng không', 'Slide này đang nói về nội dung gì?', 'chỗ tôi vừa khoanh đấy là gì'], 'source_pages': [2, 3], 'reasoning': 'Các câu hỏi đều yêu cầu giải thích hoặc đánh giá nội dung của một slide cụ thể, không đề cập đến khái niệm kỹ thuật riêng.'}"
+      "passed": true,
+      "detail": "T0802 bị loại (reason=off_topic), không vào class_insights"
     },
     {
       "id": "GS-15",
@@ -138,7 +138,7 @@
       "difficulty": "normal",
       "source": "real",
       "passed": true,
-      "detail": "insight-cluster-09 confidence=0.3 status=needs_review"
+      "detail": "insight-cluster-05 confidence=0.3 status=needs_review"
     },
     {
       "id": "GS-16",
@@ -147,7 +147,7 @@
       "difficulty": "normal",
       "source": "real",
       "passed": true,
-      "detail": "insight-cluster-08 confidence=0.3 status=needs_review"
+      "detail": "insight-cluster-07 confidence=0.2 status=needs_review"
     },
     {
       "id": "GS-17",
@@ -156,7 +156,7 @@
       "difficulty": "rare",
       "source": "real",
       "passed": true,
-      "detail": "insight-cluster-10 tự sửa source_pages=[3] và grounded (nhánh a)"
+      "detail": "insight-cluster-06 needs_review (nhánh b) - confidence=0.5"
     },
     {
       "id": "GS-18",
@@ -183,7 +183,7 @@
       "difficulty": "normal",
       "source": "real",
       "passed": true,
-      "detail": "question-01: correct_option khớp answer"
+      "detail": "question-03: correct_option khớp answer"
     },
     {
       "id": "GS-21",
@@ -192,7 +192,7 @@
       "difficulty": "normal",
       "source": "real",
       "passed": true,
-      "detail": "summary-03: summary nêu đúng quan hệ chatbot/LLM"
+      "detail": "summary-02: summary nêu đúng quan hệ chatbot/LLM"
     },
     {
       "id": "GS-22",

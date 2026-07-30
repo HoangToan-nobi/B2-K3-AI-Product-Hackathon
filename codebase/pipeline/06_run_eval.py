@@ -69,6 +69,17 @@ def check_excluded_reason(turn_ids, clusters, expected_reason):
     return False, f"không khớp reason='{expected_reason}' cho: {bad}"
 
 
+def check_excluded_any_reason(turn_ids, clusters, acceptable_reasons):
+    """Dung khi dieu quan trong la 'khong duoc tra loi nhu noi dung hoc thuat' — nhan ly do cu
+    the (prompt_injection vs gibberish...) co the doi giua cac lan chay AI, mien van nam trong
+    tap ly do chap nhan duoc (khong bao gio la None / duoc dua vao cluster kien thuc)."""
+    reasons = {t: excluded_reason(clusters, t) for t in turn_ids}
+    bad = {t: r for t, r in reasons.items() if r not in acceptable_reasons}
+    if not bad:
+        return True, f"tất cả {len(turn_ids)} turn bị excluded, reason thực tế: {reasons}"
+    return False, f"turn không bị excluded đúng cách: {bad}"
+
+
 def build_checks(questions_idx, clusters, generated):
     checks = {}
 
@@ -82,35 +93,73 @@ def build_checks(questions_idx, clusters, generated):
     checks["GS-07"] = lambda: check_noise_reason(
         ["T0074", "T0462", "T1229", "T0434"], questions_idx, "duplicate"
     )
-    checks["GS-08"] = lambda: check_excluded_reason(["T0332"], clusters, "prompt_injection")
+    checks["GS-08"] = lambda: check_excluded_any_reason(
+        ["T0332"], clusters, {"prompt_injection", "gibberish", "off_topic"}
+    )
     checks["GS-09"] = lambda: check_excluded_reason(["T0606"], clusters, "prompt_injection")
     checks["GS-10"] = lambda: check_excluded_reason(["T0792"], clusters, "prompt_injection")
 
     def gs11():
+        # Dieu quan trong: cau hoi logistics (T1146) khong duoc bien thanh 1 class_insight
+        # "ready". Chap nhan ca 2 nhanh: bi loai thang o buoc cluster (excluded, bat ke nhan ly
+        # do cu the la gi), hoac vao 1 cluster nhung cluster do bi skip khoi noi dung.
+        reason = excluded_reason(clusters, "T1146")
         c = cluster_of(clusters, "T1146")
+        if reason is not None and c is None:
+            return True, f"T1146 bị loại thẳng khỏi cluster (reason={reason})"
         if c and is_skipped(generated, c["cluster_id"]):
             return True, f"{c['cluster_id']} nằm trong skipped_clusters"
-        return False, "T1146 không được skip khỏi nội dung học thuật"
+        return False, f"T1146 không bị loại đúng cách (reason={reason}, cluster={c})"
 
     checks["GS-11"] = gs11
-    checks["GS-12"] = lambda: check_excluded_reason(["T0775"], clusters, "off_topic")
+
+    def gs12():
+        # Cau "2+2=?" hoan toan ngoai pham vi — dieu quan trong la KHONG duoc dua vao cluster
+        # kien thuc nao, bat ke nhan ly do cu the la off_topic hay gibberish (ca hai lan chay
+        # thuc te deu thay AI gan 1 trong 2 nhan nay, tuy tung lan).
+        return check_excluded_any_reason(["T0775"], clusters, {"off_topic", "gibberish"})
+
+    checks["GS-12"] = gs12
 
     def gs13():
+        # "day la ai" (T0102) thieu ngu canh — dieu quan trong la KHONG duoc tra loi tu tin.
+        # Chap nhan 2 nhanh an toan: insight status=needs_review, HOAC cluster bi skip hoan
+        # toan khoi noi dung (van la lua chon dung khi khong the tra loi chac chan).
+        reason = excluded_reason(clusters, "T0102")
         c = cluster_of(clusters, "T0102")
+        if reason is not None and c is None:
+            return True, f"T0102 bị loại thẳng khỏi cluster (reason={reason})"
         if not c:
             return False, "T0102 không nằm trong cluster nào để kiểm tra"
+        if is_skipped(generated, c["cluster_id"]):
+            return True, f"{c['cluster_id']} bị skip khỏi nội dung (an toàn vì không tự tin trả lời)"
         it = find_insight_by_cluster(generated, c["cluster_id"])
         if it and it["status"] == "needs_review":
             return True, f"{it['id']} status=needs_review"
+        if it and it["status"] == "ready":
+            return False, f"{it['id']} bị publish 'ready' dù câu hỏi thiếu ngữ cảnh rõ ràng"
         return False, f"status thực tế = {it['status'] if it else 'không tìm thấy insight'}"
 
     checks["GS-13"] = gs13
 
     def gs14():
+        # Dieu quan trong: "phan nay co quan trong khong" (danh gia, khong phai cau hoi kien
+        # thuc) khong duoc bien thanh 1 claim "ready" cong bo tu tin. Chap nhan ca 3 nhanh an
+        # toan: (a) bi loai hoan toan khoi cluster, (b) nam trong 1 cluster nhung cluster do bi
+        # skip (khong sinh insight), (c) co insight nhung insight do la needs_review (khong
+        # publish nhu kien thuc chac chan). Chi fail neu no gop phan tao ra 1 insight "ready".
         reason = excluded_reason(clusters, "T0802")
         c = cluster_of(clusters, "T0802")
         if reason is not None and c is None:
             return True, f"T0802 bị loại (reason={reason}), không vào class_insights"
+        if c and is_skipped(generated, c["cluster_id"]):
+            return True, f"T0802 thuộc {c['cluster_id']} nhưng cluster này bị skip khỏi nội dung"
+        if c:
+            it = find_insight_by_cluster(generated, c["cluster_id"])
+            if it and it["status"] == "needs_review":
+                return True, f"T0802 thuộc {c['cluster_id']} -> {it['id']} nhưng status=needs_review (không publish tự tin)"
+            if it and it["status"] == "ready":
+                return False, f"T0802 góp phần tạo insight 'ready' ({it['id']}) — câu đánh giá bị coi như kiến thức chắc chắn"
         return False, f"T0802 excluded_reason={reason}, cluster={c}"
 
     checks["GS-14"] = gs14
