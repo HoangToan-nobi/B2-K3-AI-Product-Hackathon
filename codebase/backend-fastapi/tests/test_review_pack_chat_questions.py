@@ -1,3 +1,5 @@
+import json
+
 import pytest
 
 from app.services.review_packs import ReviewPackService
@@ -104,6 +106,57 @@ def test_normalized_pack_ignores_generated_insights_without_real_chat_questions(
     )
 
     assert pack["class_insights"] == []
+
+
+def test_normalized_pack_strips_markdown_from_visible_fields():
+    service = ReviewPackService(None)
+    pack = service._normalize_generated_pack(
+        lesson_id="lesson-markdown",
+        title="Lesson",
+        slide_count=1,
+        generated={
+            "summary": [
+                {
+                    "title": "**Token** và context",
+                    "content": "- **Token:** đơn vị văn bản model xử lý.",
+                    "source_pages": [1],
+                    "source_excerpt": "**Token** là đơn vị văn bản.",
+                    "confidence": 0.9,
+                }
+            ],
+            "class_insights": [
+                {
+                    "topic": "**Những câu hỏi liên quan đến RLHF**",
+                    "common_confusion": "- rlhf là gì",
+                    "correct_understanding": "**RLHF** là cách căn chỉnh model bằng phản hồi của con người.",
+                    "source_pages": [1],
+                    "source_excerpt": "**RLHF** là bước căn chỉnh.",
+                    "confidence": 0.9,
+                    "representative_questions": ["**rlhf là gì**"],
+                }
+            ],
+            "review_questions": [
+                {
+                    "question": "**Token** là gì?",
+                    "options": ["**Một mảnh chữ**", "Một file", "Một slide", "Một ảnh"],
+                    "correct_option": 0,
+                    "answer": "**Một mảnh chữ**",
+                    "explanation": "**Token** là đơn vị model xử lý.",
+                    "source_pages": [1],
+                    "source_excerpt": "**Token** là đơn vị văn bản.",
+                    "confidence": 0.9,
+                }
+            ],
+        },
+        chat_questions=[{"user_id": "u1", "content": "rlhf là gì", "source_page": 1}],
+        slide_pages=[{"page": 1, "text": "Token là đơn vị văn bản. RLHF là bước căn chỉnh."}],
+    )
+
+    visible_blob = json.dumps(pack, ensure_ascii=False)
+    assert "**" not in visible_blob
+    assert "- rlhf" not in visible_blob
+    assert pack["summary"][0]["title"] == "Token và context"
+    assert pack["class_insights"][0]["correct_understanding"].startswith("RLHF là cách căn chỉnh")
 
 
 @pytest.mark.anyio

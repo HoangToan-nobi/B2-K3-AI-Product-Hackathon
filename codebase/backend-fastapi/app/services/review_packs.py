@@ -17,6 +17,7 @@ from app.services.lessons import LessonService
 from app.services.llm import LlmService
 from app.services.pdf_export import generate_review_pack_pdf
 from app.services.slides import CHATLOG_PATH, ensure_slide_artifact, list_static_lesson_options, read_transcript_excerpt
+from app.services.text_cleanup import strip_markdown_text
 
 
 def _pack_lesson_id(pack_id: str) -> str:
@@ -643,10 +644,10 @@ class ReviewPackService:
         is_grounded_in_slide = bool(source_excerpt.strip())
         return {
             "id": f"summary-{index:02d}",
-            "title": str(item.get("title") or f"Ý chính {index}")[:160],
-            "content": str(item.get("content") or "")[:900],
+            "title": strip_markdown_text(item.get("title") or f"Ý chính {index}")[:160],
+            "content": strip_markdown_text(item.get("content") or "")[:900],
             "source_pages": pages,
-            "source_excerpt": source_excerpt,
+            "source_excerpt": strip_markdown_text(source_excerpt),
             "confidence": confidence,
             "status": "ready" if is_grounded_in_slide else "needs_review",
         }
@@ -658,16 +659,16 @@ class ReviewPackService:
         source_excerpt = self._excerpt(pages, slide_pages, item.get("source_excerpt")) if pages else ""
         return {
             "id": f"insight-cluster-{index:02d}",
-            "topic": str(item.get("topic") or f"Câu hỏi học viên {index}")[:160],
-            "common_confusion": str(item.get("common_confusion") or "")[:700],
-            "correct_understanding": str(item.get("correct_understanding") or "")[:900],
+            "topic": strip_markdown_text(item.get("topic") or f"Câu hỏi học viên {index}")[:160],
+            "common_confusion": strip_markdown_text(item.get("common_confusion") or "")[:700],
+            "correct_understanding": strip_markdown_text(item.get("correct_understanding") or "")[:900],
             "source_pages": pages,
-            "source_excerpt": source_excerpt,
+            "source_excerpt": strip_markdown_text(source_excerpt),
             "confidence": confidence,
             "status": "ready" if source_excerpt.strip() else "needs_review",
             "unique_user_count": int(item.get("unique_user_count") or 1),
             "question_count": int(item.get("question_count") or max(1, len(questions))),
-            "representative_questions": [str(question)[:260] for question in questions[:5]],
+            "representative_questions": [strip_markdown_text(question)[:260] for question in questions[:5]],
         }
 
     def _question_item(self, item: dict[str, Any], index: int, slide_pages: list[dict[str, Any]]) -> dict[str, Any]:
@@ -678,17 +679,17 @@ class ReviewPackService:
         correct_option = int(item.get("correct_option") or 0)
         if correct_option < 0 or correct_option >= len(options):
             correct_option = 0
-        answer = str(item.get("answer") or options[correct_option])
+        answer = strip_markdown_text(item.get("answer") or options[correct_option])
         return {
             "id": f"question-{index:02d}",
             "type": "multiple_choice",
-            "question": str(item.get("question") or f"Câu hỏi {index}")[:260],
-            "options": [str(option)[:180] for option in options[:4]],
+            "question": strip_markdown_text(item.get("question") or f"Câu hỏi {index}")[:260],
+            "options": [strip_markdown_text(option)[:180] for option in options[:4]],
             "correct_option": correct_option,
             "answer": answer[:240],
-            "explanation": str(item.get("explanation") or "")[:700],
+            "explanation": strip_markdown_text(item.get("explanation") or "")[:700],
             "source_pages": pages,
-            "source_excerpt": source_excerpt,
+            "source_excerpt": strip_markdown_text(source_excerpt),
             "confidence": confidence,
             "status": "ready" if source_excerpt.strip() else "needs_review",
         }
@@ -726,6 +727,7 @@ class ReviewPackService:
                 " ",
                 str(generated.get("correct_understanding") or group.get("ai_reply") or ""),
             ).strip()
+            answer = strip_markdown_text(answer)
             confidence = float(generated.get("confidence") or 0.68)
             if not answer:
                 answer = ReviewPackService._fallback_answer_from_excerpt(representative, excerpt)
@@ -970,8 +972,10 @@ class ReviewPackService:
                     " ",
                     str(generated.get("correct_understanding") or group.get("ai_reply") or ""),
                 ).strip()
+                answer = strip_markdown_text(answer)
             if not answer:
                 answer = self._fallback_answer_from_excerpt(group["best_question"], excerpt)
+            answer = strip_markdown_text(answer)
             insights.append(
                 {
                     "topic": group["topic"],

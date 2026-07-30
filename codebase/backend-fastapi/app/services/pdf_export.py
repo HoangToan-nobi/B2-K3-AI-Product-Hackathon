@@ -12,6 +12,8 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import ListFlowable, ListItem, Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 from reportlab.platypus.flowables import HRFlowable
 
+from app.services.text_cleanup import strip_markdown_text
+
 
 FONT_NAME = "VLuoiSerif"
 FONT_BOLD = "VLuoiSerif-Bold"
@@ -58,7 +60,7 @@ def _register_serif_font() -> tuple[str, str, str]:
 
 
 def _p(text: Any) -> str:
-    return escape(str(text or "")).replace("\n", "<br/>")
+    return escape(strip_markdown_text(text)).replace("\n", "<br/>")
 
 
 def _pages(item: dict[str, Any]) -> str:
@@ -159,7 +161,7 @@ def _styles(font_name: str, bold_name: str, italic_name: str) -> dict[str, Parag
 
 def _section(story: list[Any], styles: dict[str, ParagraphStyle], title: str) -> None:
     story.append(Spacer(1, 0.25 * cm))
-    story.append(Paragraph(_p(title), styles["heading"]))
+    story.append(Paragraph(escape(str(title or "")), styles["heading"]))
     story.append(HRFlowable(width="100%", thickness=0.75, color=colors.HexColor("#999999"), spaceAfter=10))
 
 

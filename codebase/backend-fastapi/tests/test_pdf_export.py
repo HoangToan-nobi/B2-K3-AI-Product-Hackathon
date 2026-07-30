@@ -23,7 +23,7 @@ def _sample_pack() -> dict:
             {
                 "topic": "Phân biệt Automate và Augment",
                 "common_confusion": "Dễ nhầm rằng cứ dùng AI là phải tự động hóa toàn bộ.",
-                "correct_understanding": "Automation phù hợp tác vụ lặp và rủi ro thấp; augmentation phù hợp khi cần con người kiểm soát quyết định.",
+                "correct_understanding": "**Automation** phù hợp tác vụ lặp và rủi ro thấp; **augmentation** phù hợp khi cần con người kiểm soát quyết định.",
                 "source_pages": [7],
                 "unique_user_count": 5,
                 "status": "ready",
@@ -67,6 +67,8 @@ def test_generate_review_pack_pdf_preserves_vietnamese_text(tmp_path):
     assert "Định hình bài toán" in result.stdout
     assert "Đáp án: A." in result.stdout
     assert "học viên cần xác định vấn đề" in result.stdout.lower()
+    assert "**Automation**" not in result.stdout
+    assert "Automation phù hợp tác vụ lặp" in result.stdout
 
 
 @pytest.mark.anyio

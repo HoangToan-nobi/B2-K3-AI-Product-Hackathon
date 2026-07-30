@@ -3,12 +3,20 @@
 import "dotenv/config";
 import { defineConfig } from "prisma/config";
 
+function databaseUrl(): string | undefined {
+  const value = process.env["DATABASE_URL"]?.trim().replace(/^["']|["']$/g, "");
+  if (value?.startsWith("postgres://")) {
+    return value.replace("postgres://", "postgresql://");
+  }
+  return value;
+}
+
 export default defineConfig({
   schema: "prisma/schema.prisma",
   migrations: {
     path: "prisma/migrations",
   },
   datasource: {
-    url: process.env["DATABASE_URL"],
+    url: databaseUrl(),
   },
 });

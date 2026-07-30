@@ -1,7 +1,36 @@
 import type { ReviewPack } from "./types";
 
+function stripMarkdownText(value: string): string {
+  let text = String(value || "").replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+  text = text.replace(/```(?:[a-zA-Z0-9_-]+)?\s*/g, "").replace(/```/g, "");
+  text = text.replace(/!\[([^\]]*)\]\([^)]+\)/g, "$1");
+  text = text.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
+  text = text.replace(/^\s{0,3}#{1,6}\s+/gm, "");
+  text = text.replace(/^\s{0,3}>\s?/gm, "");
+  text = text.replace(/^\s{0,3}(?:[-*+]\s+|\d+[.)]\s+)/gm, "");
+  text = text.replace(/^\s{0,3}[-*_]{3,}\s*$/gm, "");
+  const emphasisPatterns = [
+    /\*\*\*([\s\S]+?)\*\*\*/g,
+    /___([\s\S]+?)___/g,
+    /\*\*([\s\S]+?)\*\*/g,
+    /__([\s\S]+?)__/g,
+    /(?<!\w)\*(?!\s)([\s\S]+?)(?<!\s)\*(?!\w)/g,
+    /(?<!\w)_(?!\s)([\s\S]+?)(?<!\s)_(?!\w)/g,
+  ];
+  let previous = "";
+  while (previous !== text) {
+    previous = text;
+    emphasisPatterns.forEach((pattern) => {
+      text = text.replace(pattern, "$1");
+    });
+  }
+  text = text.replace(/`([^`]+)`/g, "$1");
+  text = text.replace(/\\([\\`*_{}\[\]()#+\-.!>])/g, "$1");
+  return text.replace(/[ \t]*\n[ \t]*/g, " ").replace(/\s+/g, " ").trim();
+}
+
 function sanitizePdfText(value: string): string {
-  return value
+  return stripMarkdownText(value)
     .normalize("NFKD")
     .replace(/[\u0300-\u036f]/g, "")
     .replace(/[^\x20-\x7E\n]/g, "")

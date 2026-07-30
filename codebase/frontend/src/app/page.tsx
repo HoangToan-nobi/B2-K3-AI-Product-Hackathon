@@ -73,6 +73,35 @@ function sourceLabel(pages: number[]): string {
   return pages.length ? `Slide ${pages.join(", ")}` : "Theo deck";
 }
 
+function cleanDisplayText(value: unknown): string {
+  let text = String(value ?? "").replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+  text = text.replace(/```(?:[a-zA-Z0-9_-]+)?\s*/g, "").replace(/```/g, "");
+  text = text.replace(/!\[([^\]]*)\]\([^)]+\)/g, "$1");
+  text = text.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
+  text = text.replace(/^\s{0,3}#{1,6}\s+/gm, "");
+  text = text.replace(/^\s{0,3}>\s?/gm, "");
+  text = text.replace(/^\s{0,3}(?:[-*+]\s+|\d+[.)]\s+)/gm, "");
+  text = text.replace(/^\s{0,3}[-*_]{3,}\s*$/gm, "");
+  const emphasisPatterns = [
+    /\*\*\*([\s\S]+?)\*\*\*/g,
+    /___([\s\S]+?)___/g,
+    /\*\*([\s\S]+?)\*\*/g,
+    /__([\s\S]+?)__/g,
+    /(?<!\w)\*(?!\s)([\s\S]+?)(?<!\s)\*(?!\w)/g,
+    /(?<!\w)_(?!\s)([\s\S]+?)(?<!\s)_(?!\w)/g,
+  ];
+  let previous = "";
+  while (previous !== text) {
+    previous = text;
+    emphasisPatterns.forEach((pattern) => {
+      text = text.replace(pattern, "$1");
+    });
+  }
+  text = text.replace(/`([^`]+)`/g, "$1");
+  text = text.replace(/\\([\\`*_{}\[\]()#+\-.!>])/g, "$1");
+  return text.replace(/[ \t]*\n[ \t]*/g, " ").replace(/\s+/g, " ").trim();
+}
+
 function statusLabel(status: string): string {
   if (status === "missing") return "Chưa có tài liệu";
   return status === "needs_review" ? "Cần duyệt" : "Đã có tài liệu";
@@ -1730,10 +1759,10 @@ function StudySummary({ item }: { item: SummaryItem }) {
   return (
     <article className="study-card">
       <div>
-        <h3>{item.title}</h3>
+        <h3>{cleanDisplayText(item.title)}</h3>
         <span>{sourceLabel(item.source_pages)}</span>
       </div>
-      <p>{item.content}</p>
+      <p>{cleanDisplayText(item.content)}</p>
     </article>
   );
 }
@@ -1742,18 +1771,18 @@ function StudyInsight({ item }: { item: ClassInsight }) {
   return (
     <article className="study-card accent">
       <div>
-        <h3>{item.topic}</h3>
+        <h3>{cleanDisplayText(item.topic)}</h3>
         <span>{item.question_count} câu hỏi</span>
       </div>
       <p>
-        <strong>Câu hỏi:</strong> {item.common_confusion}
+        <strong>Câu hỏi:</strong> {cleanDisplayText(item.common_confusion)}
       </p>
       <p>
-        <strong>Trả lời & giải thích:</strong> {item.correct_understanding}
+        <strong>Trả lời & giải thích:</strong> {cleanDisplayText(item.correct_understanding)}
       </p>
       <div className="question-strip">
         {item.representative_questions.slice(0, 2).map((q) => (
-          <span key={q}>{q}</span>
+          <span key={q}>{cleanDisplayText(q)}</span>
         ))}
       </div>
     </article>
@@ -1765,10 +1794,10 @@ function ReviewInsight({ item, onUpdate }: { item: ClassInsight; onUpdate: (item
     <ReviewCard
       id={item.id}
       status={item.status}
-      title={item.topic}
-      body={`Câu hỏi học viên thường hỏi: ${item.common_confusion}\n\nTrả lời & giải thích: ${item.correct_understanding}`}
+      title={cleanDisplayText(item.topic)}
+      body={`Câu hỏi học viên thường hỏi: ${cleanDisplayText(item.common_confusion)}\n\nTrả lời & giải thích: ${cleanDisplayText(item.correct_understanding)}`}
       pages={item.source_pages}
-      excerpt={item.source_excerpt}
+      excerpt={cleanDisplayText(item.source_excerpt)}
       onUpdate={onUpdate}
     />
   );
@@ -1802,7 +1831,7 @@ function ReviewCard({
       ))}
       <details className="evidence">
         <summary>{sourceLabel(pages)}</summary>
-        <p>{excerpt || "Không có trích dẫn slide trực tiếp."}</p>
+        <p>{cleanDisplayText(excerpt) || "Không có trích dẫn slide trực tiếp."}</p>
       </details>
       {status === "needs_review" ? (
         <div className="actions">
@@ -1830,9 +1859,9 @@ function PdfPreview({ pack }: { pack: ReviewPack }) {
       </header>
       <h2>{pack.lesson.title}</h2>
       <p>{pack.lesson.slide_count} slide · {pack.analysis.unique_user_count} học viên · {pack.analysis.cluster_count} nhóm câu hỏi</p>
-      <PdfBlock title="Kiến thức quan trọng" items={summary.map((item) => `${item.title}: ${item.content}`)} />
-      <PdfBlock title="Học viên hay hỏi" items={insights.map((item) => `${item.topic}: ${item.correct_understanding}`)} />
-      <PdfBlock title="Quiz nhanh" items={questions.map((item, i) => `${i + 1}. ${item.question} Đáp án: ${item.answer}`)} />
+      <PdfBlock title="Kiến thức quan trọng" items={summary.map((item) => `${cleanDisplayText(item.title)}: ${cleanDisplayText(item.content)}`)} />
+      <PdfBlock title="Học viên hay hỏi" items={insights.map((item) => `${cleanDisplayText(item.topic)}: ${cleanDisplayText(item.correct_understanding)}`)} />
+      <PdfBlock title="Quiz nhanh" items={questions.map((item, i) => `${i + 1}. ${cleanDisplayText(item.question)} Đáp án: ${cleanDisplayText(item.answer)}`)} />
     </article>
   );
 }
@@ -1895,7 +1924,7 @@ function ReviewPackPage({
       <div className="rp-hero">
         <div className="rp-hero-inner">
           <div className="rp-hero-badge">Tài liệu tổng hợp</div>
-          <h1 className="rp-title">{pack.lesson.title}</h1>
+          <h1 className="rp-title">{cleanDisplayText(pack.lesson.title)}</h1>
           <p className="rp-subtitle">
             {pack.lesson.slide_count} slide đã phân tích · {summary.length} kiến thức trọng tâm · {insights.length} câu hỏi hay gặp · {questions.length} câu quiz nhanh
           </p>
@@ -1939,13 +1968,13 @@ function ReviewPackPage({
                   <div className="rp-knowledge-index">{String(idx + 1).padStart(2, "0")}</div>
                   <div className="rp-knowledge-body">
                     <div className="rp-knowledge-header">
-                      <h3>{item.title}</h3>
+                      <h3>{cleanDisplayText(item.title)}</h3>
                       {item.source_pages.length > 0 && (
                         <span className="rp-slide-ref">Slide {item.source_pages.join(", ")}</span>
                       )}
                     </div>
-                    <p>{item.content}</p>
-                    {item.source_excerpt && <blockquote className="rp-excerpt">{item.source_excerpt}</blockquote>}
+                    <p>{cleanDisplayText(item.content)}</p>
+                    {item.source_excerpt && <blockquote className="rp-excerpt">{cleanDisplayText(item.source_excerpt)}</blockquote>}
                   </div>
                 </div>
               ))}
@@ -1959,7 +1988,7 @@ function ReviewPackPage({
                 <div key={item.id} className="rp-insight-card">
                   <div className="rp-insight-header">
                     <div>
-                      <h3>{item.topic}</h3>
+                      <h3>{cleanDisplayText(item.topic)}</h3>
                       <span className="rp-question-count">{item.question_count} học viên đã hỏi về điều này</span>
                     </div>
                     {item.source_pages.length > 0 && (
@@ -1969,18 +1998,18 @@ function ReviewPackPage({
                   <div className="rp-insight-blocks">
                     <div className="rp-insight-block wrong">
                       <div className="rp-block-label">Câu hỏi học viên thường hỏi</div>
-                      <p>{item.common_confusion}</p>
+                      <p>{cleanDisplayText(item.common_confusion)}</p>
                     </div>
                     <div className="rp-insight-arrow">→</div>
                     <div className="rp-insight-block correct">
                       <div className="rp-block-label">Trả lời & giải thích</div>
-                      <p>{item.correct_understanding}</p>
+                      <p>{cleanDisplayText(item.correct_understanding)}</p>
                     </div>
                   </div>
                   {item.representative_questions.length > 0 && (
                     <div className="rp-sample-questions">
                       <p className="rp-sample-label">Câu hỏi ví dụ từ học viên</p>
-                      <ul>{item.representative_questions.slice(0, 3).map((q) => <li key={q}>{q}</li>)}</ul>
+                      <ul>{item.representative_questions.slice(0, 3).map((q) => <li key={q}>{cleanDisplayText(q)}</li>)}</ul>
                     </div>
                   )}
                 </div>
@@ -2005,7 +2034,7 @@ function ReviewPackPage({
                 <div key={item.id} className={`rp-quiz-card ${answered ? "revealed" : ""}`}>
                   <div className="rp-quiz-question">
                     <span className="rp-quiz-num">{idx + 1}</span>
-                    <span className="rp-quiz-text">{item.question}</span>
+                    <span className="rp-quiz-text">{cleanDisplayText(item.question)}</span>
                     {answered && <span className={`rp-quiz-result ${isCorrect ? "correct" : "wrong"}`}>{isCorrect ? "Đúng" : "Chưa đúng"}</span>}
                   </div>
                   {item.options.length > 0 && (
@@ -2024,7 +2053,7 @@ function ReviewPackPage({
                           }))}
                         >
                           <span className="rp-option-letter">{String.fromCharCode(65 + i)}</span>
-                          <span>{opt}</span>
+                          <span>{cleanDisplayText(opt)}</span>
                         </button>
                       ))}
                     </div>
@@ -2032,8 +2061,8 @@ function ReviewPackPage({
                   {answered && (
                     <div className="rp-quiz-answer">
                       <div className="rp-answer-label">{isCorrect ? "Kết quả đúng" : "Đáp án đúng"}</div>
-                      <p><strong>{item.answer}</strong></p>
-                      <p>{item.explanation || "Xem lại phần kiến thức trọng tâm và câu hỏi hay gặp liên quan."}</p>
+                      <p><strong>{cleanDisplayText(item.answer)}</strong></p>
+                      <p>{cleanDisplayText(item.explanation) || "Xem lại phần kiến thức trọng tâm và câu hỏi hay gặp liên quan."}</p>
                       {item.source_pages.length > 0 && (
                         <span className="rp-slide-ref">Slide {item.source_pages.join(", ")}</span>
                       )}

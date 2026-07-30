@@ -8,7 +8,8 @@ const globalForPrisma = globalThis as unknown as {
 
 function pgPoolConnectionString(value: string | undefined): string | undefined {
   if (!value) return value
-  const url = new URL(value)
+  const normalizedValue = value.trim().replace(/^["']|["']$/g, "").replace(/^postgres:\/\//, "postgresql://")
+  const url = new URL(normalizedValue)
   url.searchParams.delete('sslmode')
   return url.toString()
 }
