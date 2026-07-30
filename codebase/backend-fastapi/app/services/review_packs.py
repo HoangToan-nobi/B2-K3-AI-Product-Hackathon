@@ -1,7 +1,10 @@
 import asyncio
+import hashlib
 import json
 import re
+import threading
 import unicodedata
+from dataclasses import dataclass
 from copy import deepcopy
 from typing import Any
 
@@ -18,6 +21,18 @@ from app.services.slides import CHATLOG_PATH, ensure_slide_artifact, list_static
 
 def _pack_lesson_id(pack_id: str) -> str:
     return pack_id.removeprefix("pack-").rsplit("-", 1)[0]
+
+
+@dataclass
+class _PdfExportCacheEntry:
+    fingerprint: str
+    data: bytes
+    artifact_url: str
+    upload_started: bool = False
+
+
+_PDF_EXPORT_CACHE: dict[str, _PdfExportCacheEntry] = {}
+_PDF_EXPORT_CACHE_LOCK = threading.Lock()
 
 
 def _default_local_db() -> dict[str, Any]:
@@ -152,16 +167,88 @@ class ReviewPackService:
     async def export_review_pack_pdf(self, pack_id: str, role: str = "labcoach") -> tuple[bytes, str, str]:
         lesson_id = _pack_lesson_id(pack_id)
         pack = self.filter_pack_for_role(await self.read_review_pack(lesson_id), role)
-        bytes_ = generate_review_pack_pdf(pack)
         filename = f"{pack_id}.pdf"
-        asset = self.storage.upload_bytes(
-            data=bytes_,
+        cache_key = f"{role}:{pack_id}"
+        fingerprint = self._pdf_export_fingerprint(pack)
+        with _PDF_EXPORT_CACHE_LOCK:
+            cached = _PDF_EXPORT_CACHE.get(cache_key)
+            if cached and cached.fingerprint == fingerprint:
+                if self.storage.cloudinary_enabled and not cached.upload_started:
+                    cached.upload_started = True
+                    self._upload_pdf_export_in_background(
+                        cache_key=cache_key,
+                        fingerprint=fingerprint,
+                        data=cached.data,
+                        filename=filename,
+                    )
+                return cached.data, filename, cached.artifact_url
+
+        bytes_ = generate_review_pack_pdf(pack)
+        if self.storage.cloudinary_enabled:
+            artifact_url = f"pending://cloudinary/exports/{filename}"
+            with _PDF_EXPORT_CACHE_LOCK:
+                _PDF_EXPORT_CACHE[cache_key] = _PdfExportCacheEntry(
+                    fingerprint=fingerprint,
+                    data=bytes_,
+                    artifact_url=artifact_url,
+                    upload_started=True,
+                )
+            self._upload_pdf_export_in_background(
+                cache_key=cache_key,
+                fingerprint=fingerprint,
+                data=bytes_,
+                filename=filename,
+            )
+            return bytes_, filename, artifact_url
+
+        asset = self._upload_pdf_export(data=bytes_, filename=filename)
+        with _PDF_EXPORT_CACHE_LOCK:
+            _PDF_EXPORT_CACHE[cache_key] = _PdfExportCacheEntry(
+                fingerprint=fingerprint,
+                data=bytes_,
+                artifact_url=asset.url,
+                upload_started=True,
+            )
+        return bytes_, filename, asset.url
+
+    @staticmethod
+    def _pdf_export_fingerprint(pack: dict[str, Any]) -> str:
+        payload = json.dumps(pack, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+        return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+    def _upload_pdf_export(self, *, data: bytes, filename: str):
+        return self.storage.upload_bytes(
+            data=data,
             filename=filename,
             folder="exports",
             mime_type="application/pdf",
             public_id=filename,
         )
-        return bytes_, filename, asset.url
+
+    def _upload_pdf_export_in_background(
+        self,
+        *,
+        cache_key: str,
+        fingerprint: str,
+        data: bytes,
+        filename: str,
+    ) -> None:
+        def upload() -> None:
+            try:
+                asset = self._upload_pdf_export(data=data, filename=filename)
+            except Exception:
+                with _PDF_EXPORT_CACHE_LOCK:
+                    cached = _PDF_EXPORT_CACHE.get(cache_key)
+                    if cached and cached.fingerprint == fingerprint:
+                        cached.upload_started = False
+                return
+            with _PDF_EXPORT_CACHE_LOCK:
+                cached = _PDF_EXPORT_CACHE.get(cache_key)
+                if cached and cached.fingerprint == fingerprint:
+                    cached.artifact_url = asset.url
+                    cached.upload_started = True
+
+        threading.Thread(target=upload, daemon=True).start()
 
     def list_artifacts(self, lesson_id: str = "day1-foundation") -> dict[str, str]:
         return {

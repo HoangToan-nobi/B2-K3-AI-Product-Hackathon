@@ -3,7 +3,9 @@ import subprocess
 
 import pytest
 
+from app.services import review_packs as review_pack_service_module
 from app.services.pdf_export import generate_review_pack_pdf
+from app.services.review_packs import ReviewPackService, _PDF_EXPORT_CACHE
 
 
 def _sample_pack() -> dict:
@@ -65,3 +67,48 @@ def test_generate_review_pack_pdf_preserves_vietnamese_text(tmp_path):
     assert "Định hình bài toán" in result.stdout
     assert "Đáp án: A." in result.stdout
     assert "học viên cần xác định vấn đề" in result.stdout.lower()
+
+
+@pytest.mark.anyio
+async def test_export_review_pack_pdf_reuses_rendered_pdf_cache(monkeypatch):
+    class _FakeStorage:
+        cloudinary_enabled = False
+
+        def __init__(self) -> None:
+            self.upload_count = 0
+
+        def upload_bytes(self, **_kwargs):
+            self.upload_count += 1
+
+            class _Asset:
+                url = "memory://exports/pack-test.pdf"
+
+            return _Asset()
+
+    render_count = 0
+
+    def fake_generate_pdf(_pack):
+        nonlocal render_count
+        render_count += 1
+        return b"%PDF cached\n"
+
+    async def fake_read_review_pack(_lesson_id: str):
+        return _sample_pack()
+
+    _PDF_EXPORT_CACHE.clear()
+    monkeypatch.setattr(review_pack_service_module, "generate_review_pack_pdf", fake_generate_pdf)
+    service = ReviewPackService(None)
+    service.storage = _FakeStorage()
+    monkeypatch.setattr(service, "read_review_pack", fake_read_review_pack)
+
+    first_bytes, first_filename, first_url = await service.export_review_pack_pdf("pack-test-001", "labcoach")
+    second_bytes, second_filename, second_url = await service.export_review_pack_pdf("pack-test-001", "labcoach")
+
+    assert first_bytes == b"%PDF cached\n"
+    assert second_bytes == first_bytes
+    assert first_filename == second_filename == "pack-test-001.pdf"
+    assert first_url == second_url == "memory://exports/pack-test.pdf"
+    assert render_count == 1
+    assert service.storage.upload_count == 1
+
+    _PDF_EXPORT_CACHE.clear()
