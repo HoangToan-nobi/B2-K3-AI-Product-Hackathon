@@ -21,6 +21,17 @@ class _FakeReviewPackRepository:
         ]
 
 
+class _FakeLlmService:
+    enabled = True
+
+    def __init__(self) -> None:
+        self.calls: list[dict] = []
+
+    async def answer(self, *, question: str, context: str) -> str:
+        self.calls.append({"question": question, "context": context})
+        return "RLHF là cách căn chỉnh model bằng phản hồi của con người để câu trả lời phù hợp hơn với mong muốn sử dụng."
+
+
 @pytest.mark.anyio
 async def test_review_pack_chat_questions_include_runtime_db_questions_first():
     service = ReviewPackService(None)
@@ -122,6 +133,39 @@ async def test_review_pack_mapping_falls_back_to_recent_uploaded_lesson_cache():
     finally:
         UPLOADED_LESSONS.pop(lesson_id, None)
         UPLOADED_PAGES.pop(lesson_id, None)
+
+
+@pytest.mark.anyio
+async def test_review_pack_mapping_retries_recent_lesson_lookup(monkeypatch):
+    class _RetryLessonService:
+        def __init__(self) -> None:
+            self.calls = 0
+
+        async def list_lessons(self) -> list[dict]:
+            self.calls += 1
+            if self.calls == 1:
+                return []
+            return [
+                {
+                    "id": "lesson_retry",
+                    "title": "Retry Lesson",
+                    "slideDecks": [{"storageKey": "cloudinary://slides/retry.pdf", "pageCount": 2}],
+                }
+            ]
+
+    async def no_sleep(_seconds: float) -> None:
+        return None
+
+    service = ReviewPackService(None)
+    retry_lesson_service = _RetryLessonService()
+    service.lesson_service = retry_lesson_service
+    monkeypatch.setattr("app.services.review_packs.asyncio.sleep", no_sleep)
+
+    mapping = await service._lesson_mapping("lesson_retry")
+
+    assert retry_lesson_service.calls == 2
+    assert mapping["lesson_id"] == "lesson_retry"
+    assert mapping["max_page"] == 2
 
 
 def test_select_chat_context_questions_prioritizes_page_and_user_diversity():
@@ -231,16 +275,21 @@ def test_top_chat_question_groups_keep_single_question_and_rank_top_ten():
         {"user_id": "u1", "content": "AI khác gì ML?", "source_page": 3},
         {"user_id": "u2", "content": "AI khác gì ML?", "source_page": 3},
         {"user_id": "u3", "content": "Token có chi phí như thế nào?", "source_page": 12},
-        *[
-            {"user_id": f"u-extra-{index}", "content": f"Câu hỏi riêng {index} là gì?", "source_page": index}
-            for index in range(8)
-        ],
+        {"user_id": "u-extra-1", "content": "Context window là gì?", "source_page": 4},
+        {"user_id": "u-extra-2", "content": "Attention hoạt động như thế nào?", "source_page": 5},
+        {"user_id": "u-extra-3", "content": "Hallucination vì sao xảy ra?", "source_page": 6},
+        {"user_id": "u-extra-4", "content": "Agent khác workflow ở đâu?", "source_page": 7},
+        {"user_id": "u-extra-5", "content": "Temperature dùng để làm gì?", "source_page": 8},
+        {"user_id": "u-extra-6", "content": "Prompt engineering là gì?", "source_page": 9},
+        {"user_id": "u-extra-7", "content": "RAG khác fine-tuning thế nào?", "source_page": 10},
+        {"user_id": "u-extra-8", "content": "Parameter là gì?", "source_page": 11},
     ]
 
     groups = ReviewPackService._top_chat_question_groups(questions, limit=10)
 
     assert len(groups) == 10
     assert groups[0]["representative_questions"] == ["AI khác gì ML?"]
+    assert groups[0]["topic"] == "Câu hỏi về AI / ML"
     assert groups[0]["question_count"] == 2
     assert any(group["representative_questions"] == ["Token có chi phí như thế nào?"] for group in groups)
 
@@ -251,6 +300,62 @@ def test_top_chat_question_groups_keep_single_question_and_rank_top_ten():
 
     assert len(single) == 1
     assert single[0]["representative_questions"] == ["Parameter là gì?"]
+    assert single[0]["topic"] == "Câu hỏi về Parameter"
+
+
+def test_top_chat_question_groups_cluster_related_rlhf_questions():
+    questions = [
+        {"user_id": "u1", "content": "rlhf là gì", "source_page": 18},
+        {"user_id": "u2", "content": "giải thích kỹ về rlhf", "source_page": 18},
+        {"user_id": "u3", "content": "rlhf khác gì bình thường", "source_page": 19},
+    ]
+
+    groups = ReviewPackService._top_chat_question_groups(questions, limit=10)
+
+    assert len(groups) == 1
+    assert groups[0]["signature"] == "rlhf"
+    assert groups[0]["topic"] == "Những câu hỏi liên quan đến RLHF"
+    assert groups[0]["question_count"] == 3
+    assert groups[0]["unique_user_count"] == 3
+    assert groups[0]["best_question"] == "rlhf khác gì bình thường"
+    assert groups[0]["representative_questions"] == [
+        "rlhf là gì",
+        "giải thích kỹ về rlhf",
+        "rlhf khác gì bình thường",
+    ]
+
+
+@pytest.mark.anyio
+async def test_answer_chat_question_groups_asks_llm_with_best_cluster_question():
+    service = ReviewPackService(None)
+    fake_llm = _FakeLlmService()
+    service.llm_service = fake_llm
+
+    insights = await service._answer_chat_question_groups(
+        slide_pages=[
+            {
+                "page": 18,
+                "text": "RLHF dùng phản hồi của con người để căn chỉnh model sau giai đoạn huấn luyện nền.",
+            }
+        ],
+        chat_questions=[
+            {"user_id": "u1", "content": "rlhf là gì", "source_page": 18, "cited_pages": [18]},
+            {"user_id": "u2", "content": "giải thích kỹ về rlhf", "source_page": 18, "cited_pages": [18]},
+            {"user_id": "u3", "content": "rlhf khác gì bình thường", "source_page": 18, "cited_pages": [18]},
+        ],
+        generated_insights=[],
+    )
+
+    assert fake_llm.calls == [
+        {
+            "question": "rlhf khác gì bình thường",
+            "context": "[Slide 18] RLHF dùng phản hồi của con người để căn chỉnh model sau giai đoạn huấn luyện nền.",
+        }
+    ]
+    assert len(insights) == 1
+    assert insights[0]["topic"] == "Những câu hỏi liên quan đến RLHF"
+    assert insights[0]["source_pages"] == [18]
+    assert insights[0]["correct_understanding"].startswith("RLHF là cách căn chỉnh")
 
 
 def test_normalized_pack_locks_insights_to_real_chat_questions():
@@ -300,7 +405,7 @@ def test_normalized_pack_locks_insights_to_real_chat_questions():
     )
 
     topics = [item["topic"] for item in pack["class_insights"]]
-    assert topics == ["AI khác gì ML?", "Parameter là gì?"]
+    assert topics == ["Câu hỏi về AI / ML", "Câu hỏi về Parameter"]
     assert all("tải slide" not in item["topic"].lower() for item in pack["class_insights"])
     assert pack["class_insights"][0]["correct_understanding"].startswith("AI là phạm vi rộng hơn")
 

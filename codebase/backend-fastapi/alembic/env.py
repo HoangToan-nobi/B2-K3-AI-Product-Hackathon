@@ -18,7 +18,7 @@ def get_url() -> str:
     database_url = get_settings().database_url
     if not database_url:
         raise RuntimeError("DATABASE_URL is required for Alembic commands")
-    return database_url.replace("+asyncpg", "")
+    return database_url.replace("+asyncpg", "").replace("postgres://", "postgresql://", 1)
 
 
 def run_migrations_offline() -> None:
@@ -50,4 +50,3 @@ if context.is_offline_mode():
     run_migrations_offline()
 else:
     run_migrations_online()
-

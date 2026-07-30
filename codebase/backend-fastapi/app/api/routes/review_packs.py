@@ -75,6 +75,7 @@ async def create_review_pack_job(
 
     async def run_job() -> None:
         try:
+            await job.wait_for_connection(timeout=5)
             if AsyncSessionLocal is None:
                 service = ReviewPackService(None)
                 result = await service.create_review_pack(body.lesson_id, body.run_pipeline, progress=job)

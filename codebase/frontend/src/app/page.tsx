@@ -198,6 +198,7 @@ export default function Home() {
     new Promise<T>(async (resolve, reject) => {
       let settled = false;
       let source: EventSource | null = null;
+      let reconnectAttempts = 0;
 
       const finish = (callback: () => void) => {
         if (settled) return;
@@ -220,30 +221,40 @@ export default function Home() {
           message: "VLười đã nhận yêu cầu và đang chuẩn bị xử lý.",
           logs: ["Bắt đầu: VLười đã nhận yêu cầu."],
         });
-        source = new EventSource(start.events_url);
-        source.onmessage = (event) => {
-          const data = JSON.parse(event.data) as ProgressEventPayload;
-          const line = `${data.step}: ${data.message}`;
-          setProgressJob((current) => ({
-            active: data.type === "progress",
-            kind: current?.kind || kind,
-            title: data.title || current?.title || fallbackTitle,
-            percent: data.percent,
-            step: data.step,
-            message: data.message,
-            detail: data.detail,
-            logs: [...(current?.logs || []), line].slice(-6),
-          }));
-          if (data.type === "complete") {
-            finish(() => resolve(data.payload as T));
-          }
-          if (data.type === "error") {
-            finish(() => reject(new Error(data.message)));
-          }
+        const connect = () => {
+          source?.close();
+          source = new EventSource(start.events_url);
+          source.onmessage = (event) => {
+            const data = JSON.parse(event.data) as ProgressEventPayload;
+            const line = `${data.step}: ${data.message}`;
+            setProgressJob((current) => ({
+              active: data.type === "progress",
+              kind: current?.kind || kind,
+              title: data.title || current?.title || fallbackTitle,
+              percent: data.percent,
+              step: data.step,
+              message: data.message,
+              detail: data.detail,
+              logs: [...(current?.logs || []), line].slice(-6),
+            }));
+            if (data.type === "complete") {
+              finish(() => resolve(data.payload as T));
+            }
+            if (data.type === "error") {
+              finish(() => reject(new Error(data.message)));
+            }
+          };
+          source.onerror = () => {
+            if (settled) return;
+            reconnectAttempts += 1;
+            if (reconnectAttempts <= 2) {
+              window.setTimeout(connect, 350);
+              return;
+            }
+            finish(() => reject(new Error("Mất kết nối tiến trình từ VLười.")));
+          };
         };
-        source.onerror = () => {
-          finish(() => reject(new Error("Mất kết nối tiến trình từ VLười.")));
-        };
+        connect();
       } catch (error) {
         finish(() => reject(error));
       }

@@ -1,5 +1,7 @@
+import asyncio
 import json
 import re
+import unicodedata
 from copy import deepcopy
 from typing import Any
 
@@ -212,8 +214,14 @@ class ReviewPackService:
         try:
             return get_lesson_mapping(lesson_id)
         except ValueError:
-            lessons = await self.lesson_service.list_lessons()
-            lesson = next((item for item in lessons if item["id"] == lesson_id), None)
+            lesson = None
+            for attempt in range(6):
+                lessons = await self.lesson_service.list_lessons()
+                lesson = next((item for item in lessons if item["id"] == lesson_id), None)
+                if lesson:
+                    break
+                if attempt < 5:
+                    await asyncio.sleep(0.25)
             if not lesson:
                 raise
             deck = lesson["slideDecks"][0] if lesson.get("slideDecks") else {"pageCount": 0}
@@ -287,6 +295,15 @@ class ReviewPackService:
                 "Dùng bản dự phòng",
                 "VLười chưa tạo được bản AI ổn định, nên đang chuẩn bị bản nháp an toàn từ dữ liệu đã có.",
             )
+
+        if chat_questions:
+            generated_insights = generated.get("class_insights", []) if isinstance(generated, dict) else []
+            enriched_insights = await self._answer_chat_question_groups(
+                slide_pages=slide.get("pages", []),
+                chat_questions=chat_questions,
+                generated_insights=generated_insights if isinstance(generated_insights, list) else [],
+            )
+            generated = {**(generated or {}), "class_insights": enriched_insights}
 
         await self._emit_progress(
             progress,
@@ -608,8 +625,8 @@ class ReviewPackService:
         insights: list[dict[str, Any]] = []
 
         for group in groups:
-            representative = group["representative_questions"][0]
-            generated = generated_by_question.get(ReviewPackService._question_signature(representative), {})
+            representative = group["best_question"]
+            generated = generated_by_question.get(group["signature"], {})
             source_pages = ReviewPackService._safe_pages_optional(
                 []
                 if group.get("is_outside_slide")
@@ -629,8 +646,8 @@ class ReviewPackService:
 
             insights.append(
                 {
-                    "topic": representative[:160],
-                    "common_confusion": representative[:700],
+                    "topic": group["topic"][:160],
+                    "common_confusion": group["common_confusion"][:700],
                     "correct_understanding": answer[:900],
                     "source_pages": source_pages,
                     "source_excerpt": excerpt,
@@ -650,7 +667,7 @@ class ReviewPackService:
             content = re.sub(r"\s+", " ", str(item.get("content") or "")).strip()
             if len(content) < 8:
                 continue
-            signature = ReviewPackService._question_signature(content)
+            signature = ReviewPackService._question_topic_signature(content)
             if not signature:
                 continue
             group = groups.setdefault(
@@ -693,12 +710,16 @@ class ReviewPackService:
         )
         return [
             {
+                "signature": ReviewPackService._question_topic_signature(group["representative_questions"][0]),
                 "source_page": group.get("source_page"),
                 "cited_pages": group.get("cited_pages", [])[:4],
-                "ai_reply": group.get("ai_reply", ""),
+                "ai_reply": ReviewPackService._best_stored_answer(group["representative_questions"], group.get("ai_reply", "")),
                 "is_outside_slide": bool(group.get("is_outside_slide")),
                 "question_count": int(group["question_count"]),
                 "unique_user_count": max(1, len(group["users"])),
+                "topic": ReviewPackService._cluster_topic(signature=ReviewPackService._question_topic_signature(group["representative_questions"][0]), questions=group["representative_questions"]),
+                "common_confusion": ReviewPackService._cluster_common_question(group["representative_questions"]),
+                "best_question": ReviewPackService._best_cluster_question(group["representative_questions"]),
                 "representative_questions": group["representative_questions"][:5],
             }
             for group in ranked[:limit]
@@ -716,13 +737,110 @@ class ReviewPackService:
             questions = item.get("representative_questions") if isinstance(item.get("representative_questions"), list) else []
             candidates.extend(str(question).strip() for question in questions if str(question).strip())
             for candidate in candidates:
-                signature = ReviewPackService._question_signature(candidate)
+                signature = ReviewPackService._question_topic_signature(candidate)
                 if signature and signature not in matched:
                     matched[signature] = item
         return matched
 
     @staticmethod
     def _question_signature(content: str) -> str:
+        return ReviewPackService._question_topic_signature(content)
+
+    @staticmethod
+    def _question_topic_signature(content: str) -> str:
+        normalized = ReviewPackService._ascii_normalize(content)
+        tokens = re.findall(r"[a-z0-9]+", normalized)
+        stopwords = {
+            "anh",
+            "ban",
+            "binh",
+            "cai",
+            "can",
+            "cho",
+            "co",
+            "cua",
+            "duoc",
+            "em",
+            "giai",
+            "gi",
+            "hoi",
+            "khac",
+            "ky",
+            "la",
+            "lam",
+            "minh",
+            "nao",
+            "nhu",
+            "noi",
+            "ro",
+            "sao",
+            "the",
+            "thich",
+            "thuong",
+            "ve",
+            "voi",
+        }
+        keywords = [token for token in tokens if token not in stopwords and (len(token) >= 3 or token in {"ai", "ml"})]
+        if not keywords:
+            return ""
+        priority = [
+            token
+            for token in keywords
+            if token in {"ai", "ml", "llm", "rlhf", "dpo", "sft", "rag", "token", "context", "agent", "parameter", "prompt"}
+            or token.isdigit()
+        ]
+        selected = priority or keywords
+        return " ".join(dict.fromkeys(selected[:4]))
+
+    @staticmethod
+    def _ascii_normalize(content: str) -> str:
+        normalized = unicodedata.normalize("NFKD", content.lower())
+        normalized = "".join(ch for ch in normalized if not unicodedata.combining(ch))
+        return re.sub(r"\s+", " ", normalized)
+
+    @staticmethod
+    def _cluster_topic(*, signature: str, questions: list[str]) -> str:
+        label = ReviewPackService._topic_label(signature, questions)
+        if len(questions) > 1:
+            return f"Những câu hỏi liên quan đến {label}"
+        return f"Câu hỏi về {label}"
+
+    @staticmethod
+    def _topic_label(signature: str, questions: list[str]) -> str:
+        if not signature:
+            return (questions[0] if questions else "chủ đề này")[:80]
+        parts = signature.split()
+        acronyms = {"ai", "ml", "llm", "rlhf", "dpo", "sft", "rag"}
+        display = [part.upper() if part in acronyms else part.capitalize() for part in parts]
+        return " / ".join(display)
+
+    @staticmethod
+    def _cluster_common_question(questions: list[str]) -> str:
+        best = ReviewPackService._best_cluster_question(questions)
+        if len(questions) <= 1:
+            return best
+        examples = "; ".join(questions[:3])
+        return f"Học viên thường hỏi theo nhiều cách, ví dụ: {examples}."
+
+    @staticmethod
+    def _best_cluster_question(questions: list[str]) -> str:
+        if not questions:
+            return ""
+        detail_markers = ("khác", "giải thích", "vì sao", "như thế nào", "ví dụ", "khi nào", "cách")
+        return max(
+            questions,
+            key=lambda question: (
+                sum(1 for marker in detail_markers if marker in question.lower()),
+                len(question),
+            ),
+        )
+
+    @staticmethod
+    def _best_stored_answer(questions: list[str], answer: str) -> str:
+        return re.sub(r"\s+", " ", answer).strip()
+
+    @staticmethod
+    def _question_signature_legacy(content: str) -> str:
         normalized = re.sub(r"\s+", " ", content.lower()).strip()
         normalized = re.sub(r"[^\w\sÀ-ỹ]", "", normalized, flags=re.UNICODE)
         stop_phrases = (
@@ -735,6 +853,77 @@ class ReviewPackService:
         for phrase in stop_phrases:
             normalized = normalized.replace(phrase, " ")
         return re.sub(r"\s+", " ", normalized).strip()
+
+    async def _answer_chat_question_groups(
+        self,
+        *,
+        slide_pages: list[dict[str, Any]],
+        chat_questions: list[dict[str, Any]],
+        generated_insights: list[dict[str, Any]],
+        limit: int = 10,
+    ) -> list[dict[str, Any]]:
+        groups = self._top_chat_question_groups(chat_questions, limit=limit)
+        generated_by_question = self._match_generated_insights_by_question(generated_insights)
+        insights: list[dict[str, Any]] = []
+        for group in groups:
+            generated = generated_by_question.get(group["signature"], {})
+            source_pages = self._safe_pages_optional(
+                []
+                if group.get("is_outside_slide")
+                else group.get("cited_pages") or generated.get("source_pages") or ([group["source_page"]] if group.get("source_page") else []),
+                slide_pages,
+            )
+            excerpt = self._excerpt(source_pages, slide_pages, generated.get("source_excerpt")) if source_pages else ""
+            answer = ""
+            if source_pages and excerpt:
+                answer = await self._answer_cluster_from_slide(group["best_question"], source_pages, slide_pages)
+            if not answer:
+                answer = re.sub(
+                    r"\s+",
+                    " ",
+                    str(generated.get("correct_understanding") or group.get("ai_reply") or ""),
+                ).strip()
+            if not answer:
+                answer = self._fallback_answer_from_excerpt(group["best_question"], excerpt)
+            insights.append(
+                {
+                    "topic": group["topic"],
+                    "common_confusion": group["common_confusion"],
+                    "correct_understanding": answer,
+                    "source_pages": source_pages,
+                    "source_excerpt": excerpt,
+                    "confidence": 0.82 if source_pages and excerpt else 0.62,
+                    "unique_user_count": group["unique_user_count"],
+                    "question_count": group["question_count"],
+                    "representative_questions": group["representative_questions"],
+                }
+            )
+        return insights
+
+    async def _answer_cluster_from_slide(
+        self,
+        question: str,
+        source_pages: list[int],
+        slide_pages: list[dict[str, Any]],
+    ) -> str:
+        if not self.llm_service.enabled:
+            return ""
+        context_chunks = []
+        for page_number in source_pages:
+            page = next((item for item in slide_pages if int(item.get("page") or 0) == page_number), None)
+            text = re.sub(r"\s+", " ", str((page or {}).get("text") or "")).strip()
+            if text:
+                context_chunks.append(f"[Slide {page_number}] {text[:1200]}")
+        if not context_chunks:
+            return ""
+        try:
+            answer = await self.llm_service.answer(
+                question=question,
+                context="\n\n".join(context_chunks),
+            )
+            return re.sub(r"\s+", " ", answer or "").strip()
+        except Exception:
+            return ""
 
     @staticmethod
     def _fallback_generated(slide_pages: list[dict[str, Any]], chat_questions: list[dict[str, Any]]) -> dict[str, Any]:

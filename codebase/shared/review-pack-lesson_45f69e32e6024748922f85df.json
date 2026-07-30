@@ -1,17 +1,17 @@
 {
   "schema_version": "1.0",
   "pack_id": "pack-lesson_45f69e32e6024748922f85df-001",
-  "status": "needs_review",
+  "status": "ready",
   "lesson": {
     "id": "lesson_45f69e32e6024748922f85df",
     "title": "Day 01 - AI & LLM Foundation",
     "slide_count": 29
   },
   "analysis": {
-    "student_question_count": 3,
+    "student_question_count": 5,
     "unique_user_count": 1,
     "cluster_count": 3,
-    "included_cluster_count": 0,
+    "included_cluster_count": 3,
     "excluded_noise_count": 0
   },
   "summary": [
@@ -84,31 +84,36 @@
   "class_insights": [
     {
       "id": "insight-cluster-01",
-      "topic": "rlhf là gì",
-      "common_confusion": "rlhf là gì",
-      "correct_understanding": "Trả lời gợi ý: Nội dung liên quan nằm ở đoạn slide: [Slide 1] AI IN ACTION - Day 1 AI & LLM Foundation C Bạn đang dùng AI mỗi ngày — nhưng thực sự bên trong nó đang làm gì?. Giải thích: Đây là câu hỏi thật từ học viên, nên Lab Coach cần kiểm tra xem câu trả lời gợi ý đã bám đúng slide và đủ dễ hiểu chưa.",
+      "topic": "Những câu hỏi liên quan đến RLHF",
+      "common_confusion": "Học viên thường hỏi theo nhiều cách, ví dụ: rlhf khác gì bình thường; giải thích qua về RLHF; rlhf là gì.",
+      "correct_understanding": "**RLHF khác gì so với huấn luyện thông thường?** Theo tài liệu slide, quy trình phát triển LLM gồm nhiều bước: **Pre-training → Căn chỉnh (SFT, RLHF/DPO) → Luyện suy luận**. - **Huấn luyện thông thường (Pre-training):** Mô hình học từ hàng nghìn tỷ mảnh chữ, chỉ có một nhiệm vụ duy nhất là **đoán mảnh chữ tiếp theo**. Nó học ngữ pháp, kiến thức, nhưng chưa biết cách trả lời hữu ích hay an toàn. - **RLHF (Reinforcement Learning from Human Feedback):** Là bước **căn chỉnh sau pre-training**. Mô hình được huấn luyện thêm dựa trên **phản hồi của con người** (ví dụ: đánh giá câu trả lời nào hay hơn) để học cách ưu tiên những câu trả lời hữu ích, trung thực và an toàn hơn. **Tóm lại:** Pre-training dạy mô hình *biết nói*, còn RLHF dạy mô hình *nói đúng ý người dùng* và *nói có trách nhiệm*.",
       "source_pages": [
-        1
+        10,
+        4,
+        7,
+        8
       ],
-      "source_excerpt": "[Slide 1] AI IN ACTION - Day 1 AI & LLM Foundation C Bạn đang dùng AI mỗi ngày — nhưng thực sự bên trong nó đang làm gì?",
-      "confidence": 0.68,
+      "source_excerpt": "[Slide 10] LLM là gì? — một bộ não nền, không phải một chatbot LLM (Large Language Model) là một mô hình ngôn ngữ rất lớn, 💬 Chatbot thường dựa trên kiến trúc Transformer, được luyện trên hàng nghìn tỷ mảnh chữ để học cách đoán mảnh chữ tiếp theo trong 1 model nền N O 📝 (LLM) Tóm tắt tài liệu ngữ cảnh. A T ⟵ 💻 Viết code Nhờ được luyện đủ rộng, nó trở thành một nền chung: thay vì mỗi việc train một model riêng, cùng một model làm được rất nhiều việc. H A 🌐 Dịch & phân tích Chatbot chỉ là một dạng",
+      "confidence": 0.82,
       "status": "ready",
       "unique_user_count": 1,
-      "question_count": 1,
+      "question_count": 3,
       "representative_questions": [
+        "rlhf khác gì bình thường",
+        "giải thích qua về RLHF",
         "rlhf là gì"
       ]
     },
     {
       "id": "insight-cluster-02",
-      "topic": "sinh văn bản là như nào?",
+      "topic": "Câu hỏi về Sinh / Van",
       "common_confusion": "sinh văn bản là như nào?",
-      "correct_understanding": "Trả lời gợi ý: Nội dung liên quan nằm ở đoạn slide: [Slide 1] AI IN ACTION - Day 1 AI & LLM Foundation C Bạn đang dùng AI mỗi ngày — nhưng thực sự bên trong nó đang làm gì?. Giải thích: Đây là câu hỏi thật từ học viên, nên Lab Coach cần kiểm tra xem câu trả lời gợi ý đã bám đúng slide và đủ dễ hiểu chưa.",
+      "correct_understanding": "Sinh văn bản là quá trình AI tự động tạo ra nội dung chữ viết (câu, đoạn văn, bài báo, code, v.v.) dựa trên yêu cầu hoặc dữ liệu đầu vào. Ví dụ: Khi bạn hỏi AI một câu hỏi, nó sẽ \"sinh\" ra câu trả lời bằng cách dự đoán từng chữ một cách hợp lý, dựa trên những gì nó đã học từ hàng tỷ văn bản trước đó.",
       "source_pages": [
         1
       ],
       "source_excerpt": "[Slide 1] AI IN ACTION - Day 1 AI & LLM Foundation C Bạn đang dùng AI mỗi ngày — nhưng thực sự bên trong nó đang làm gì?",
-      "confidence": 0.68,
+      "confidence": 0.82,
       "status": "ready",
       "unique_user_count": 1,
       "question_count": 1,
@@ -118,14 +123,14 @@
     },
     {
       "id": "insight-cluster-03",
-      "topic": "llm khác gì với agent~",
+      "topic": "Câu hỏi về LLM / Agent",
       "common_confusion": "llm khác gì với agent~",
-      "correct_understanding": "Trả lời gợi ý: Nội dung liên quan nằm ở đoạn slide: [Slide 1] AI IN ACTION - Day 1 AI & LLM Foundation C Bạn đang dùng AI mỗi ngày — nhưng thực sự bên trong nó đang làm gì?. Giải thích: Đây là câu hỏi thật từ học viên, nên Lab Coach cần kiểm tra xem câu trả lời gợi ý đã bám đúng slide và đủ dễ hiểu chưa.",
+      "correct_understanding": "**LLM (Large Language Model)** là mô hình ngôn ngữ lớn, có khả năng hiểu và sinh văn bản dựa trên dữ liệu đã học. LLM chỉ xử lý đầu vào và trả về đầu ra văn bản, không tự thực hiện hành động hay tương tác với môi trường bên ngoài. **Agent** là hệ thống có khả năng tự chủ, có thể nhận biết môi trường, đưa ra quyết định và thực hiện hành động để đạt mục tiêu. Agent có thể sử dụng LLM như một thành phần để xử lý ngôn ngữ, nhưng còn có thêm các module như lập kế hoạch, ghi nhớ, và gọi công cụ bên ngoài. **Tóm lại:** LLM là bộ não xử lý ngôn ngữ, Agent là hệ thống thông minh có thể hành động. Agent có thể dùng LLM, nhưng LLM không phải là Agent.",
       "source_pages": [
         1
       ],
       "source_excerpt": "[Slide 1] AI IN ACTION - Day 1 AI & LLM Foundation C Bạn đang dùng AI mỗi ngày — nhưng thực sự bên trong nó đang làm gì?",
-      "confidence": 0.68,
+      "confidence": 0.82,
       "status": "ready",
       "unique_user_count": 1,
       "question_count": 1,
@@ -246,16 +251,6 @@
       "status": "ready"
     }
   ],
-  "warnings": [
-    {
-      "code": "LOW_CONFIDENCE",
-      "message": "Một số mục cần Lab Coach đối chiếu slide trước khi phát hành.",
-      "item_ids": [
-        "insight-cluster-01",
-        "insight-cluster-02",
-        "insight-cluster-03"
-      ]
-    }
-  ],
+  "warnings": [],
   "generated_at": "2026-07-30T00:00:00+00:00"
 }

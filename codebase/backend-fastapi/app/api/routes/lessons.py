@@ -83,6 +83,7 @@ async def upload_lesson_job(
 
     async def run_job() -> None:
         try:
+            await job.wait_for_connection(timeout=5)
             if AsyncSessionLocal is None:
                 service = LessonService(None)
                 lesson, slide_deck = await service.upload_lesson(
@@ -183,6 +184,7 @@ async def add_slide_to_lesson_job(
 
     async def run_job() -> None:
         try:
+            await job.wait_for_connection(timeout=5)
             if AsyncSessionLocal is None:
                 service = LessonService(None)
                 slide_deck = await service.add_slide_to_lesson(

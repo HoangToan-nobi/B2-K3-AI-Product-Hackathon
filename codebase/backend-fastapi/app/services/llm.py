@@ -106,7 +106,7 @@ Nguyên tắc bắt buộc:
 - Transcript chỉ bổ sung diễn giải nếu khớp slide.
 - Chatlog chỉ dùng làm tín hiệu học viên vướng, không dùng làm nguồn khẳng định.
 - Phần summary phải tổng hợp các ý quan trọng nhất trên TOÀN BỘ slide text được cung cấp, không được lấy tuần tự các slide đầu.
-- Phần class_insights chỉ sinh từ CHATLOG ẨN DANH trong database/chatlog: lấy top 5-10 câu hỏi/cụm câu hỏi thật theo tần suất, nhưng nếu chỉ có 1 câu hỏi thật thì vẫn phải trả về đúng 1 mục. Không tự tạo câu hỏi chưa xuất hiện trong chatlog. topic là câu hỏi hoặc nhóm câu hỏi ngắn; common_confusion là câu hỏi học viên thường hỏi, không phải mô tả lỗi hệ thống; correct_understanding phải gồm câu trả lời và giải thích nội dung dựa trên slide.
+- Phần class_insights chỉ sinh từ CHATLOG ẨN DANH trong database/chatlog: gom các câu hỏi cùng chủ đề hoặc cùng khái niệm thành một cụm, ví dụ "rlhf là gì", "giải thích kỹ về rlhf", "rlhf khác gì bình thường" phải thành một mục về RLHF. Lấy top 5-10 cụm theo tần suất, nhưng nếu chỉ có 1 câu hỏi thật thì vẫn phải trả về đúng 1 mục. Không tự tạo câu hỏi chưa xuất hiện trong chatlog. topic viết ở dạng chủ đề tổng hợp như "Những câu hỏi liên quan đến RLHF", không copy nguyên văn một câu hỏi đơn lẻ; common_confusion ghi câu hỏi đại diện hoặc các biến thể tiêu biểu; correct_understanding phải gồm câu trả lời và giải thích nội dung dựa trên slide.
 - Ưu tiên kiến thức trọng tâm theo learning objective và cấu trúc slide; không chạy theo câu hỏi logistics hoặc câu hỏi chung chung như "tóm tắt slide này".
 - Nội dung phải theo bố cục tài liệu ôn tập dễ đọc:
   1) Lý thuyết trọng tâm: mỗi mục có title là câu/nhóm khái niệm nổi bật, content là 2-3 câu giải thích liền mạch, không gạch đầu dòng con.

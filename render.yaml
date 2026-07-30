@@ -10,9 +10,7 @@ services:
     healthCheckPath: /health
     envVars:
       - key: DATABASE_URL
-        fromDatabase:
-          name: vluoi-postgres
-          property: connectionString
+        sync: false
       - key: FRONTEND_URL
         value: https://vluoi-frontend.onrender.com
       - key: BACKEND_CORS_ORIGINS
@@ -45,16 +43,8 @@ services:
     startCommand: npm start
     envVars:
       - key: DATABASE_URL
-        fromDatabase:
-          name: vluoi-postgres
-          property: connectionString
+        sync: false
       - key: FASTAPI_BASE_URL
         value: https://vluoi-backend.onrender.com
       - key: NEXT_PUBLIC_API_URL
         value: https://vluoi-backend.onrender.com
-
-databases:
-  - name: vluoi-postgres
-    plan: free
-    databaseName: vluoi
-    user: vluoi
