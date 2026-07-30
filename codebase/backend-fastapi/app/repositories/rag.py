@@ -1,5 +1,6 @@
 import json
-from datetime import datetime, timezone
+import re
+from datetime import datetime
 from dataclasses import dataclass
 from typing import Any
 from uuid import uuid4
@@ -103,16 +104,19 @@ class RagRepository:
         current_slide_page: int | None,
         selected_text: str | None,
         anonymized_user_id: str = "runtime-student",
-    ) -> None:
+    ) -> str | None:
         if self.session is None or not message.strip():
-            return
+            return None
 
         db_lesson_id = self._db_lesson_id(lesson_id)
         slide_page_id = await self._find_slide_page_id(db_lesson_id, current_slide_page)
+        question_id = f"sq_{uuid4().hex[:24]}"
         normalized_message = json.dumps(
             {
                 "current_slide_page": current_slide_page,
                 "selected_text": selected_text or "",
+                "citations": "",
+                "cited_pages": [],
             },
             ensure_ascii=False,
         )
@@ -133,14 +137,69 @@ class RagRepository:
                     """
                 ),
                 {
-                    "id": f"sq_{uuid4().hex[:24]}",
+                    "id": question_id,
                     "lesson_id": db_lesson_id,
                     "anonymized_user_id": anonymized_user_id,
                     "message": message.strip(),
                     "normalized_message": normalized_message,
                     "slide_page_hint": slide_page_id,
-                    "created_at": datetime.now(timezone.utc),
+                    "created_at": datetime.utcnow(),
                 },
+            )
+            await self.session.commit()
+            return question_id
+        except Exception:
+            await self.session.rollback()
+            return None
+
+    async def update_student_question_answer_metadata(
+        self,
+        *,
+        question_id: str | None,
+        reply: str,
+        citations: str,
+        context_sources: list[dict[str, Any]] | None = None,
+    ) -> None:
+        if self.session is None or not question_id:
+            return
+        try:
+            row = (
+                await self.session.execute(
+                    text(
+                        """
+                        SELECT "normalizedMessage"
+                        FROM "StudentQuestion"
+                        WHERE id = :question_id
+                        LIMIT 1
+                        """
+                    ),
+                    {"question_id": question_id},
+                )
+            ).mappings().first()
+            if not row:
+                return
+            try:
+                metadata = json.loads(row["normalizedMessage"] or "{}")
+                if not isinstance(metadata, dict):
+                    metadata = {}
+            except json.JSONDecodeError:
+                metadata = {}
+            metadata.update(
+                {
+                    "ai_reply": reply[:1800],
+                    "citations": citations,
+                    "cited_pages": self._extract_cited_pages(citations, context_sources or []),
+                }
+            )
+            await self.session.execute(
+                text(
+                    """
+                    UPDATE "StudentQuestion"
+                    SET "normalizedMessage" = :metadata
+                    WHERE id = :question_id
+                    """
+                ),
+                {"question_id": question_id, "metadata": json.dumps(metadata, ensure_ascii=False)},
             )
             await self.session.commit()
         except Exception:
@@ -257,6 +316,24 @@ class RagRepository:
             return aliases.get(lesson_id, lesson_id)
         except ValueError:
             return lesson_id
+
+    @staticmethod
+    def _extract_cited_pages(citations: str, context_sources: list[dict[str, Any]]) -> list[int]:
+        pages: list[int] = []
+        if "ngoài slide" not in citations.lower() and "ngoai slide" not in citations.lower():
+            for match in re.findall(r"(?:slide|trang)\s*(\d+)", citations, flags=re.IGNORECASE):
+                page = int(match)
+                if page not in pages:
+                    pages.append(page)
+        for source in context_sources:
+            if source.get("type") != "slide":
+                continue
+            page_number = source.get("page_number")
+            if str(page_number or "").isdigit():
+                page = int(page_number)
+                if page not in pages:
+                    pages.append(page)
+        return pages
 
     @staticmethod
     def _extract_excerpt(content: str, query: str, window: int = 900) -> str:

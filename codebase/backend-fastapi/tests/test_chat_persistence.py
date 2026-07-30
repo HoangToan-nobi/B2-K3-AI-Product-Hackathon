@@ -12,9 +12,14 @@ def anyio_backend():
 class _FakeRagRepository:
     def __init__(self) -> None:
         self.saved: list[dict] = []
+        self.updated: list[dict] = []
 
-    async def save_student_question(self, **kwargs) -> None:
+    async def save_student_question(self, **kwargs) -> str:
         self.saved.append(kwargs)
+        return "sq_test"
+
+    async def update_student_question_answer_metadata(self, **kwargs) -> None:
+        self.updated.append(kwargs)
 
     async def list_slide_pages(self, lesson_id: str) -> list[RagDocument]:
         return [
@@ -60,5 +65,13 @@ async def test_chat_reply_persists_student_question_with_slide_hint():
             "message": "RAG là gì?",
             "current_slide_page": 3,
             "selected_text": "RAG",
+        }
+    ]
+    assert fake_repository.updated == [
+        {
+            "question_id": "sq_test",
+            "reply": "Dựa trên Slide 3.",
+            "citations": "Slide 3",
+            "context_sources": [],
         }
     ]

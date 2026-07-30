@@ -138,6 +138,7 @@ class LessonService:
             if db_created:
                 lesson, slide_deck = db_created
                 slide_deck["extraction"] = extraction_meta
+                self._remember_uploaded_lesson(lesson, page_texts)
                 for extra_file in upload_files[1:]:
                     try:
                         await self.add_slide_to_lesson(lesson_id=lesson["id"], file=extra_file, progress=progress)
@@ -189,6 +190,16 @@ class LessonService:
             "VLười đã sắp xếp slide để học viên có thể xem và hỏi đáp.",
         )
         return lesson, slide_deck
+
+    @staticmethod
+    def _remember_uploaded_lesson(lesson: dict[str, Any], page_texts: list[str]) -> None:
+        lesson_id = str(lesson.get("id") or "")
+        if not lesson_id:
+            return
+        UPLOADED_LESSONS[lesson_id] = lesson
+        UPLOADED_PAGES[lesson_id] = [
+            {"pageNumber": index, "textContent": text} for index, text in enumerate(page_texts, start=1)
+        ]
 
     async def get_slide_file(self, lesson_id: str) -> tuple[bytes, str, str]:
         try:

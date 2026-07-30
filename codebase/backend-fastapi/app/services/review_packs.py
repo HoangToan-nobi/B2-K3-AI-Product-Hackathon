@@ -386,11 +386,11 @@ class ReviewPackService:
 
     @staticmethod
     def _csv_chat_questions_for_lesson(mapping: dict[str, Any]) -> list[dict[str, Any]]:
-        if not CHATLOG_PATH.exists():
+        day_codes = set(mapping.get("day_codes") or [])
+        if not CHATLOG_PATH.exists() or not mapping.get("chatlog_csv") or not day_codes:
             return []
         import csv
 
-        day_codes = set(mapping.get("day_codes") or [])
         rows: list[dict[str, Any]] = []
         with CHATLOG_PATH.open(encoding="utf-8") as file:
             for row in csv.DictReader(file):
@@ -475,12 +475,17 @@ class ReviewPackService:
         fallback = self._fallback_generated(slide_pages, chat_questions)
         data = generated if isinstance(generated, dict) else fallback
         raw_summary = data["summary"] if isinstance(data.get("summary"), list) else fallback["summary"]
-        raw_insights = data["class_insights"] if isinstance(data.get("class_insights"), list) else fallback["class_insights"]
+        generated_insights = data["class_insights"] if isinstance(data.get("class_insights"), list) else []
+        raw_insights = (
+            self._chat_grounded_insights(slide_pages, chat_questions, generated_insights, limit=10)
+            if chat_questions
+            else fallback["class_insights"]
+        )
         raw_questions = data["review_questions"] if isinstance(data.get("review_questions"), list) else fallback["review_questions"]
         summary = [self._summary_item(item, index, slide_pages) for index, item in enumerate(raw_summary[:6], start=1)]
         insights = [
             self._insight_item(item, index, slide_pages)
-            for index, item in enumerate(raw_insights[:6], start=1)
+            for index, item in enumerate(raw_insights[:10], start=1)
         ]
         if len(raw_questions) < 3:
             raw_questions = [
@@ -543,18 +548,19 @@ class ReviewPackService:
         }
 
     def _insight_item(self, item: dict[str, Any], index: int, slide_pages: list[dict[str, Any]]) -> dict[str, Any]:
-        pages = self._safe_pages(item.get("source_pages"), slide_pages)
+        pages = self._safe_pages_optional(item.get("source_pages"), slide_pages)
         confidence = float(item.get("confidence") or 0.6)
         questions = item.get("representative_questions") if isinstance(item.get("representative_questions"), list) else []
+        source_excerpt = self._excerpt(pages, slide_pages, item.get("source_excerpt")) if pages else ""
         return {
             "id": f"insight-cluster-{index:02d}",
             "topic": str(item.get("topic") or f"Câu hỏi học viên {index}")[:160],
             "common_confusion": str(item.get("common_confusion") or "")[:700],
             "correct_understanding": str(item.get("correct_understanding") or "")[:900],
             "source_pages": pages,
-            "source_excerpt": self._excerpt(pages, slide_pages, item.get("source_excerpt")),
+            "source_excerpt": source_excerpt,
             "confidence": confidence,
-            "status": "ready" if confidence >= 0.72 else "needs_review",
+            "status": "ready" if source_excerpt.strip() else "needs_review",
             "unique_user_count": int(item.get("unique_user_count") or 1),
             "question_count": int(item.get("question_count") or max(1, len(questions))),
             "representative_questions": [str(question)[:260] for question in questions[:5]],
@@ -584,9 +590,156 @@ class ReviewPackService:
         }
 
     @staticmethod
+    def _safe_pages_optional(value: Any, slide_pages: list[dict[str, Any]]) -> list[int]:
+        pages = [int(page) for page in value if isinstance(page, int | float) or str(page).isdigit()] if isinstance(value, list) else []
+        max_page = max([int(page.get("page", 1)) for page in slide_pages] or [1])
+        valid = [page for page in pages if 1 <= page <= max_page]
+        return valid[:4]
+
+    @staticmethod
+    def _chat_grounded_insights(
+        slide_pages: list[dict[str, Any]],
+        chat_questions: list[dict[str, Any]],
+        generated_insights: list[dict[str, Any]],
+        limit: int = 10,
+    ) -> list[dict[str, Any]]:
+        groups = ReviewPackService._top_chat_question_groups(chat_questions, limit=limit)
+        generated_by_question = ReviewPackService._match_generated_insights_by_question(generated_insights)
+        insights: list[dict[str, Any]] = []
+
+        for group in groups:
+            representative = group["representative_questions"][0]
+            generated = generated_by_question.get(ReviewPackService._question_signature(representative), {})
+            source_pages = ReviewPackService._safe_pages_optional(
+                []
+                if group.get("is_outside_slide")
+                else group.get("cited_pages") or generated.get("source_pages") or ([group["source_page"]] if group.get("source_page") else []),
+                slide_pages,
+            )
+            excerpt = ReviewPackService._excerpt(source_pages, slide_pages, generated.get("source_excerpt")) if source_pages else ""
+            answer = re.sub(
+                r"\s+",
+                " ",
+                str(generated.get("correct_understanding") or group.get("ai_reply") or ""),
+            ).strip()
+            confidence = float(generated.get("confidence") or 0.68)
+            if not answer:
+                answer = ReviewPackService._fallback_answer_from_excerpt(representative, excerpt)
+                confidence = min(confidence, 0.68)
+
+            insights.append(
+                {
+                    "topic": representative[:160],
+                    "common_confusion": representative[:700],
+                    "correct_understanding": answer[:900],
+                    "source_pages": source_pages,
+                    "source_excerpt": excerpt,
+                    "confidence": confidence,
+                    "unique_user_count": group["unique_user_count"],
+                    "question_count": group["question_count"],
+                    "representative_questions": group["representative_questions"],
+                }
+            )
+        return insights
+
+    @staticmethod
+    def _top_chat_question_groups(questions: list[dict[str, Any]], limit: int = 10) -> list[dict[str, Any]]:
+        groups: dict[str, dict[str, Any]] = {}
+        order = 0
+        for item in questions:
+            content = re.sub(r"\s+", " ", str(item.get("content") or "")).strip()
+            if len(content) < 8:
+                continue
+            signature = ReviewPackService._question_signature(content)
+            if not signature:
+                continue
+            group = groups.setdefault(
+                signature,
+                {
+                    "order": order,
+                    "source_page": item.get("source_page"),
+                    "cited_pages": [],
+                    "ai_reply": "",
+                    "is_outside_slide": False,
+                    "question_count": 0,
+                    "users": set(),
+                    "representative_questions": [],
+                },
+            )
+            order += 1
+            group["question_count"] += 1
+            user_id = str(item.get("user_id") or "")
+            if user_id:
+                group["users"].add(user_id)
+            if not group.get("source_page") and item.get("source_page"):
+                group["source_page"] = item.get("source_page")
+            for page in item.get("cited_pages") or []:
+                if str(page or "").isdigit() and int(page) not in group["cited_pages"]:
+                    group["cited_pages"].append(int(page))
+            if not group.get("ai_reply") and item.get("ai_reply"):
+                group["ai_reply"] = str(item.get("ai_reply") or "")
+            group["is_outside_slide"] = bool(group.get("is_outside_slide") or item.get("is_outside_slide"))
+            if content not in group["representative_questions"]:
+                group["representative_questions"].append(content)
+
+        ranked = sorted(
+            groups.values(),
+            key=lambda value: (
+                -int(value["question_count"]),
+                -len(value["users"]),
+                int(value["source_page"] or 9999),
+                int(value["order"]),
+            ),
+        )
+        return [
+            {
+                "source_page": group.get("source_page"),
+                "cited_pages": group.get("cited_pages", [])[:4],
+                "ai_reply": group.get("ai_reply", ""),
+                "is_outside_slide": bool(group.get("is_outside_slide")),
+                "question_count": int(group["question_count"]),
+                "unique_user_count": max(1, len(group["users"])),
+                "representative_questions": group["representative_questions"][:5],
+            }
+            for group in ranked[:limit]
+        ]
+
+    @staticmethod
+    def _match_generated_insights_by_question(generated_insights: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
+        matched: dict[str, dict[str, Any]] = {}
+        for item in generated_insights:
+            candidates = []
+            for field in ("common_confusion", "topic"):
+                value = str(item.get(field) or "").strip()
+                if value:
+                    candidates.append(value)
+            questions = item.get("representative_questions") if isinstance(item.get("representative_questions"), list) else []
+            candidates.extend(str(question).strip() for question in questions if str(question).strip())
+            for candidate in candidates:
+                signature = ReviewPackService._question_signature(candidate)
+                if signature and signature not in matched:
+                    matched[signature] = item
+        return matched
+
+    @staticmethod
+    def _question_signature(content: str) -> str:
+        normalized = re.sub(r"\s+", " ", content.lower()).strip()
+        normalized = re.sub(r"[^\w\sÀ-ỹ]", "", normalized, flags=re.UNICODE)
+        stop_phrases = (
+            "cho em hỏi",
+            "em hỏi",
+            "mình hỏi",
+            "cho mình hỏi",
+            "ạ",
+        )
+        for phrase in stop_phrases:
+            normalized = normalized.replace(phrase, " ")
+        return re.sub(r"\s+", " ", normalized).strip()
+
+    @staticmethod
     def _fallback_generated(slide_pages: list[dict[str, Any]], chat_questions: list[dict[str, Any]]) -> dict[str, Any]:
         summary = ReviewPackService._fallback_summary_from_all_slides(slide_pages)
-        class_insights = ReviewPackService._fallback_insights_from_chat(slide_pages, chat_questions)
+        class_insights = ReviewPackService._fallback_insights_from_chat(slide_pages, chat_questions, limit=10)
         review_questions = ReviewPackService._fallback_quiz_items(summary, class_insights, slide_pages, limit=5)
 
         return {
@@ -648,7 +801,7 @@ class ReviewPackService:
                     "answer": answer[:220],
                     "explanation": f"Đáp án đúng vì câu hỏi này đã được giải thích trong phần học viên hay hỏi: {answer[:300]}",
                     "source_pages": pages,
-                    "source_excerpt": item.get("source_excerpt") or ReviewPackService._excerpt(pages, slide_pages),
+                    "source_excerpt": item.get("source_excerpt") or (ReviewPackService._excerpt(pages, slide_pages) if pages else ""),
                     "confidence": 0.74,
                 }
             )
@@ -660,7 +813,7 @@ class ReviewPackService:
     def _fallback_insights_from_chat(
         slide_pages: list[dict[str, Any]],
         chat_questions: list[dict[str, Any]],
-        limit: int = 5,
+        limit: int = 10,
     ) -> list[dict[str, Any]]:
         insights: list[dict[str, Any]] = []
         selected = ReviewPackService._select_chat_context_questions(chat_questions, limit=limit)
@@ -668,19 +821,26 @@ class ReviewPackService:
             content = re.sub(r"\s+", " ", str(question.get("content") or "")).strip()
             if not content:
                 continue
-            source_page = question.get("source_page")
-            page = ReviewPackService._page_for_question(slide_pages, source_page)
-            page_number = int(page.get("page") or source_page or 1)
-            excerpt = re.sub(r"\s+", " ", str(page.get("text") or "")).strip()[:500]
-            answer = ReviewPackService._fallback_answer_from_excerpt(content, excerpt)
+            source_pages = ReviewPackService._safe_pages_optional(
+                []
+                if question.get("is_outside_slide")
+                else question.get("cited_pages") or ([question.get("source_page")] if question.get("source_page") else []),
+                slide_pages,
+            )
+            page_number = source_pages[0] if source_pages else None
+            page = ReviewPackService._page_for_question(slide_pages, page_number) if page_number else {}
+            excerpt = re.sub(r"\s+", " ", str(page.get("text") or "")).strip()[:500] if page_number else ""
+            answer = re.sub(r"\s+", " ", str(question.get("ai_reply") or "")).strip()
+            if not answer:
+                answer = ReviewPackService._fallback_answer_from_excerpt(content, excerpt)
             insights.append(
                 {
                     "topic": content[:160],
                     "common_confusion": content[:700],
                     "correct_understanding": answer,
-                    "source_pages": [page_number],
+                    "source_pages": source_pages,
                     "source_excerpt": excerpt,
-                    "confidence": 0.68,
+                    "confidence": 0.78 if source_pages and excerpt else 0.62,
                     "unique_user_count": 1,
                     "question_count": 1,
                     "representative_questions": [content],
@@ -706,8 +866,7 @@ class ReviewPackService:
             )
         compact_excerpt = excerpt[:360].rstrip()
         return (
-            f"Trả lời gợi ý: Nội dung liên quan nằm ở đoạn slide: {compact_excerpt}.\n"
-            "Giải thích: Đây là câu hỏi thật từ học viên, nên Lab Coach cần kiểm tra xem câu trả lời gợi ý đã bám đúng slide và đủ dễ hiểu chưa."
+            f"Trả lời & giải thích: Nội dung liên quan nằm trong slide: {compact_excerpt}."
         )
 
     @staticmethod

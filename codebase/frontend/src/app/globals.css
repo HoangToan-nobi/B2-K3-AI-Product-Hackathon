@@ -384,12 +384,37 @@ a { color: var(--accent); text-decoration: none; }
   line-height: 1.25;
 }
 
-.progress-panel-head span {
+.progress-panel-actions {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.progress-panel-actions span {
   color: var(--text);
   font-size: 24px;
   font-weight: 800;
   line-height: 1;
   font-variant-numeric: tabular-nums;
+}
+
+.progress-close {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  color: #a9b8d3;
+  font-size: 18px;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+  transition: background 0.15s, color 0.15s;
+}
+
+.progress-close:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: var(--text);
 }
 
 .progress-track {

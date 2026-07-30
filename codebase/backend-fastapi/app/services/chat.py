@@ -91,7 +91,7 @@ class ChatService:
         selected_text: str | None,
     ) -> dict[str, Any]:
         lesson_id = self._canonical_lesson_id(lesson_id)
-        await self.rag_repository.save_student_question(
+        question_id = await self.rag_repository.save_student_question(
             lesson_id=lesson_id,
             message=message,
             current_slide_page=current_slide_page,
@@ -161,13 +161,26 @@ class ChatService:
             chat_docs=chat_docs,
         )
         if agent_result["reply"]:
+            await self.rag_repository.update_student_question_answer_metadata(
+                question_id=question_id,
+                reply=agent_result["reply"],
+                citations=agent_result.get("citations") or "",
+                context_sources=agent_result.get("context_sources") or [],
+            )
             return agent_result
 
-        return {
+        fallback_result = {
             "reply": self._extractive_answer(message=message, pages=target_pages),
             "citations": self._build_citations(target_pages),
             "context_sources": [],
         }
+        await self.rag_repository.update_student_question_answer_metadata(
+            question_id=question_id,
+            reply=fallback_result["reply"],
+            citations=fallback_result["citations"],
+            context_sources=[],
+        )
+        return fallback_result
 
     @staticmethod
     def _page_by_number(pages: list[RagDocument], page_number: int) -> RagDocument | None:

@@ -97,6 +97,7 @@ export default function Home() {
   const [downloading, setDownloading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [progressJob, setProgressJob] = useState<ProgressState | null>(null);
+  const [progressPanelVisible, setProgressPanelVisible] = useState(true);
   const [catalogVersion, setCatalogVersion] = useState(0);
 
   useEffect(() => {
@@ -209,6 +210,7 @@ export default function Home() {
         const startRes = await startRequest();
         if (!startRes.ok) throw new Error("Không bắt đầu được tiến trình.");
         const start = (await startRes.json()) as ProgressJobStart;
+        setProgressPanelVisible(true);
         setProgressJob({
           active: true,
           kind,
@@ -478,7 +480,9 @@ export default function Home() {
                 </button>
               </div>
             )}
-            {progressJob && <ProgressPanel progress={progressJob} />}
+            {progressJob && progressPanelVisible && (
+              <ProgressPanel progress={progressJob} onClose={() => setProgressPanelVisible(false)} />
+            )}
             {loadingLessons ? (
               <SkeletonList />
             ) : screen === "home" ? (
@@ -521,7 +525,7 @@ export default function Home() {
   );
 }
 
-function ProgressPanel({ progress }: { progress: ProgressState }) {
+function ProgressPanel({ progress, onClose }: { progress: ProgressState; onClose: () => void }) {
   return (
     <section className={`progress-panel ${progress.active ? "running" : "done"}`} aria-live="polite">
       <div className="progress-panel-head">
@@ -529,7 +533,12 @@ function ProgressPanel({ progress }: { progress: ProgressState }) {
           <p>{progress.title}</p>
           <strong>{progress.step}</strong>
         </div>
-        <span>{progress.percent}%</span>
+        <div className="progress-panel-actions">
+          <span>{progress.percent}%</span>
+          <button type="button" className="progress-close" aria-label="Ẩn tiến trình" onClick={onClose}>
+            ×
+          </button>
+        </div>
       </div>
       <div className="progress-track" aria-label={`Tiến trình ${progress.percent}%`}>
         <div className="progress-fill" style={{ width: `${progress.percent}%` }} />

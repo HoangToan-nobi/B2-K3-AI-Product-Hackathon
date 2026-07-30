@@ -1,0 +1,60 @@
+services:
+  - type: web
+    name: vluoi-backend
+    runtime: python
+    plan: free
+    branch: plxg
+    rootDir: codebase/backend-fastapi
+    buildCommand: pip install -e .
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: vluoi-postgres
+          property: connectionString
+      - key: FRONTEND_URL
+        value: https://vluoi-frontend.onrender.com
+      - key: BACKEND_CORS_ORIGINS
+        value: https://vluoi-frontend.onrender.com
+      - key: DEEPSEEK_API_KEY
+        sync: false
+      - key: DEEPSEEK_MODEL
+        value: deepseek-chat
+      - key: UPLOAD_DIR
+        value: uploads
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: CLOUDINARY_URL
+        sync: false
+      - key: CLOUDINARY_FOLDER
+        value: vluoi
+
+  - type: web
+    name: vluoi-frontend
+    runtime: node
+    plan: free
+    branch: plxg
+    rootDir: codebase/frontend
+    buildCommand: npm ci && npx prisma generate && npm run build
+    preDeployCommand: npx prisma db push --skip-generate
+    startCommand: npm start
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: vluoi-postgres
+          property: connectionString
+      - key: FASTAPI_BASE_URL
+        value: https://vluoi-backend.onrender.com
+      - key: NEXT_PUBLIC_API_URL
+        value: https://vluoi-backend.onrender.com
+
+databases:
+  - name: vluoi-postgres
+    plan: free
+    databaseName: vluoi
+    user: vluoi

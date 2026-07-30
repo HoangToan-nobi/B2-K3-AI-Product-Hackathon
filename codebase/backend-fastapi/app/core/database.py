@@ -7,8 +7,8 @@ from app.core.config import get_settings
 
 settings = get_settings()
 engine = (
-    create_async_engine(settings.database_url, pool_pre_ping=True)
-    if settings.database_url
+    create_async_engine(settings.async_database_url, pool_pre_ping=True)
+    if settings.async_database_url
     else None
 )
 AsyncSessionLocal = (
@@ -25,4 +25,3 @@ async def get_db_session() -> AsyncIterator[AsyncSession | None]:
 
     async with AsyncSessionLocal() as session:
         yield session
-

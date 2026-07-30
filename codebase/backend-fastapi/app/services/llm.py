@@ -106,7 +106,7 @@ Nguyên tắc bắt buộc:
 - Transcript chỉ bổ sung diễn giải nếu khớp slide.
 - Chatlog chỉ dùng làm tín hiệu học viên vướng, không dùng làm nguồn khẳng định.
 - Phần summary phải tổng hợp các ý quan trọng nhất trên TOÀN BỘ slide text được cung cấp, không được lấy tuần tự các slide đầu.
-- Phần class_insights chỉ sinh từ CHATLOG ẨN DANH trong database/chatlog: mỗi mục phải đại diện cho một câu hỏi học viên thường hỏi. topic là câu hỏi hoặc nhóm câu hỏi ngắn; common_confusion là câu hỏi học viên thường hỏi, không phải mô tả lỗi hệ thống; correct_understanding phải gồm câu trả lời và giải thích nội dung dựa trên slide.
+- Phần class_insights chỉ sinh từ CHATLOG ẨN DANH trong database/chatlog: lấy top 5-10 câu hỏi/cụm câu hỏi thật theo tần suất, nhưng nếu chỉ có 1 câu hỏi thật thì vẫn phải trả về đúng 1 mục. Không tự tạo câu hỏi chưa xuất hiện trong chatlog. topic là câu hỏi hoặc nhóm câu hỏi ngắn; common_confusion là câu hỏi học viên thường hỏi, không phải mô tả lỗi hệ thống; correct_understanding phải gồm câu trả lời và giải thích nội dung dựa trên slide.
 - Ưu tiên kiến thức trọng tâm theo learning objective và cấu trúc slide; không chạy theo câu hỏi logistics hoặc câu hỏi chung chung như "tóm tắt slide này".
 - Nội dung phải theo bố cục tài liệu ôn tập dễ đọc:
   1) Lý thuyết trọng tâm: mỗi mục có title là câu/nhóm khái niệm nổi bật, content là 2-3 câu giải thích liền mạch, không gạch đầu dòng con.
@@ -135,7 +135,7 @@ Schema:
                         f"TRANSCRIPT:\n{transcript_context}\n\n"
                         f"CHATLOG ẨN DANH:\n{chat_context}\n\n"
                         "Hãy tạo đúng cấu trúc nội dung cho PDF gồm: "
-                        "5-6 mục lý thuyết trọng tâm, 4-5 mục cả lớp thường hỏi, 3-5 câu quiz nhanh. "
+                        "5-6 mục lý thuyết trọng tâm, top 5-10 mục cả lớp thường hỏi nếu chatlog có đủ dữ liệu, 3-5 câu quiz nhanh. "
                         "Văn phong như tài liệu ôn tập chính thức: câu ngắn vừa phải, thuật ngữ rõ, "
                         "không markdown, không bullet trong content/common_confusion/correct_understanding."
                     ),

@@ -178,13 +178,24 @@ class ReviewPackRepository:
         questions: list[dict[str, Any]] = []
         for row in rows:
             metadata = _parse_metadata(row["normalizedMessage"])
-            page_number = row["pageNumber"] or metadata.get("current_slide_page")
+            cited_pages = [
+                int(page)
+                for page in (metadata.get("cited_pages") or [])
+                if str(page or "").isdigit()
+            ]
+            citations = str(metadata.get("citations") or "")
+            is_outside_slide = "ngoài slide" in citations.lower() or "ngoai slide" in citations.lower()
+            page_number = None if is_outside_slide else ((cited_pages[0] if cited_pages else None) or row["pageNumber"] or metadata.get("current_slide_page"))
             questions.append(
                 {
                     "id": str(row["id"]),
                     "user_id": row["anonymizedUserId"] or "",
                     "content": row["message"] or "",
                     "source_page": int(page_number) if str(page_number or "").isdigit() else None,
+                    "cited_pages": cited_pages,
+                    "citations": citations,
+                    "is_outside_slide": is_outside_slide,
+                    "ai_reply": metadata.get("ai_reply") or "",
                     "source": "runtime_db",
                 }
             )

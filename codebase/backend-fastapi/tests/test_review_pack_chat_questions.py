@@ -1,6 +1,7 @@
 import pytest
 
 from app.services.review_packs import ReviewPackService
+from app.services.lessons import UPLOADED_LESSONS, UPLOADED_PAGES
 
 
 @pytest.fixture
@@ -49,6 +50,78 @@ async def test_review_pack_uses_runtime_db_questions_without_csv_fallback(monkey
     )
 
     assert [item["source"] for item in questions] == ["runtime_db"]
+
+
+def test_uploaded_lesson_mapping_does_not_use_static_csv_chatlog():
+    questions = ReviewPackService._csv_chat_questions_for_lesson(
+        {"lesson_id": "lesson_uploaded", "chatlog_csv": "", "day_codes": []}
+    )
+
+    assert questions == []
+
+
+def test_normalized_pack_ignores_generated_insights_without_real_chat_questions():
+    service = ReviewPackService(None)
+    pack = service._normalize_generated_pack(
+        lesson_id="lesson-empty-chat",
+        title="Lesson",
+        slide_count=1,
+        generated={
+            "summary": [
+                {
+                    "title": "Token",
+                    "content": "Token là đơn vị văn bản mà model xử lý.",
+                    "source_pages": [1],
+                    "source_excerpt": "Token là đơn vị văn bản mà model xử lý.",
+                    "confidence": 0.9,
+                }
+            ],
+            "class_insights": [
+                {
+                    "topic": "Câu bịa từ AI",
+                    "common_confusion": "Câu bịa từ AI",
+                    "correct_understanding": "Không được xuất hiện nếu không có chatlog thật.",
+                    "source_pages": [1],
+                    "source_excerpt": "Token là đơn vị văn bản mà model xử lý.",
+                    "confidence": 0.9,
+                }
+            ],
+            "review_questions": [],
+        },
+        chat_questions=[],
+        slide_pages=[{"page": 1, "text": "Token là đơn vị văn bản mà model xử lý."}],
+    )
+
+    assert pack["class_insights"] == []
+
+
+@pytest.mark.anyio
+async def test_review_pack_mapping_falls_back_to_recent_uploaded_lesson_cache():
+    lesson_id = "lesson_recent_upload"
+    UPLOADED_LESSONS[lesson_id] = {
+        "id": lesson_id,
+        "title": "Recent Uploaded Lesson",
+        "slideDecks": [
+            {
+                "id": "deck_recent_upload",
+                "lessonId": lesson_id,
+                "storageKey": "cloudinary://slides/recent-upload.pdf",
+                "pageCount": 1,
+            }
+        ],
+    }
+    UPLOADED_PAGES[lesson_id] = [{"pageNumber": 1, "textContent": "AI khác gì ML?"}]
+
+    try:
+        service = ReviewPackService(None)
+        mapping = await service._lesson_mapping(lesson_id)
+
+        assert mapping["lesson_id"] == lesson_id
+        assert mapping["title"] == "Recent Uploaded Lesson"
+        assert mapping["max_page"] == 1
+    finally:
+        UPLOADED_LESSONS.pop(lesson_id, None)
+        UPLOADED_PAGES.pop(lesson_id, None)
 
 
 def test_select_chat_context_questions_prioritizes_page_and_user_diversity():
@@ -148,9 +221,146 @@ def test_fallback_insights_are_student_question_answer_cards():
 
     assert insight["topic"] == "RAG khác gì so với hỏi trực tiếp LLM?"
     assert insight["common_confusion"] == "RAG khác gì so với hỏi trực tiếp LLM?"
-    assert "Trả lời gợi ý:" in insight["correct_understanding"]
-    assert "Giải thích:" in insight["correct_understanding"]
+    assert "Trả lời & giải thích:" in insight["correct_understanding"]
+    assert "Lab Coach cần kiểm tra" not in insight["correct_understanding"]
     assert "JSON" not in insight["common_confusion"]
+
+
+def test_top_chat_question_groups_keep_single_question_and_rank_top_ten():
+    questions = [
+        {"user_id": "u1", "content": "AI khác gì ML?", "source_page": 3},
+        {"user_id": "u2", "content": "AI khác gì ML?", "source_page": 3},
+        {"user_id": "u3", "content": "Token có chi phí như thế nào?", "source_page": 12},
+        *[
+            {"user_id": f"u-extra-{index}", "content": f"Câu hỏi riêng {index} là gì?", "source_page": index}
+            for index in range(8)
+        ],
+    ]
+
+    groups = ReviewPackService._top_chat_question_groups(questions, limit=10)
+
+    assert len(groups) == 10
+    assert groups[0]["representative_questions"] == ["AI khác gì ML?"]
+    assert groups[0]["question_count"] == 2
+    assert any(group["representative_questions"] == ["Token có chi phí như thế nào?"] for group in groups)
+
+    single = ReviewPackService._top_chat_question_groups(
+        [{"user_id": "u1", "content": "Parameter là gì?", "source_page": 8}],
+        limit=10,
+    )
+
+    assert len(single) == 1
+    assert single[0]["representative_questions"] == ["Parameter là gì?"]
+
+
+def test_normalized_pack_locks_insights_to_real_chat_questions():
+    service = ReviewPackService(None)
+    pack = service._normalize_generated_pack(
+        lesson_id="lesson-chat",
+        title="Lesson",
+        slide_count=3,
+        generated={
+            "summary": [
+                {
+                    "title": "AI và ML",
+                    "content": "AI là hệ rộng hơn, ML là nhánh học từ dữ liệu.",
+                    "source_pages": [3],
+                    "source_excerpt": "AI là hệ rộng hơn ML.",
+                    "confidence": 0.8,
+                }
+            ],
+            "class_insights": [
+                {
+                    "topic": "Làm thế nào để tải slide về máy?",
+                    "common_confusion": "Làm thế nào để tải slide về máy?",
+                    "correct_understanding": "Không được xuất hiện vì không có trong chatlog bài này.",
+                    "source_pages": [1],
+                    "source_excerpt": "Trang bìa",
+                    "confidence": 0.95,
+                },
+                {
+                    "topic": "AI khác gì ML?",
+                    "common_confusion": "AI khác gì ML?",
+                    "correct_understanding": "AI là phạm vi rộng hơn, ML là một nhánh dùng dữ liệu để học mẫu.",
+                    "source_pages": [3],
+                    "source_excerpt": "AI là hệ rộng hơn ML.",
+                    "confidence": 0.9,
+                },
+            ],
+            "review_questions": [],
+        },
+        chat_questions=[
+            {"user_id": "u1", "content": "AI khác gì ML?", "source_page": 3},
+            {"user_id": "u2", "content": "Parameter là gì?", "source_page": 4},
+        ],
+        slide_pages=[
+            {"page": 3, "text": "AI là hệ rộng hơn ML."},
+            {"page": 4, "text": "Parameter là tham số mà model học được trong quá trình huấn luyện."},
+        ],
+    )
+
+    topics = [item["topic"] for item in pack["class_insights"]]
+    assert topics == ["AI khác gì ML?", "Parameter là gì?"]
+    assert all("tải slide" not in item["topic"].lower() for item in pack["class_insights"])
+    assert pack["class_insights"][0]["correct_understanding"].startswith("AI là phạm vi rộng hơn")
+
+
+def test_chat_cited_insight_is_ready_and_uses_real_citation_pages():
+    service = ReviewPackService(None)
+    pack = service._normalize_generated_pack(
+        lesson_id="lesson-chat",
+        title="Lesson",
+        slide_count=12,
+        generated={"summary": [], "class_insights": [], "review_questions": []},
+        chat_questions=[
+            {
+                "user_id": "u1",
+                "content": "Token có chi phí như thế nào?",
+                "source_page": 1,
+                "cited_pages": [12],
+                "citations": "Slide 12",
+                "ai_reply": "Token là đơn vị tính chi phí khi gọi API; nội dung càng nhiều token thì chi phí càng tăng.",
+            }
+        ],
+        slide_pages=[
+            {"page": 1, "text": "Trang bìa"},
+            {"page": 12, "text": "Token là đơn vị model xử lý và cũng là đơn vị tính chi phí API."},
+        ],
+    )
+
+    insight = pack["class_insights"][0]
+    assert insight["source_pages"] == [12]
+    assert insight["source_excerpt"].startswith("Token là đơn vị")
+    assert insight["status"] == "ready"
+    assert pack["status"] == "ready"
+
+
+def test_outside_slide_chat_insight_needs_labcoach_review():
+    service = ReviewPackService(None)
+    pack = service._normalize_generated_pack(
+        lesson_id="lesson-chat",
+        title="Lesson",
+        slide_count=1,
+        generated={"summary": [], "class_insights": [], "review_questions": []},
+        chat_questions=[
+            {
+                "user_id": "u1",
+                "content": "Hôm nay thời tiết thế nào?",
+                "source_page": 1,
+                "cited_pages": [],
+                "citations": "Ngoài slide",
+                "is_outside_slide": True,
+                "ai_reply": "Đây là câu hỏi ngoài nội dung slide.",
+            }
+        ],
+        slide_pages=[{"page": 1, "text": "AI là hệ rộng hơn ML."}],
+    )
+
+    insight = pack["class_insights"][0]
+    assert insight["source_pages"] == []
+    assert insight["source_excerpt"] == ""
+    assert insight["status"] == "needs_review"
+    assert pack["status"] == "needs_review"
 
 
 def test_normalized_pack_keeps_slide_grounded_summary_out_of_review():
