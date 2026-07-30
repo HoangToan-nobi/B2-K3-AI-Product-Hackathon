@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 const fs = require('fs');
 
 const indexHtml = fs.readFileSync('../frontend-old/index.html', 'utf-8');
@@ -11,4 +12,3 @@ if (cssMatch) {
 
 // Extract JS data and convert to React
 // This requires rewriting the React component. I will write it directly below.
-

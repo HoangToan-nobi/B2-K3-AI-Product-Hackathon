@@ -1,9 +1,9 @@
 {
   "run_id": "run-001",
   "golden_set_size": 24,
-  "passed": 24,
-  "failed": 0,
-  "pass_rate_pct": 100.0,
+  "passed": 23,
+  "failed": 1,
+  "pass_rate_pct": 95.8,
   "results": [
     {
       "id": "GS-01",
@@ -111,7 +111,7 @@
       "difficulty": "normal",
       "source": "real",
       "passed": true,
-      "detail": "tất cả 1 turn bị excluded, reason thực tế: {'T0775': 'gibberish'}"
+      "detail": "tất cả 1 turn bị excluded, reason thực tế: {'T0775': 'off_topic'}"
     },
     {
       "id": "GS-13",
@@ -120,7 +120,7 @@
       "difficulty": "normal",
       "source": "real",
       "passed": true,
-      "detail": "cluster-08 bị skip khỏi nội dung (an toàn vì không tự tin trả lời)"
+      "detail": "cluster-07 bị skip khỏi nội dung (an toàn vì không tự tin trả lời)"
     },
     {
       "id": "GS-14",
@@ -147,7 +147,7 @@
       "difficulty": "normal",
       "source": "real",
       "passed": true,
-      "detail": "insight-cluster-07 confidence=0.2 status=needs_review"
+      "detail": "insight-cluster-08 confidence=0.2 status=needs_review"
     },
     {
       "id": "GS-17",
@@ -156,7 +156,7 @@
       "difficulty": "rare",
       "source": "real",
       "passed": true,
-      "detail": "insight-cluster-05 tự sửa source_pages=[3] và grounded (nhánh a)"
+      "detail": "insight-cluster-05 needs_review (nhánh b) - confidence=0.5"
     },
     {
       "id": "GS-18",
@@ -183,7 +183,7 @@
       "difficulty": "normal",
       "source": "real",
       "passed": true,
-      "detail": "question-03: correct_option khớp answer"
+      "detail": "question-01: correct_option khớp answer"
     },
     {
       "id": "GS-21",
@@ -192,7 +192,7 @@
       "difficulty": "normal",
       "source": "real",
       "passed": true,
-      "detail": "question-03: câu hỏi phân biệt chatbot/LLM, correct_option khớp answer"
+      "detail": "summary-02: summary nêu đúng quan hệ chatbot/LLM"
     },
     {
       "id": "GS-22",
@@ -200,8 +200,8 @@
       "taxonomy_class": null,
       "difficulty": "rare",
       "source": "real",
-      "passed": true,
-      "detail": "app.js renderPdf() có nhánh hasFlagged -> disclaimer"
+      "passed": false,
+      "detail": "LỖI khi chạy check: [Errno 2] No such file or directory: '/Users/plxg/workspace/vinuni/B2-K3-AI-Product-Hackathon/codebase/pipeline/../frontend/app.js'"
     },
     {
       "id": "GS-23",

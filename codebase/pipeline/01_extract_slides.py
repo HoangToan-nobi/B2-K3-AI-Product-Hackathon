@@ -11,6 +11,7 @@ phai tu suy luan noi dung chinh.
 """
 import json
 import re
+import shutil
 import subprocess
 import sys
 
@@ -31,6 +32,11 @@ def _clean_page(raw_page: str) -> str:
 
 
 def extract(pdf_path: str, lesson_id: str) -> dict:
+    if shutil.which("pdftotext") is None:
+        raise RuntimeError(
+            "Thieu pdftotext/Poppler trong PATH. Cai tren macOS bang: brew install poppler"
+        )
+
     raw = subprocess.run(
         ["pdftotext", "-layout", pdf_path, "-"],
         check=True,
@@ -55,7 +61,11 @@ def main():
         print("Dung: python3 01_extract_slides.py <slide.pdf> <lesson_id> <output.json>")
         sys.exit(1)
     pdf_path, lesson_id, out_path = sys.argv[1], sys.argv[2], sys.argv[3]
-    data = extract(pdf_path, lesson_id)
+    try:
+        data = extract(pdf_path, lesson_id)
+    except RuntimeError as error:
+        print(f"Loi: {error}", file=sys.stderr)
+        sys.exit(1)
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
     print(f"Da trich {data['page_count']} trang -> {out_path}")

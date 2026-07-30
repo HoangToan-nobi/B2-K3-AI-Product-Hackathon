@@ -1,0 +1,18 @@
+{
+  "active_lesson_id": "day1-foundation",
+  "published_pack_ids": [
+    "pack-day1-foundation-001"
+  ],
+  "users": [
+    {
+      "id": "student-demo",
+      "name": "Học viên demo",
+      "role": "student"
+    },
+    {
+      "id": "labcoach-demo",
+      "name": "Lab Coach demo",
+      "role": "labcoach"
+    }
+  ]
+}

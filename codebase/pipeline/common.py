@@ -5,6 +5,7 @@ Khong dung SDK ngoai — chi urllib (stdlib) — de repo chay duoc ma khong can 
 import json
 import os
 import re
+import ssl
 import time
 import urllib.request
 import urllib.error
@@ -93,6 +94,14 @@ def call_ai_json(stage: str, system_prompt: str, user_prompt: str, max_tokens: i
         log_record["error"] = {"http_status": e.code, "body": body}
         _write_log(stage, timestamp, log_record)
         raise RuntimeError(f"DeepSeek API loi {e.code}: {body}") from e
+    except urllib.error.URLError as e:
+        if isinstance(e.reason, ssl.SSLCertVerificationError):
+            raise RuntimeError(
+                "Khong verify duoc SSL certificate khi goi DeepSeek API. "
+                "Neu dung Python tu python.org tren macOS, chay: "
+                "'/Applications/Python 3.13/Install Certificates.command'"
+            ) from e
+        raise RuntimeError(f"Khong goi duoc DeepSeek API: {e}") from e
 
     elapsed_ms = int((time.time() - started) * 1000)
     response_json = json.loads(raw)
