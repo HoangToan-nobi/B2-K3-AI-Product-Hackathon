@@ -36,15 +36,21 @@ class LessonService:
 
     async def list_lessons(self) -> list[dict[str, Any]]:
         static_lessons = self._visible_static_lessons()
+        merged: dict[str, dict[str, Any]] = {lesson["id"]: lesson for lesson in static_lessons}
+        static_ids = set(merged)
         try:
             lessons = await self.repository.list_lessons()
             if lessons:
-                static_ids = {lesson["id"] for lesson in static_lessons}
-                return [*static_lessons, *[lesson for lesson in lessons if lesson["id"] not in static_ids]]
+                for lesson in lessons:
+                    if lesson["id"] not in static_ids:
+                        merged[lesson["id"]] = lesson
         except Exception:
             pass
 
-        return [*static_lessons, *list(UPLOADED_LESSONS.values())]
+        for lesson in UPLOADED_LESSONS.values():
+            merged[lesson["id"]] = lesson
+
+        return list(merged.values())
 
     async def upload_lesson(
         self,

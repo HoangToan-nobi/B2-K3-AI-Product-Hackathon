@@ -281,7 +281,8 @@ class ReviewPackService:
                 {
                     "id": lesson_id,
                     "title": lesson["title"],
-                    "slide_count": lesson["slideDecks"][0]["pageCount"],
+                    "slide_count": sum(int(deck.get("pageCount") or 0) for deck in lesson.get("slideDecks", [])),
+                    "slideDecks": lesson.get("slideDecks", []),
                     "pack_id": pack_id,
                     "status": status,
                 }

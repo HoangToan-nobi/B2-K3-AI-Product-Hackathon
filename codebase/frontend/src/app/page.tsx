@@ -405,7 +405,7 @@ export default function Home() {
       setOpenLessonId(data.lesson.id);
       setCatalogVersion((value) => value + 1);
       setScreen("course");
-      setNotice({ tone: "success", text: `Đã thêm ngày học và đọc nội dung slide (${data.slideDeck?.extraction?.sourceType || "file"}).` });
+      setNotice({ tone: "success", text: `Đã thêm ngày học và đọc nội dung slide.` });
     } catch {
       setNotice({ tone: "error", text: "Upload thất bại. Hãy dùng PDF/PPTX có text selectable." });
     } finally {
@@ -499,10 +499,29 @@ export default function Home() {
             setRole(nextRole);
             setScreen("home");
             setCoachAction("menu");
+            setNotice(null);
+            setProgressJob(null);
+            setProgressPanelVisible(false);
           }}
           onNavigate={setScreen}
           onToggleTheme={toggleTheme}
         />
+      )}
+
+      {(notice || (progressJob && progressPanelVisible)) && (
+        <main className="content status-region">
+          {notice && (
+            <div className={`notice ${notice.tone}`}>
+              <span>{notice.text}</span>
+              <button type="button" className="notice-close" onClick={() => setNotice(null)}>
+                ×
+              </button>
+            </div>
+          )}
+          {progressJob && progressPanelVisible && (
+            <ProgressPanel progress={progressJob} onClose={() => setProgressPanelVisible(false)} />
+          )}
+        </main>
       )}
 
       {screen === "reader" ? (
@@ -542,17 +561,6 @@ export default function Home() {
             }}
           />
           <main className="content">
-            {notice && (
-              <div className={`notice ${notice.tone}`}>
-                <span>{notice.text}</span>
-                <button type="button" className="notice-close" onClick={() => setNotice(null)}>
-                  ×
-                </button>
-              </div>
-            )}
-            {progressJob && progressPanelVisible && (
-              <ProgressPanel progress={progressJob} onClose={() => setProgressPanelVisible(false)} />
-            )}
             {loadingLessons ? (
               <SkeletonList />
             ) : screen === "home" ? (

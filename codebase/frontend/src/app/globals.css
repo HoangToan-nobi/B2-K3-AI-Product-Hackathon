@@ -382,6 +382,13 @@ a { color: var(--accent); text-decoration: none; }
   padding: 0 clamp(16px, 5vw, 80px) 64px;
 }
 
+.status-region {
+  width: 100%;
+  flex-shrink: 0;
+  padding-top: 18px;
+  padding-bottom: 0;
+}
+
 .notice {
   display: flex;
   align-items: center;
