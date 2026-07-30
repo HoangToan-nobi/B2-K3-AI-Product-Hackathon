@@ -1,0 +1,225 @@
+{
+  "run_id": "run-001",
+  "golden_set_size": 24,
+  "passed": 24,
+  "failed": 0,
+  "pass_rate_pct": 100.0,
+  "results": [
+    {
+      "id": "GS-01",
+      "group": "A",
+      "taxonomy_class": null,
+      "difficulty": "normal",
+      "source": "real",
+      "passed": true,
+      "detail": "cùng cluster {'cluster-02'}"
+    },
+    {
+      "id": "GS-02",
+      "group": "A",
+      "taxonomy_class": null,
+      "difficulty": "normal",
+      "source": "real",
+      "passed": true,
+      "detail": "cùng cluster {'cluster-01'}"
+    },
+    {
+      "id": "GS-03",
+      "group": "B",
+      "taxonomy_class": null,
+      "difficulty": "rare",
+      "source": "synthetic_from_real_slide",
+      "passed": true,
+      "detail": "token->cluster-01, attention->cluster-02"
+    },
+    {
+      "id": "GS-04",
+      "group": "C",
+      "taxonomy_class": null,
+      "difficulty": "normal",
+      "source": "real",
+      "passed": true,
+      "detail": "tất cả 4 turn có filter_reason='greeting'"
+    },
+    {
+      "id": "GS-05",
+      "group": "C",
+      "taxonomy_class": null,
+      "difficulty": "normal",
+      "source": "real",
+      "passed": true,
+      "detail": "tất cả 1 turn bị excluded với reason='gibberish'"
+    },
+    {
+      "id": "GS-06",
+      "group": "C",
+      "taxonomy_class": null,
+      "difficulty": "normal",
+      "source": "real",
+      "passed": true,
+      "detail": "tất cả 1 turn bị excluded với reason='gibberish'"
+    },
+    {
+      "id": "GS-07",
+      "group": "C",
+      "taxonomy_class": null,
+      "difficulty": "normal",
+      "source": "real",
+      "passed": true,
+      "detail": "tất cả 4 turn có filter_reason='duplicate'"
+    },
+    {
+      "id": "GS-08",
+      "group": "C",
+      "taxonomy_class": "③",
+      "difficulty": "rare",
+      "source": "real",
+      "passed": true,
+      "detail": "tất cả 1 turn bị excluded với reason='prompt_injection'"
+    },
+    {
+      "id": "GS-09",
+      "group": "C",
+      "taxonomy_class": "③",
+      "difficulty": "rare",
+      "source": "real",
+      "passed": true,
+      "detail": "tất cả 1 turn bị excluded với reason='prompt_injection'"
+    },
+    {
+      "id": "GS-10",
+      "group": "C",
+      "taxonomy_class": "③",
+      "difficulty": "rare",
+      "source": "real",
+      "passed": true,
+      "detail": "tất cả 1 turn bị excluded với reason='prompt_injection'"
+    },
+    {
+      "id": "GS-11",
+      "group": "C",
+      "taxonomy_class": "③",
+      "difficulty": "normal",
+      "source": "real",
+      "passed": true,
+      "detail": "cluster-08 nằm trong skipped_clusters"
+    },
+    {
+      "id": "GS-12",
+      "group": "C",
+      "taxonomy_class": "③",
+      "difficulty": "normal",
+      "source": "real",
+      "passed": true,
+      "detail": "tất cả 1 turn bị excluded với reason='off_topic'"
+    },
+    {
+      "id": "GS-13",
+      "group": "C",
+      "taxonomy_class": "②",
+      "difficulty": "normal",
+      "source": "real",
+      "passed": true,
+      "detail": "insight-cluster-10 status=needs_review"
+    },
+    {
+      "id": "GS-14",
+      "group": "C",
+      "taxonomy_class": "②",
+      "difficulty": "normal",
+      "source": "real",
+      "passed": true,
+      "detail": "T0802 bị loại (reason=other), không vào class_insights"
+    },
+    {
+      "id": "GS-15",
+      "group": "D",
+      "taxonomy_class": "①",
+      "difficulty": "normal",
+      "source": "real",
+      "passed": true,
+      "detail": "insight-cluster-05 confidence=0.4 status=needs_review"
+    },
+    {
+      "id": "GS-16",
+      "group": "D",
+      "taxonomy_class": "①",
+      "difficulty": "normal",
+      "source": "real",
+      "passed": true,
+      "detail": "insight-cluster-09 confidence=0.3 status=needs_review"
+    },
+    {
+      "id": "GS-17",
+      "group": "D",
+      "taxonomy_class": "①",
+      "difficulty": "rare",
+      "source": "real",
+      "passed": true,
+      "detail": "insight-cluster-06 needs_review (nhánh b) - confidence=0.5"
+    },
+    {
+      "id": "GS-18",
+      "group": "D",
+      "taxonomy_class": "①",
+      "difficulty": "rare",
+      "source": "real",
+      "passed": true,
+      "detail": "tất cả 6 turn có filter_reason='unmapped_page'"
+    },
+    {
+      "id": "GS-19",
+      "group": "E",
+      "taxonomy_class": "④",
+      "difficulty": "normal",
+      "source": "real",
+      "passed": true,
+      "detail": "question-04 giữ nguyên ký hiệu kỹ thuật: 'T=0'"
+    },
+    {
+      "id": "GS-20",
+      "group": "E",
+      "taxonomy_class": "④",
+      "difficulty": "normal",
+      "source": "real",
+      "passed": true,
+      "detail": "question-03: correct_option khớp answer"
+    },
+    {
+      "id": "GS-21",
+      "group": "E",
+      "taxonomy_class": "④",
+      "difficulty": "normal",
+      "source": "real",
+      "passed": true,
+      "detail": "summary-02: summary nêu đúng quan hệ chatbot/LLM"
+    },
+    {
+      "id": "GS-22",
+      "group": "E",
+      "taxonomy_class": null,
+      "difficulty": "rare",
+      "source": "real",
+      "passed": true,
+      "detail": "app.js renderPdf() có nhánh hasFlagged -> disclaimer"
+    },
+    {
+      "id": "GS-23",
+      "group": "D",
+      "taxonomy_class": "①",
+      "difficulty": "rare",
+      "source": "real",
+      "passed": true,
+      "detail": "script chỉ nhận day_codes qua tham số dòng lệnh, không hardcode gộp 'New learning material'"
+    },
+    {
+      "id": "GS-24",
+      "group": "A",
+      "taxonomy_class": "②",
+      "difficulty": "normal",
+      "source": "real",
+      "passed": true,
+      "detail": "build_user_prompt truyền selected_text kèm clean_question cho AI"
+    }
+  ]
+}

@@ -143,5 +143,4 @@ Chỉ số validation cần ghi:
 **Quality bar nháp:** 100% kiến thức/câu trả lời trong PDF có nguồn từ slide; không lộ thông tin nhận diện; ≥80% câu hỏi trong golden set được gán đúng cluster. Quality bar chính thức chỉ chốt sau lượt đo thử đầu tiên và giữ nguyên từ hạn nộp spec.
 
 ---
-
-*Canvas này chốt cho CP1. Trước CP4, nhóm cần bổ sung kết quả mining có số đếm kiểm chứng được, ≥5 ví dụ nguyên văn đã ẩn danh, bảng impact bằng số và kết quả khảo sát học viên/Lab Coach.*
+  

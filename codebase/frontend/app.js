@@ -2,7 +2,9 @@
 (function () {
   "use strict";
 
-  const RAW = window.MOCK_REVIEW_PACK;
+  // Uu tien du lieu AI that (real-data.js, sinh tu codebase/pipeline/) — fallback ve mock
+  // khi chua chay pipeline hoac khi can demo khong phu thuoc mang/API (xem KE-HOACH-NHOM-2-NGUOI.md §12).
+  const RAW = window.REAL_REVIEW_PACK || window.MOCK_REVIEW_PACK;
   // Working copy — "Duyệt/Bỏ" mutate this, never the mock source, so the flow can be replayed.
   const state = { pack: null };
 

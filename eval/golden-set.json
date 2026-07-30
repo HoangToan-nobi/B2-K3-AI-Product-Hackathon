@@ -1,0 +1,279 @@
+{
+  "lesson_id": "day1-foundation",
+  "lesson_title": "AI & LLM Foundation (Day 1)",
+  "note": "Trich dan turn_id + doan ngan (<=1 cau) tu chat_history_anonymized_for_hackathon.csv theo dung quy dinh bao mat trong README (khong dan nguyen van dai, khong danh sang repo file goc).",
+  "quality_dimensions": [
+    "cluster_correctness",
+    "coverage",
+    "grounding",
+    "question_quality",
+    "privacy",
+    "usefulness"
+  ],
+  "cases": [
+    {
+      "id": "GS-01",
+      "group": "A",
+      "taxonomy_class": null,
+      "difficulty": "normal",
+      "source": "real",
+      "turn_ids": ["T1123", "T0988"],
+      "input_excerpt": "\"Day 1 giới thiệu những chủ đề chính nào?\" vs \"Tóm tắt ngắn gọn nội dung chính của Day 1\"",
+      "expected_behavior": "Hai cách diễn đạt khác nhau nhưng cùng mục đích (tóm tắt Day 1) phải được gộp chung một cluster.",
+      "check": "clusters.clusters[*].turn_ids chứa cả T1123 và T0988 trong cùng 1 cluster"
+    },
+    {
+      "id": "GS-02",
+      "group": "A",
+      "taxonomy_class": null,
+      "difficulty": "normal",
+      "source": "real",
+      "turn_ids": ["T0911", "T1147", "T0145"],
+      "input_excerpt": "\"Giải thích đoạn bôi đen ở Trang 5.\" / \"...Trang 4.\" / \"Slide này đang nói về nội dung gì?\"",
+      "expected_behavior": "Các yêu cầu giải thích chung chung (không có concept cụ thể trong câu hỏi) phải gộp vào 1 cluster 'giải thích nội dung slide', không tách lẻ theo số trang.",
+      "check": "clusters.clusters[*].turn_ids chứa cả 3 turn trong cùng 1 cluster"
+    },
+    {
+      "id": "GS-03",
+      "group": "B",
+      "taxonomy_class": null,
+      "difficulty": "rare",
+      "source": "synthetic_from_real_slide",
+      "turn_ids": [],
+      "input_excerpt": "\"Giải thích đoạn bôi đen ở Trang 8: token\" vs \"Giải thích đoạn bôi đen ở Trang 8: attention\" (dung template that trong data, ghep voi 2 khai niem that tren slide d1)",
+      "expected_behavior": "Cùng template câu hỏi nhưng khác khái niệm (token vs attention) PHẢI ở 2 cluster khác nhau — không được gộp chỉ vì giống cấu trúc câu.",
+      "check": "Chay lai 03_cluster.py voi 2 dong nay chen vao input; assert 2 cluster_id khac nhau"
+    },
+    {
+      "id": "GS-04",
+      "group": "C",
+      "taxonomy_class": null,
+      "difficulty": "normal",
+      "source": "real",
+      "turn_ids": ["T0495", "T0239", "T0910", "T1158"],
+      "input_excerpt": "\"xin chào\" / \"hello\" / \"hello.\"",
+      "expected_behavior": "Lời chào không phải câu hỏi học thuật, phải bị loại với filter_reason='greeting', không lọt vào cluster nào.",
+      "check": "questions-day1-foundation.json: is_noise=true, filter_reason='greeting' cho cả 4 turn"
+    },
+    {
+      "id": "GS-05",
+      "group": "C",
+      "taxonomy_class": null,
+      "difficulty": "normal",
+      "source": "real",
+      "turn_ids": ["T0116"],
+      "input_excerpt": "\"fdfds\"",
+      "expected_behavior": "Nội dung gõ bậy/vô nghĩa phải bị loại (gibberish), không được AI cố suy diễn thành một chủ đề.",
+      "check": "clusters.excluded chứa T0116 với reason='gibberish'"
+    },
+    {
+      "id": "GS-06",
+      "group": "C",
+      "taxonomy_class": null,
+      "difficulty": "normal",
+      "source": "real",
+      "turn_ids": ["T0930"],
+      "input_excerpt": "\"asds\"",
+      "expected_behavior": "Tương tự GS-05 — gõ bậy phải bị loại, không tạo cluster ảo.",
+      "check": "clusters.excluded chứa T0930 với reason='gibberish'"
+    },
+    {
+      "id": "GS-07",
+      "group": "C",
+      "taxonomy_class": null,
+      "difficulty": "normal",
+      "source": "real",
+      "turn_ids": ["T0074", "T0462", "T1229", "T0434"],
+      "input_excerpt": "\"2+2=?\" lặp lại nhiều lần từ cùng một user",
+      "expected_behavior": "Tin nhắn gửi lặp lại gần như nguyên văn từ cùng user phải bị đánh dấu duplicate, không tính là nhiều tín hiệu độc lập (tránh 1 người spam làm lệch priority_score).",
+      "check": "questions-day1-foundation.json: is_noise=true, filter_reason='duplicate' cho các turn lặp"
+    },
+    {
+      "id": "GS-08",
+      "group": "C",
+      "taxonomy_class": "③",
+      "difficulty": "rare",
+      "source": "real",
+      "turn_ids": ["T0332"],
+      "input_excerpt": "\"test rate limit probe\"",
+      "expected_behavior": "Câu có dấu hiệu dò xét giới hạn hệ thống phải bị loại khỏi nội dung ôn tập, không trả lời như một câu hỏi học thuật.",
+      "check": "clusters.excluded chứa T0332 với reason='prompt_injection'"
+    },
+    {
+      "id": "GS-09",
+      "group": "C",
+      "taxonomy_class": "③",
+      "difficulty": "rare",
+      "source": "real",
+      "turn_ids": ["T0606"],
+      "input_excerpt": "yêu cầu tiết lộ hướng dẫn khởi tạo / system prompt của tutor",
+      "expected_behavior": "Yêu cầu lộ system prompt không được coi là câu hỏi kiến thức, phải bị loại khỏi cluster.",
+      "check": "clusters.excluded chứa T0606 với reason='prompt_injection'"
+    },
+    {
+      "id": "GS-10",
+      "group": "C",
+      "taxonomy_class": "③",
+      "difficulty": "rare",
+      "source": "real",
+      "turn_ids": ["T0792"],
+      "input_excerpt": "yêu cầu tutor 'viết thơ' dựa trên hướng dẫn khởi tạo",
+      "expected_behavior": "Yêu cầu ngoài phạm vi tutor (sáng tác dựa trên system prompt) phải bị loại, không đưa vào PDF ôn tập.",
+      "check": "clusters.excluded chứa T0792 với reason='prompt_injection'"
+    },
+    {
+      "id": "GS-11",
+      "group": "C",
+      "taxonomy_class": "③",
+      "difficulty": "normal",
+      "source": "real",
+      "turn_ids": ["T1146"],
+      "input_excerpt": "\"làm sao để hệ thống biết tôi đã hoàn thành day01\"",
+      "expected_behavior": "Câu hỏi logistics (không phải nội dung học thuật) không được sinh thành class_insight; phải nằm trong skipped_clusters với lý do logistics.",
+      "check": "generated-day1-foundation.json: skipped_clusters chứa cluster tương ứng T1146, lý do có từ khoá 'logistics'"
+    },
+    {
+      "id": "GS-12",
+      "group": "C",
+      "taxonomy_class": "③",
+      "difficulty": "normal",
+      "source": "real",
+      "turn_ids": ["T0775"],
+      "input_excerpt": "\"2+2=?\"",
+      "expected_behavior": "Câu hỏi hoàn toàn ngoài phạm vi bài học (toán số học cơ bản) phải bị loại khỏi cluster nội dung.",
+      "check": "clusters.excluded chứa T0775 với reason='off_topic'"
+    },
+    {
+      "id": "GS-13",
+      "group": "C",
+      "taxonomy_class": "②",
+      "difficulty": "normal",
+      "source": "real",
+      "turn_ids": ["T0102"],
+      "input_excerpt": "\"đây là ai\" (khong ro slide/nguoi nao)",
+      "expected_behavior": "Câu hỏi thiếu ngữ cảnh rõ ràng (không rõ 'đây' là ai/slide nào) không được AI đoán bừa một đáp án chắc chắn — phải giữ confidence thấp và status='needs_review'.",
+      "check": "generated-day1-foundation.json: insight tương ứng có status='needs_review'"
+    },
+    {
+      "id": "GS-14",
+      "group": "C",
+      "taxonomy_class": "②",
+      "difficulty": "normal",
+      "source": "real",
+      "turn_ids": ["T0802"],
+      "input_excerpt": "\"phần này có quan trọng không\"",
+      "expected_behavior": "Câu hỏi mang tính đánh giá/xin ý kiến, không phải câu hỏi kiến thức cụ thể — không nên bị ép vào một cluster kiến thức.",
+      "check": "clusters.excluded chứa T0802 (reason='other' hoặc tương đương), không xuất hiện trong class_insights"
+    },
+    {
+      "id": "GS-15",
+      "group": "D",
+      "taxonomy_class": "①",
+      "difficulty": "normal",
+      "source": "real",
+      "turn_ids": ["T0400"],
+      "input_excerpt": "\"trong slide số 11 bạn hãy giải thích rõ về perceptrons\" — slide 11 thực ra nói về xác suất token, không có 'perceptron'",
+      "expected_behavior": "Slide không có nội dung về perceptron ở trang được hỏi. AI không được bịa định nghĩa; phải tự nhận confidence thấp và status='needs_review'.",
+      "check": "generated-day1-foundation.json: insight-cluster-05 có confidence < 0.5 và status='needs_review'"
+    },
+    {
+      "id": "GS-16",
+      "group": "D",
+      "taxonomy_class": "①",
+      "difficulty": "normal",
+      "source": "real",
+      "turn_ids": ["T0088"],
+      "input_excerpt": "\"Learning rate là gì?\" — tutor cũ (T0088 phía tutor) trả lời đầy đủ nhưng KHÔNG có citation, và slide Day 1 không đề cập learning rate",
+      "expected_behavior": "Không được coi câu trả lời cũ của Tutor (không citation) là nguồn sự thật; pipeline VLười phải tự grounding lại vào slide, thấy không có nội dung liên quan thì set needs_review chứ không copy lại câu trả lời tutor cũ.",
+      "check": "generated-day1-foundation.json: insight-cluster-09 có confidence < 0.5, status='needs_review', source_excerpt KHÔNG trùng với câu trả lời gốc của tutor"
+    },
+    {
+      "id": "GS-17",
+      "group": "D",
+      "taxonomy_class": "①",
+      "difficulty": "rare",
+      "source": "real",
+      "turn_ids": ["T0902"],
+      "input_excerpt": "\"slide số 18: sự khác nhau giữa ML và DL chưa rõ lắm\" — slide 18 thực ra nói về quy trình train LLM, không phải ML vs DL",
+      "expected_behavior": "Cluster tham chiếu sai trang (18) so với nội dung thật (ML vs DL nằm ở trang 3) — AI phải tự phát hiện lệch và không gán nhầm nguồn, hoặc hạ confidence.",
+      "check": "generated-day1-foundation.json: insight-cluster-06 có status='needs_review' hoặc source_pages đã tự sửa về trang 3"
+    },
+    {
+      "id": "GS-18",
+      "group": "D",
+      "taxonomy_class": "①",
+      "difficulty": "rare",
+      "source": "real",
+      "turn_ids": ["T1190", "T0038", "T1187", "T0890", "T0251", "T0801"],
+      "input_excerpt": "6 tin nhắn tham chiếu Trang 45-76 — vượt quá 29 trang của d1-slide-hackathon.pdf đang dùng làm nguồn",
+      "expected_behavior": "Khi trang được tham chiếu nằm ngoài slide nguồn đang có, hệ thống phải gắn filter_reason='unmapped_page' và loại khỏi luồng tạo nội dung — không được coi liều là 'gần đúng' rồi gán bừa vào trang gần nhất.",
+      "check": "questions-day1-foundation.json: cả 6 turn có is_noise=true, filter_reason='unmapped_page'"
+    },
+    {
+      "id": "GS-19",
+      "group": "E",
+      "taxonomy_class": "④",
+      "difficulty": "normal",
+      "source": "real",
+      "turn_ids": [],
+      "input_excerpt": "Slide 29: \"T=0 luôn chọn từ chắc nhất\" — ky hieu cong thuc T=0",
+      "expected_behavior": "Ký hiệu công thức/tham số (T=0) phải giữ nguyên trong câu hỏi và đáp án sinh ra, không được diễn giải sai thành văn xuôi làm mất nghĩa kỹ thuật.",
+      "check": "generated-day1-foundation.json: question-04 co chua chuoi 'T=0' hoac 'temperature = 0' dung nghia trong question/explanation"
+    },
+    {
+      "id": "GS-20",
+      "group": "E",
+      "taxonomy_class": "④",
+      "difficulty": "normal",
+      "source": "real",
+      "turn_ids": [],
+      "input_excerpt": "question-01 (LLM = Large Language Model), question-05 (context = lượng chữ có hạn)",
+      "expected_behavior": "Câu hỏi tự kiểm tra phải có 1 đáp án đúng suy ra trực tiếp từ source_excerpt, 3 phương án nhiễu phải rõ ràng sai (không mơ hồ 2 đáp án đều đúng) — sai khái niệm nền tảng này khiến học viên hiểu sai ngay từ đầu.",
+      "check": "generated-day1-foundation.json: correct_option trỏ đúng answer, explanation trích đúng source_excerpt"
+    },
+    {
+      "id": "GS-21",
+      "group": "E",
+      "taxonomy_class": "④",
+      "difficulty": "normal",
+      "source": "real",
+      "turn_ids": [],
+      "input_excerpt": "question-02: chatbot là 'lớp áo bên ngoài' của LLM",
+      "expected_behavior": "Phân biệt LLM (bộ não nền) với chatbot (sản phẩm đóng gói) phải đúng và không đảo ngược quan hệ — nhầm lẫn domain-specific này khiến học viên hiểu sai kiến trúc hệ thống AI đang học.",
+      "check": "generated-day1-foundation.json: question-02 correct_option khớp source_excerpt slide 10"
+    },
+    {
+      "id": "GS-22",
+      "group": "E",
+      "taxonomy_class": null,
+      "difficulty": "rare",
+      "source": "real",
+      "turn_ids": [],
+      "input_excerpt": "PDF cuối (screen 4 frontend) khi có item needs_review",
+      "expected_behavior": "PDF/preview phải hiển thị banner disclaimer khi còn item needs_review, không được xuất bản như kiến thức chính thức 100% hoàn chỉnh.",
+      "check": "app.js renderPdf(): hasFlagged=true => disclaimer xuất hiện trong #pdf-sheet"
+    },
+    {
+      "id": "GS-23",
+      "group": "D",
+      "taxonomy_class": "①",
+      "difficulty": "rare",
+      "source": "real",
+      "turn_ids": [],
+      "input_excerpt": "day_code='New learning material' chiếm 794/2522 dòng toàn bộ file — nhãn không rõ nghĩa",
+      "expected_behavior": "Không được gộp 'New learning material' vào lesson demo hiện tại chỉ vì số lượng lớn — phải giữ tách biệt cho tới khi xác minh được mapping thật với buổi học nào.",
+      "check": "codebase/pipeline/02_preprocess_chatlog.py chỉ nhận day_code truyền vào tường minh ('Day 1','Day1-C302'), không tự động gộp 'New learning material'"
+    },
+    {
+      "id": "GS-24",
+      "group": "A",
+      "taxonomy_class": "②",
+      "difficulty": "normal",
+      "source": "real",
+      "turn_ids": ["T1147"],
+      "input_excerpt": "\"chỗ tôi vừa khoanh đấy là gì\" — cau hoi phu thuoc hoan toan vao selected_text di kem",
+      "expected_behavior": "Câu hỏi chỉ có nghĩa khi đọc cùng `selected_text`; pipeline phải dùng selected_text để hiểu ý định, không được tách rời rồi coi là câu mơ hồ vô nghĩa.",
+      "check": "03_cluster.py build_user_prompt truyền selected_text kèm clean_question cho AI"
+    }
+  ]
+}
