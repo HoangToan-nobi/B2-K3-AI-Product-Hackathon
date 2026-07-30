@@ -1,0 +1,611 @@
+<!doctype html>
+<html lang="vi" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>VLười — Gói Ôn Tập</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=Literata:ital,opsz,wght@0,18..36,400;0,18..36,500;0,18..36,600;1,18..36,400;1,18..36,500&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* ===== brand tokens ===== */
+    --amber:#ffb020;
+    --pink:#ff6b9d;
+    --gradient: linear-gradient(135deg, var(--amber) 0%, var(--pink) 100%);
+    --evidence:#7c6fee;      /* cool violet — provenance / citation */
+    --evidence-soft: rgba(124,111,238,.12);
+    --ready:#2fbf8f;         /* verified / sourced */
+    --ready-soft: rgba(47,191,143,.14);
+    --review:#f5a524;        /* needs human review */
+    --review-soft: rgba(245,165,36,.14);
+    --danger:#ff6b6b;
+    --radius-sm:8px;
+    --radius-md:12px;
+    --radius-lg:16px;
+    --font-ui:'Sora', system-ui, sans-serif;
+    --font-body:'Literata', Georgia, serif;
+    --font-mono:'JetBrains Mono', ui-monospace, monospace;
+  }
+
+  [data-theme="dark"]{
+    --bg:#120f1e;
+    --bg-elevated:#1b1730;
+    --card:#211c3a;
+    --card-hover:#271f44;
+    --border: rgba(148,133,214,.18);
+    --border-strong: rgba(148,133,214,.32);
+    --text:#f1eefb;
+    --text-muted:#a79cd1;
+    --text-faint:#726a97;
+    --shadow: 0 20px 60px -20px rgba(0,0,0,.6);
+  }
+  [data-theme="light"]{
+    --bg:#f6f4fb;
+    --bg-elevated:#ffffff;
+    --card:#ffffff;
+    --card-hover:#fbf9ff;
+    --border: rgba(60,45,110,.12);
+    --border-strong: rgba(60,45,110,.22);
+    --text:#221c3d;
+    --text-muted:#655c85;
+    --text-faint:#948bb5;
+    --shadow: 0 20px 50px -24px rgba(60,40,110,.25);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--font-ui);
+    -webkit-font-smoothing:antialiased;
+    transition:background .35s ease, color .35s ease;
+    min-height:100vh;
+  }
+  body::before{
+    content:"";
+    position:fixed; inset:0;
+    background:
+      radial-gradient(circle at 12% -10%, rgba(255,176,32,.09), transparent 45%),
+      radial-gradient(circle at 90% 0%, rgba(255,107,157,.07), transparent 40%);
+    pointer-events:none;
+    z-index:0;
+  }
+  .app{ position:relative; z-index:1; max-width:760px; margin:0 auto; padding:28px 20px 80px; }
+
+  a,button{ font-family:inherit; }
+  button{ cursor:pointer; }
+  :focus-visible{ outline:2px solid var(--evidence); outline-offset:3px; border-radius:8px; }
+
+  /* ===== header ===== */
+  .app-header{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:6px 2px 26px;
+  }
+  .brand{ font-family:var(--font-ui); font-weight:700; font-size:21px; letter-spacing:-.02em; }
+  .brand span{
+    background:var(--gradient); -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .brand-tagline{ font-family:var(--font-body); font-style:italic; font-weight:400; font-size:13px; color:var(--text-muted); margin-top:3px; }
+
+  .theme-toggle{
+    display:flex; align-items:center; gap:8px;
+    background:var(--card); border:1px solid var(--border);
+    padding:6px; border-radius:999px;
+  }
+  .theme-toggle button{
+    border:none; background:transparent; width:32px; height:32px; border-radius:999px;
+    display:flex; align-items:center; justify-content:center; color:var(--text-faint);
+    transition:.2s;
+  }
+  .theme-toggle button.active{ background:var(--gradient); color:#1b1220; }
+  .theme-toggle svg{ width:16px; height:16px; }
+
+  /* ===== stepper ===== */
+  .stepper{
+    display:flex; align-items:flex-start; justify-content:space-between;
+    margin-bottom:34px; position:relative; padding:0 4px;
+  }
+  .stepper::before{
+    content:""; position:absolute; top:15px; left:36px; right:36px; height:2px;
+    background:var(--border);
+  }
+  .stepper .rail{
+    position:absolute; top:15px; left:36px; height:2px; background:var(--gradient);
+    width:0%; transition:width .5s cubic-bezier(.65,0,.35,1);
+  }
+  .step{
+    position:relative; z-index:1; display:flex; flex-direction:column; align-items:center;
+    gap:8px; font-size:12px; color:var(--text-faint); width:25%; text-align:center;
+    font-weight:600;
+  }
+  .step-num{
+    width:30px; height:30px; border-radius:999px; display:flex; align-items:center; justify-content:center;
+    background:var(--bg-elevated); border:2px solid var(--border-strong); color:var(--text-faint);
+    font-family:var(--font-mono); font-size:12.5px; transition:.3s;
+  }
+  .step.active .step-num{ background:var(--gradient); border-color:transparent; color:#1b1220; }
+  .step.active{ color:var(--text); }
+  .step.done .step-num{ background:var(--ready); border-color:transparent; color:#0b2018; }
+  .step.done .step-num::after{ content:"✓"; }
+  .step.done .step-num{ font-size:0; }
+  .step.done .step-num::after{ font-size:13px; }
+  .step-label{ max-width:80px; }
+
+  /* ===== panels ===== */
+  .panel{ display:none; animation: rise .45s cubic-bezier(.2,.7,.3,1); }
+  .panel.active{ display:block; }
+  @keyframes rise{ from{ opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
+  @media (prefers-reduced-motion: reduce){ .panel{ animation:none; } }
+
+  .panel-title{ font-family:var(--font-ui); font-size:26px; font-weight:700; letter-spacing:-.015em; margin:0 0 8px; }
+  .panel-sub{ font-family:var(--font-body); font-weight:400; color:var(--text-muted); font-size:15px; line-height:1.6; margin:0 0 28px; max-width:56ch; }
+
+  .section-label{
+    font-family:var(--font-mono); text-transform:uppercase; letter-spacing:.1em; font-size:11px;
+    color:var(--text-faint); font-weight:700; margin:32px 0 12px; display:flex; align-items:center; gap:10px;
+  }
+  .section-label::after{ content:""; flex:1; height:1px; background:var(--border); }
+
+  /* ===== buttons ===== */
+  .btn{
+    font-family:var(--font-ui); font-weight:600; font-size:14px; letter-spacing:.005em; border-radius:10px; border:none;
+    padding:12px 20px; display:inline-flex; align-items:center; gap:8px; transition:.2s transform, .2s box-shadow, .2s background;
+  }
+  .btn-primary{ background:var(--gradient); color:#1b1220; box-shadow:0 8px 24px -12px rgba(255,107,157,.5); }
+  .btn-primary:hover{ transform:translateY(-1px); box-shadow:0 12px 28px -12px rgba(255,107,157,.6); }
+  .btn-primary:disabled{ opacity:.55; cursor:not-allowed; transform:none; box-shadow:none; }
+  .btn-ghost{ background:transparent; color:var(--text-muted); border:1px solid var(--border); }
+  .btn-ghost:hover{ color:var(--text); border-color:var(--border-strong); background:var(--card-hover); }
+
+  .footer-actions{ display:flex; justify-content:space-between; align-items:center; margin-top:34px; }
+
+  /* ===== screen 1 : lesson picker ===== */
+  .lesson-row{
+    background:var(--card); border:1px solid var(--border); border-radius:var(--radius-lg);
+    padding:22px; display:flex; align-items:center; justify-content:space-between; gap:16px;
+    box-shadow:var(--shadow);
+  }
+  .lesson-eyebrow{ font-family:var(--font-mono); font-size:11px; color:var(--evidence); letter-spacing:.06em; text-transform:uppercase; margin-bottom:6px; }
+  #lesson-title{ font-family:var(--font-ui); font-size:19px; margin:0 0 8px; font-weight:700; }
+  .lesson-meta{ display:flex; gap:14px; font-family:var(--font-mono); font-size:12.5px; color:var(--text-muted); }
+  .lesson-meta span{ display:flex; align-items:center; gap:6px; }
+  .lesson-meta span::before{ content:"•"; color:var(--text-faint); }
+  .lesson-meta span:first-child::before{ content:none; }
+
+  .processing-box{
+    margin-top:16px; display:flex; align-items:center; gap:12px; padding:15px 18px;
+    background:var(--evidence-soft); border:1px solid rgba(124,111,238,.3); border-radius:var(--radius-md);
+    font-size:13.5px; color:var(--text);
+  }
+  .spinner{
+    width:16px; height:16px; border-radius:999px; border:2.5px solid rgba(124,111,238,.25);
+    border-top-color:var(--evidence); animation:spin .8s linear infinite; flex-shrink:0;
+  }
+  @keyframes spin{ to{ transform:rotate(360deg);} }
+
+  /* ===== stat row ===== */
+  .stat-row{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:22px; }
+  .stat-card{
+    background:var(--card); border:1px solid var(--border); border-radius:var(--radius-md);
+    padding:16px 12px; text-align:center;
+  }
+  .stat-value{ font-family:var(--font-mono); font-weight:700; font-size:21px; color:var(--text); }
+  .stat-label{ font-family:var(--font-mono); font-weight:500; font-size:10.5px; color:var(--text-faint); margin-top:5px; line-height:1.4; }
+
+  .warning-banner{
+    display:flex; gap:12px; align-items:flex-start; background:var(--review-soft);
+    border:1px solid rgba(245,165,36,.35); border-radius:var(--radius-md); padding:14px 16px; margin-bottom:22px;
+  }
+  .warning-banner .ic{ color:var(--review); flex-shrink:0; margin-top:1px; }
+  .warning-banner p{ margin:0; font-size:13.5px; line-height:1.5; color:var(--text); }
+  .warning-banner strong{ color:var(--review); }
+
+  /* ===== topic list (screen 2) ===== */
+  .topic-item{
+    background:var(--card); border:1px solid var(--border); border-radius:var(--radius-md);
+    padding:16px 18px; margin-bottom:10px; transition:.2s;
+  }
+  .topic-item:hover{ border-color:var(--border-strong); background:var(--card-hover); }
+  .topic-top{ display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:10px; }
+  .topic-name{ font-weight:600; font-size:14.5px; }
+  .topic-count{ font-family:var(--font-mono); font-weight:500; font-size:12px; color:var(--evidence); white-space:nowrap; }
+  .topic-bar-track{ height:6px; border-radius:999px; background:var(--border); overflow:hidden; display:flex; }
+  .topic-bar-fill{ height:100%; background:var(--gradient); border-radius:999px; }
+  .topic-foot{ display:flex; justify-content:space-between; margin-top:8px; font-family:var(--font-mono); font-size:11px; color:var(--text-faint); }
+
+  /* ===== chips ===== */
+  .chip{
+    display:inline-flex; align-items:center; gap:6px; font-family:var(--font-mono); font-size:11px;
+    padding:5px 10px; border-radius:6px; border:1px solid transparent; white-space:nowrap; font-weight:600;
+  }
+  .chip-evidence{ background:var(--evidence-soft); color:var(--evidence); border-color:rgba(124,111,238,.3); }
+  .chip-ready{ background:var(--ready-soft); color:var(--ready); border-color:rgba(47,191,143,.35); }
+  .chip-review{ background:var(--review-soft); color:var(--review); border-color:rgba(245,165,36,.35); }
+
+  /* ===== content cards (screen 3) ===== */
+  .content-card{
+    background:var(--card); border:1px solid var(--border); border-radius:var(--radius-md);
+    padding:18px 20px; margin-bottom:12px;
+  }
+  .content-card-head{ display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:8px; }
+  .content-card h4{ font-family:var(--font-ui); font-size:15px; margin:0; font-weight:600; line-height:1.4; }
+  .content-card p{ font-family:var(--font-body); font-weight:400; font-size:14.5px; line-height:1.68; color:var(--text-muted); margin:0 0 12px; }
+  .content-card-foot{ display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; }
+
+  .insight-card{ border-left:3px solid var(--review); }
+
+  .qa-item{
+    background:var(--card); border:1px solid var(--border); border-radius:var(--radius-md);
+    margin-bottom:10px; overflow:hidden;
+  }
+  .qa-question{
+    width:100%; text-align:left; background:transparent; border:none; padding:15px 18px;
+    display:flex; justify-content:space-between; align-items:center; gap:12px; color:var(--text);
+    font-family:var(--font-ui); font-weight:600; font-size:14.5px;
+  }
+  .qa-question .arrow{ transition:.25s; color:var(--text-faint); flex-shrink:0; }
+  .qa-item.open .qa-question .arrow{ transform:rotate(180deg); color:var(--evidence); }
+  .qa-answer{ max-height:0; overflow:hidden; transition:max-height .3s ease; }
+  .qa-item.open .qa-answer{ max-height:200px; }
+  .qa-answer-inner{ padding:0 18px 16px; font-family:var(--font-body); font-size:14px; line-height:1.6; color:var(--text-muted); border-top:1px dashed var(--border); padding-top:12px; margin:0 18px 16px; }
+
+  /* ===== screen 4: pdf preview ===== */
+  .pdf-sheet{
+    background:var(--card); border:1px solid var(--border); border-radius:var(--radius-lg);
+    padding:40px 34px; box-shadow:var(--shadow); font-family:var(--font-body);
+  }
+  .pdf-header{ display:flex; justify-content:space-between; align-items:flex-start; border-bottom:2px solid var(--border); padding-bottom:16px; margin-bottom:20px; }
+  .pdf-header .mark{ font-family:var(--font-ui); font-weight:700; font-size:17px; color:var(--text); position:relative; padding-left:14px; }
+  .pdf-header .mark::before{ content:""; position:absolute; left:0; top:2px; bottom:2px; width:3px; border-radius:2px; background:var(--gradient); }
+  .pdf-header .meta{ text-align:right; font-family:var(--font-mono); font-weight:500; font-size:11px; color:var(--text-faint); line-height:1.6; }
+  .pdf-h1{ font-size:20px; font-weight:700; margin:0 0 4px; }
+  .pdf-sub{ font-size:12.5px; font-weight:500; color:var(--text-faint); font-family:var(--font-mono); margin-bottom:22px; }
+  .pdf-block{ margin-bottom:20px; }
+  .pdf-block h5{ font-family:var(--font-ui); font-size:12.5px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--evidence); margin:0 0 8px; }
+  .pdf-block p{ font-size:14.5px; line-height:1.7; margin:0 0 6px; }
+  .pdf-note{ font-size:12.5px; color:var(--text-faint); font-style:italic; }
+  .pdf-footnotes{ margin-top:26px; padding-top:16px; border-top:1px dashed var(--border); font-family:var(--font-mono); font-size:11px; color:var(--text-faint); line-height:1.9; }
+  .pdf-page-foot{ text-align:center; margin-top:24px; font-family:var(--font-mono); font-size:11px; color:var(--text-faint); }
+
+  @media (max-width:560px){
+    .stat-row{ grid-template-columns:repeat(2,1fr); }
+    .lesson-row{ flex-direction:column; align-items:stretch; }
+    .step-label{ display:none; }
+    .app-header{ align-items:flex-start; }
+    .pdf-sheet{ padding:26px 18px; }
+  }
+</style>
+</head>
+<body>
+  <div class="app">
+    <header class="app-header">
+      <div>
+        <div class="brand">VL<span>ười</span></div>
+        <div class="brand-tagline">Lười đọc dài. Không lười hiểu.</div>
+      </div>
+      <div class="theme-toggle" role="group" aria-label="Chuyển giao diện sáng / tối">
+        <button type="button" id="btn-theme-light" aria-label="Giao diện sáng">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        </button>
+        <button type="button" id="btn-theme-dark" aria-label="Giao diện tối">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <nav class="stepper" id="stepper">
+      <div class="rail" id="stepper-rail"></div>
+      <div class="step active" data-step="1"><span class="step-num">1</span><span class="step-label">Chọn buổi học</span></div>
+      <div class="step" data-step="2"><span class="step-num">2</span><span class="step-label">Kết quả phân tích</span></div>
+      <div class="step" data-step="3"><span class="step-num">3</span><span class="step-label">Review nội dung</span></div>
+      <div class="step" data-step="4"><span class="step-num">4</span><span class="step-label">Preview PDF</span></div>
+    </nav>
+
+    <!-- Screen 1 -->
+    <section class="panel active" data-panel="1">
+      <h1 class="panel-title">Chọn buổi học</h1>
+      <p class="panel-sub">Chọn một buổi để VLười kết hợp slide và chatlog đã ẩn danh, tạo bản ôn tập có nguồn trích dẫn rõ ràng.</p>
+
+      <div class="lesson-row">
+        <div class="lesson-info">
+          <div class="lesson-eyebrow">Buổi học gần nhất</div>
+          <h3 id="lesson-title">—</h3>
+          <div class="lesson-meta">
+            <span id="lesson-slides">— slide</span>
+            <span id="lesson-questions">— câu hỏi liên quan</span>
+          </div>
+        </div>
+        <button class="btn btn-primary" id="btn-generate">Tạo VLười Pack</button>
+      </div>
+
+      <div class="processing-box" id="processing-box" hidden>
+        <span class="spinner"></span>
+        <span>Đang đối chiếu chatlog với slide…</span>
+      </div>
+    </section>
+
+    <!-- Screen 2 -->
+    <section class="panel" data-panel="2">
+      <h1 class="panel-title">Kết quả phân tích</h1>
+      <p class="panel-sub">Chủ đề được xếp hạng theo số học viên hỏi thật, không theo số tin nhắn.</p>
+
+      <div class="stat-row" id="stat-row"></div>
+      <div id="warning-slot"></div>
+
+      <div class="section-label">Cả lớp thường hỏi</div>
+      <div id="topic-list"></div>
+
+      <div class="footer-actions">
+        <button class="btn btn-ghost" data-back="1">Quay lại</button>
+        <button class="btn btn-primary" data-next="3">Xem nội dung ôn tập</button>
+      </div>
+    </section>
+
+    <!-- Screen 3 -->
+    <section class="panel" data-panel="3">
+      <h1 class="panel-title">Review nội dung</h1>
+      <p class="panel-sub">Mục có nguồn rõ hiển thị sẵn sàng phát hành. Mục chưa chắc chắn cần trợ giảng duyệt trước khi gửi cả lớp.</p>
+
+      <div class="section-label">Lý thuyết trọng tâm</div>
+      <div id="summary-list"></div>
+
+      <div class="section-label">Điểm cả lớp thường nhầm</div>
+      <div id="insight-list"></div>
+
+      <div class="section-label">Câu hỏi tự kiểm tra</div>
+      <div id="question-list"></div>
+
+      <div class="footer-actions">
+        <button class="btn btn-ghost" data-back="2">Quay lại</button>
+        <button class="btn btn-primary" data-next="4">Xem trước PDF</button>
+      </div>
+    </section>
+
+    <!-- Screen 4 -->
+    <section class="panel" data-panel="4">
+      <h1 class="panel-title">Xem trước PDF</h1>
+      <p class="panel-sub">Bản ôn tập cho buổi học, kèm nguồn trích dẫn về trang slide gốc.</p>
+
+      <article class="pdf-sheet" id="pdf-sheet"></article>
+
+      <div class="footer-actions">
+        <button class="btn btn-ghost" data-back="3">Quay lại</button>
+        <button class="btn btn-primary" id="btn-download">Tải PDF</button>
+      </div>
+    </section>
+  </div>
+
+<script>
+/* ============ MOCK DATA ============ */
+const DB = {
+  lesson: {
+    title: "Buổi 7 — Lan truyền ngược & Optimizer (Backpropagation, SGD, Adam)",
+    slides: 42,
+    questionsRaw: 57
+  },
+  stats: [
+    { value: "42", label: "Slide đã quét" },
+    { value: "57", label: "Câu hỏi trong chatlog" },
+    { value: "23", label: "Học viên tham gia hỏi" },
+    { value: "68%", label: "Câu hỏi khớp nguồn slide" }
+  ],
+  warning: "5 câu hỏi không khớp với slide nào trong buổi — có thể giảng viên giải đáp ngoài giáo trình. Trợ giảng nên xem lại trước khi phát hành.",
+  topics: [
+    { name: "Vanishing / Exploding Gradient", students: 14, messages: 38, pct: 100 },
+    { name: "Vì sao dùng Adam thay vì SGD thuần", students: 11, messages: 29, pct: 79 },
+    { name: "Chain rule cho mạng nhiều lớp", students: 9, messages: 52, pct: 64, note: "Nhiều tin nhắn nhưng ít học viên — 1 luồng thảo luận dài" },
+    { name: "Learning rate warmup / decay", students: 6, messages: 14, pct: 43 },
+    { name: "BatchNorm vs LayerNorm ảnh hưởng gradient", students: 4, messages: 9, pct: 29 }
+  ],
+  summaries: [
+    {
+      title: "Vanishing Gradient là gì và vì sao xảy ra",
+      body: "Khi đạo hàm được nhân dồn qua nhiều lớp, nếu các giá trị đều nhỏ hơn 1 thì gradient tiến dần về 0 ở các lớp đầu — khiến chúng gần như không được cập nhật.",
+      source: "Slide tr. 8", students: 14, status: "ready"
+    },
+    {
+      title: "Vì sao Adam hội tụ nhanh hơn SGD thuần",
+      body: "Adam kết hợp momentum và learning rate thích ứng theo từng tham số, giúp ổn định hướng cập nhật hơn khi bề mặt loss gồ ghề.",
+      source: "Slide tr. 15", students: 11, status: "ready"
+    },
+    {
+      title: "Chain rule áp dụng cho mạng nhiều lớp",
+      body: "Đạo hàm loss theo trọng số ở lớp đầu được tính bằng tích các đạo hàm cục bộ qua từng lớp trung gian, theo đúng thứ tự lan truyền ngược.",
+      source: "Slide tr. 5 + chatlog", students: 9, status: "review"
+    }
+  ],
+  insights: [
+    { title: "Nhầm learning rate decay với weight decay", body: "Nhiều học viên dùng lẫn hai khái niệm — decay đầu điều chỉnh tốc độ học, decay sau là regularization lên trọng số.", source: "9 tin nhắn chatlog" },
+    { title: "Nghĩ Adam luôn tốt hơn SGD trong mọi trường hợp", body: "Thực tế SGD + momentum vẫn tổng quát hoá tốt hơn ở một số bài toán thị giác máy tính, dù hội tụ chậm hơn.", source: "6 tin nhắn chatlog" }
+  ],
+  questions: [
+    { q: "Vì sao gradient có xu hướng biến mất ở các lớp đầu mạng sâu?", a: "Vì đạo hàm bị nhân dồn qua nhiều lớp có giá trị < 1, tích số càng về lớp đầu càng tiến gần 0." },
+    { q: "Adam cải thiện điều gì so với SGD thuần?", a: "Adam thêm momentum bậc 1 và chuẩn hoá bằng bình phương gradient trung bình (bậc 2), giúp learning rate thích ứng theo từng tham số." },
+    { q: "Chain rule được dùng ở bước nào trong backprop?", a: "Ở bước tính gradient loss theo từng trọng số — nhân liên tiếp đạo hàm cục bộ từ lớp output ngược về lớp input." }
+  ]
+};
+
+/* ============ STATE ============ */
+let step = 1;
+let generated = false;
+
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => [...r.querySelectorAll(s)];
+
+/* ============ THEME ============ */
+function setTheme(t){
+  document.documentElement.setAttribute('data-theme', t);
+  $('#btn-theme-light').classList.toggle('active', t === 'light');
+  $('#btn-theme-dark').classList.toggle('active', t === 'dark');
+}
+$('#btn-theme-light').addEventListener('click', () => setTheme('light'));
+$('#btn-theme-dark').addEventListener('click', () => setTheme('dark'));
+const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+setTheme(prefersLight ? 'light' : 'dark');
+
+/* ============ STEPPER / NAV ============ */
+function renderStepper(){
+  $$('.step').forEach(el => {
+    const n = +el.dataset.step;
+    el.classList.toggle('active', n === step);
+    el.classList.toggle('done', n < step);
+  });
+  const pct = ((step - 1) / 3) * 100;
+  $('#stepper-rail').style.width = pct + '%';
+}
+
+function goToStep(n){
+  if (n > 1 && !generated) return; // must generate first
+  step = n;
+  $$('.panel').forEach(p => p.classList.toggle('active', +p.dataset.panel === n));
+  renderStepper();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+$$('[data-next]').forEach(b => b.addEventListener('click', () => goToStep(+b.dataset.next)));
+$$('[data-back]').forEach(b => b.addEventListener('click', () => goToStep(+b.dataset.back)));
+$$('.step').forEach(el => el.addEventListener('click', () => {
+  const n = +el.dataset.step;
+  if (n <= step) goToStep(n);
+}));
+
+/* ============ RENDER: screen 1 ============ */
+function renderLesson(){
+  $('#lesson-title').textContent = DB.lesson.title;
+  $('#lesson-slides').textContent = DB.lesson.slides + ' slide';
+  $('#lesson-questions').textContent = DB.lesson.questionsRaw + ' câu hỏi liên quan';
+}
+renderLesson();
+
+$('#btn-generate').addEventListener('click', () => {
+  const btn = $('#btn-generate');
+  btn.disabled = true;
+  $('#processing-box').hidden = false;
+  setTimeout(() => {
+    $('#processing-box').hidden = true;
+    btn.disabled = false;
+    generated = true;
+    renderStep2();
+    renderStep3();
+    renderStep4();
+    goToStep(2);
+  }, 1400);
+});
+
+/* ============ RENDER: screen 2 ============ */
+function renderStep2(){
+  $('#stat-row').innerHTML = DB.stats.map(s => `
+    <div class="stat-card">
+      <div class="stat-value">${s.value}</div>
+      <div class="stat-label">${s.label}</div>
+    </div>`).join('');
+
+  $('#warning-slot').innerHTML = `
+    <div class="warning-banner">
+      <span class="ic">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </span>
+      <p><strong>Cần chú ý.</strong> ${DB.warning}</p>
+    </div>`;
+
+  $('#topic-list').innerHTML = DB.topics.map(t => `
+    <div class="topic-item">
+      <div class="topic-top">
+        <div class="topic-name">${t.name}</div>
+        <div class="topic-count">${t.students} học viên hỏi</div>
+      </div>
+      <div class="topic-bar-track"><div class="topic-bar-fill" style="width:${t.pct}%"></div></div>
+      <div class="topic-foot">
+        <span>${t.messages} tin nhắn chatlog</span>
+        <span>${t.note ? t.note : ''}</span>
+      </div>
+    </div>`).join('');
+}
+
+/* ============ RENDER: screen 3 ============ */
+function renderStep3(){
+  $('#summary-list').innerHTML = DB.summaries.map(s => `
+    <div class="content-card">
+      <div class="content-card-head">
+        <h4>${s.title}</h4>
+      </div>
+      <p>${s.body}</p>
+      <div class="content-card-foot">
+        <span class="chip chip-evidence">📎 ${s.source} · ${s.students} học viên hỏi</span>
+        ${s.status === 'ready'
+          ? '<span class="chip chip-ready">✓ Sẵn sàng phát hành</span>'
+          : '<span class="chip chip-review">⚑ Cần trợ giảng duyệt</span>'}
+      </div>
+    </div>`).join('');
+
+  $('#insight-list').innerHTML = DB.insights.map(i => `
+    <div class="content-card insight-card">
+      <div class="content-card-head"><h4>${i.title}</h4></div>
+      <p>${i.body}</p>
+      <div class="content-card-foot">
+        <span class="chip chip-evidence">📎 ${i.source}</span>
+      </div>
+    </div>`).join('');
+
+  $('#question-list').innerHTML = DB.questions.map((q, idx) => `
+    <div class="qa-item" data-idx="${idx}">
+      <button type="button" class="qa-question">
+        <span>${q.q}</span>
+        <span class="arrow">▾</span>
+      </button>
+      <div class="qa-answer"><div class="qa-answer-inner">${q.a}</div></div>
+    </div>`).join('');
+
+  $$('.qa-question').forEach(btn => {
+    btn.addEventListener('click', () => btn.closest('.qa-item').classList.toggle('open'));
+  });
+}
+
+/* ============ RENDER: screen 4 ============ */
+function renderStep4(){
+  const today = new Date().toLocaleDateString('vi-VN');
+  $('#pdf-sheet').innerHTML = `
+    <div class="pdf-header">
+      <div class="mark">VLười — Gói Ôn Tập</div>
+      <div class="meta">Xuất ngày ${today}<br>Nguồn: slide + chatlog ẩn danh</div>
+    </div>
+    <div class="pdf-h1">${DB.lesson.title}</div>
+    <div class="pdf-sub">${DB.lesson.slides} slide · ${DB.stats[2].value} học viên tham gia thảo luận</div>
+
+    <div class="pdf-block">
+      <h5>Lý thuyết trọng tâm</h5>
+      ${DB.summaries.map(s => `<p><strong>${s.title}.</strong> ${s.body}</p>`).join('')}
+    </div>
+
+    <div class="pdf-block">
+      <h5>Điểm cả lớp thường nhầm</h5>
+      ${DB.insights.map(i => `<p><strong>${i.title}.</strong> ${i.body}</p>`).join('')}
+    </div>
+
+    <div class="pdf-block">
+      <h5>Câu hỏi tự kiểm tra</h5>
+      ${DB.questions.map((q, i) => `<p>${i+1}. ${q.q}</p>`).join('')}
+      <p class="pdf-note">Đáp án đầy đủ ở trang sau.</p>
+    </div>
+
+    <div class="pdf-footnotes">
+      ${DB.summaries.map(s => `📎 ${s.source} — ${s.students} học viên hỏi liên quan`).join('<br>')}
+    </div>
+    <div class="pdf-page-foot">Trang 1 / 3 — VLười Gói Ôn Tập</div>
+  `;
+}
+
+$('#btn-download').addEventListener('click', (e) => {
+  const btn = e.currentTarget;
+  const original = btn.textContent;
+  btn.textContent = 'Đã tải xuống ✓';
+  btn.disabled = true;
+  setTimeout(() => { btn.textContent = original; btn.disabled = false; }, 1800);
+});
+
+renderStepper();
+</script>
+</body>
+</html>
