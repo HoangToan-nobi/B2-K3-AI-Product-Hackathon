@@ -1,0 +1,198 @@
+{
+  "schema_version": "1.0",
+  "pack_id": "pack-day5-product-001",
+  "status": "needs_review",
+  "lesson": {
+    "id": "day5-product",
+    "title": "AI Product Hackathon (Day 5)",
+    "slide_count": 20
+  },
+  "analysis": {
+    "student_question_count": 1252,
+    "unique_user_count": 369,
+    "cluster_count": 3,
+    "included_cluster_count": 2,
+    "excluded_noise_count": 0
+  },
+  "summary": [
+    {
+      "id": "summary-01",
+      "title": "Chọn bài toán AI đúng",
+      "content": "Trước khi code, cần xác định bài toán có ý nghĩa thực tiễn và thuyết phục team đi theo hướng đúng. Sai lầm phổ biến là làm rồi mới thấy sai, gây lãng phí.",
+      "source_pages": [
+        2,
+        3,
+        4
+      ],
+      "source_excerpt": "Suy cho cùng, chuyện này quan trọng hơn chuyện các bạn biết sử dụng công cụ gì. Tại vì nhiều người đi một đoạn rồi mới thấy hoá ra mình đi sai, đến lúc quay về làm lại từ đầu thì cảm giác rất là khó khăn.",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "summary-02",
+      "title": "Bảy phần lý thuyết của buổi học",
+      "content": "Buổi học gồm: AI landscape, anti-pattern, AI product life cycle, các component của AI system, khung chọn mức độ ứng dụng AI, problem statement, và discovery workshop.",
+      "source_pages": [
+        4
+      ],
+      "source_excerpt": "Nội dung cả bài, nếu các bạn học từ bây giờ cho đến chiều, có bảy phần lý thuyết. Phần một là AI landscape... Sau đó là các anti-pattern... Rồi chúng ta nói về AI product life cycle...",
+      "confidence": 0.9,
+      "status": "ready"
+    },
+    {
+      "id": "summary-03",
+      "title": "Đôi khi không làm gì tốt hơn làm sai",
+      "content": "Trong thực tế, đôi khi không làm gì còn tốt hơn làm rồi nhận ra sai, tùy trường hợp. Ví dụ AWS phát hành 40 chức năng/ngày, Google gấp ba, nên chọn lọc rất quan trọng.",
+      "source_pages": [
+        5,
+        6
+      ],
+      "source_excerpt": "trên thực tế, đôi khi không làm gì sẽ còn tốt hơn là làm, để rồi nhận ra chúng ta sai — nó sẽ tuỳ vào từng trường hợp nhé.",
+      "confidence": 0.85,
+      "status": "ready"
+    },
+    {
+      "id": "summary-04",
+      "title": "Định nghĩa workflow",
+      "content": "Workflow là quy trình làm việc từ khởi phát ý tưởng đến hoàn thành sản phẩm và nhận phản hồi, giúp mọi người trong team phối hợp.",
+      "source_pages": [
+        7,
+        8
+      ],
+      "source_excerpt": "[Học viên]: theo em, workflow chính là một quá trình bắt đầu từ khi mình khởi phát ý tưởng đến khi mình hoàn thành sản phẩm và đưa được nhận xét về sản phẩm.",
+      "confidence": 0.8,
+      "status": "ready"
+    }
+  ],
+  "class_insights": [
+    {
+      "id": "insight-cluster-01",
+      "topic": "Chọn bài toán AI",
+      "common_confusion": "Học viên thường bắt tay vào làm ngay mà không xác định bài toán có ý nghĩa thực tiễn hay không, dẫn đến lãng phí thời gian.",
+      "correct_understanding": "Cần có khung nền tảng lý thuyết để đánh giá bài toán trước khi code, bao gồm việc xác định giá trị thực tiễn và thuyết phục team.",
+      "source_pages": [
+        2,
+        3,
+        4
+      ],
+      "source_excerpt": "Cho nên câu hỏi đặt ra là: giả sử các bạn là người làm startup... thì cái sản phẩm các bạn đang định làm... nó có ý nghĩa thực tiễn hay không?",
+      "confidence": 0.9,
+      "status": "ready",
+      "unique_user_count": 5,
+      "question_count": 3,
+      "representative_questions": [
+        "Làm thế nào để biết bài toán có ý nghĩa thực tiễn?",
+        "Làm sao thuyết phục team chọn hướng A thay vì B?",
+        "Nếu không có khung lý thuyết thì dễ sai như thế nào?"
+      ]
+    },
+    {
+      "id": "insight-cluster-02",
+      "topic": "Anti-pattern trong AI product",
+      "common_confusion": "Học viên chưa rõ anti-pattern là gì và tại sao cần tránh.",
+      "correct_understanding": "Anti-pattern là những cách làm sai lầm thường gặp khi phát triển sản phẩm AI, cần nhận diện để tránh lãng phí.",
+      "source_pages": [
+        4
+      ],
+      "source_excerpt": "Sau đó là các anti-pattern, tức là những cái cần tránh.",
+      "confidence": 0.7,
+      "status": "needs_review",
+      "unique_user_count": 2,
+      "question_count": 1,
+      "representative_questions": [
+        "Anti-pattern là gì?"
+      ]
+    },
+    {
+      "id": "insight-cluster-03",
+      "topic": "Workflow trong quản lý sinh viên",
+      "common_confusion": "Học viên có thể chưa phân biệt workflow với quy trình chung.",
+      "correct_understanding": "Workflow là một quy trình làm việc cụ thể, ví dụ quy trình tuyển sinh, đăng ký học trong trường đại học.",
+      "source_pages": [
+        7,
+        8
+      ],
+      "source_excerpt": "[Học viên]: ví dụ về một trường đại học về quản lý sinh viên: bước đầu tiên là tuyển sinh, các bước tiếp theo là các học kỳ, các bài kiểm tra, và cuối cùng đầu ra là điểm và tốt nghiệp.",
+      "confidence": 0.8,
+      "status": "ready",
+      "unique_user_count": 2,
+      "question_count": 2,
+      "representative_questions": [
+        "Workflow là gì?",
+        "Cho ví dụ workflow trong trường học?"
+      ]
+    }
+  ],
+  "review_questions": [
+    {
+      "id": "question-01",
+      "type": "multiple_choice",
+      "question": "Theo bài giảng, điều gì quan trọng hơn việc biết sử dụng công cụ AI?",
+      "options": [
+        "Chọn đúng bài toán và biết nên làm gì, không làm gì",
+        "Code thật nhanh",
+        "Có nhiều dữ liệu",
+        "Dùng model mới nhất"
+      ],
+      "correct_option": 0,
+      "answer": "Chọn đúng bài toán và biết nên làm gì, không làm gì",
+      "explanation": "Giảng viên nhấn mạnh việc chọn đúng bài toán quan trọng hơn công cụ, vì nếu chọn sai sẽ mất thời gian làm lại.",
+      "source_pages": [
+        2
+      ],
+      "source_excerpt": "Suy cho cùng, chuyện này quan trọng hơn chuyện các bạn biết sử dụng công cụ gì.",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "question-02",
+      "type": "multiple_choice",
+      "question": "Buổi học chiều nay gồm bao nhiêu phần lý thuyết?",
+      "options": [
+        "5",
+        "6",
+        "7",
+        "8"
+      ],
+      "correct_option": 2,
+      "answer": "7",
+      "explanation": "Bài giảng nêu rõ có bảy phần lý thuyết: AI landscape, anti-pattern, AI product life cycle, component, khung chọn mức độ AI, problem statement, discovery workshop.",
+      "source_pages": [
+        4
+      ],
+      "source_excerpt": "Nội dung cả bài, nếu các bạn học từ bây giờ cho đến chiều, có bảy phần lý thuyết.",
+      "confidence": 0.9,
+      "status": "ready"
+    },
+    {
+      "id": "question-03",
+      "type": "multiple_choice",
+      "question": "Ví dụ về tốc độ phát hành chức năng của AWS năm 2019 là bao nhiêu chức năng mỗi ngày?",
+      "options": [
+        "20",
+        "40",
+        "100",
+        "365"
+      ],
+      "correct_option": 1,
+      "answer": "40",
+      "explanation": "Giảng viên dẫn số liệu: trung bình một ngày đội ngũ AWS phát hành khoảng 40 chức năng.",
+      "source_pages": [
+        6
+      ],
+      "source_excerpt": "vào năm 2019... trung bình một ngày, đội ngũ của AWS platform phát hành ra khoảng 40 chức năng.",
+      "confidence": 0.95,
+      "status": "ready"
+    }
+  ],
+  "warnings": [
+    {
+      "code": "LOW_CONFIDENCE",
+      "message": "Một số mục cần Lab Coach đối chiếu slide trước khi phát hành.",
+      "item_ids": [
+        "insight-cluster-02"
+      ]
+    }
+  ],
+  "generated_at": "2026-07-30T00:00:00+00:00"
+}

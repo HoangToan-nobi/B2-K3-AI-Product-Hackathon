@@ -1,0 +1,227 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String?
+  email     String   @unique
+  role      String   @default("student") // "student", "labcoach", "admin"
+  createdAt DateTime @default(now())
+
+  courses       Course[]
+  lessons       Lesson[]
+  conversations Conversation[]
+}
+
+model Course {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  ownerId     String
+  createdAt   DateTime @default(now())
+
+  owner   User     @relation(fields: [ownerId], references: [id])
+  lessons Lesson[]
+}
+
+model Lesson {
+  id          String   @id @default(cuid())
+  courseId    String
+  title       String
+  description String?
+  status      String   @default("draft") // "draft", "published"
+  createdBy   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  course           Course             @relation(fields: [courseId], references: [id])
+  creator          User               @relation(fields: [createdBy], references: [id])
+  slideDecks       SlideDeck[]
+  slideChunks      SlideChunk[]
+  chatlogImports   ChatlogImport[]
+  studentQuestions StudentQuestion[]
+  knowledgePacks   KnowledgePack[]
+  conversations    Conversation[]
+  ingestionJobs    IngestionJob[]
+  transcripts      Transcript[]
+}
+
+model SlideDeck {
+  id               String   @id @default(cuid())
+  lessonId         String
+  originalFilename String
+  storageKey       String
+  mimeType         String
+  pageCount        Int      @default(0)
+  status           String   @default("pending") // "pending", "processing", "ready", "error"
+  uploadedBy       String
+  createdAt        DateTime @default(now())
+
+  lesson     Lesson       @relation(fields: [lessonId], references: [id])
+  slidePages SlidePage[]
+  slideChunks SlideChunk[]
+}
+
+model SlidePage {
+  id                  String   @id @default(cuid())
+  deckId              String
+  pageNumber          Int
+  textContent         String?
+  imageStorageKey     String?
+  thumbnailStorageKey String?
+  createdAt           DateTime @default(now())
+
+  deck             SlideDeck         @relation(fields: [deckId], references: [id])
+  slideChunks      SlideChunk[]
+  studentQuestions StudentQuestion[]
+  citations        Citation[]
+}
+
+model SlideChunk {
+  id         String   @id @default(cuid())
+  pageId     String?
+  deckId     String
+  lessonId   String
+  chunkIndex Int
+  content    String
+  embedding  String?  // JSON stringified vector for SQLite MVP
+  tokenCount Int      @default(0)
+  metadata   String?  // JSON string
+  createdAt  DateTime @default(now())
+
+  page      SlidePage? @relation(fields: [pageId], references: [id])
+  deck      SlideDeck  @relation(fields: [deckId], references: [id])
+  lesson    Lesson     @relation(fields: [lessonId], references: [id])
+  citations Citation[]
+}
+
+model ChatlogImport {
+  id               String   @id @default(cuid())
+  lessonId         String
+  originalFilename String
+  storageKey       String
+  status           String   @default("pending")
+  uploadedBy       String
+  createdAt        DateTime @default(now())
+
+  lesson           Lesson            @relation(fields: [lessonId], references: [id])
+  studentQuestions StudentQuestion[]
+}
+
+model StudentQuestion {
+  id                String   @id @default(cuid())
+  lessonId          String
+  importId          String?
+  anonymizedUserId  String?
+  message           String
+  normalizedMessage String?
+  slidePageHint     String?
+  createdAt         DateTime @default(now())
+
+  lesson    Lesson         @relation(fields: [lessonId], references: [id])
+  import    ChatlogImport? @relation(fields: [importId], references: [id])
+  slidePage SlidePage?     @relation(fields: [slidePageHint], references: [id])
+  citations Citation[]
+}
+
+model KnowledgePack {
+  id          String   @id @default(cuid())
+  lessonId    String
+  version     Int      @default(1)
+  status      String   @default("draft") // "draft", "published"
+  generatedBy String?
+  generatedAt DateTime?
+  publishedAt DateTime?
+
+  lesson         Lesson          @relation(fields: [lessonId], references: [id])
+  knowledgeItems KnowledgeItem[]
+}
+
+model KnowledgeItem {
+  id         String   @id @default(cuid())
+  packId     String
+  type       String   // "summary", "misconception", "qa", "quiz", "blindspot"
+  title      String?
+  content    String
+  confidence Float?
+  status     String   @default("needs_review") // "needs_review", "approved", "hidden"
+  metadata   String?  // JSON string
+  createdAt  DateTime @default(now())
+
+  pack KnowledgePack @relation(fields: [packId], references: [id])
+}
+
+model Citation {
+  id                String   @id @default(cuid())
+  targetType        String   // "knowledge_item" or "chat_message"
+  targetId          String
+  slidePageId       String?
+  slideChunkId      String?
+  studentQuestionId String?
+  quote             String?
+  createdAt         DateTime @default(now())
+
+  slidePage       SlidePage?       @relation(fields: [slidePageId], references: [id])
+  slideChunk      SlideChunk?      @relation(fields: [slideChunkId], references: [id])
+  studentQuestion StudentQuestion? @relation(fields: [studentQuestionId], references: [id])
+}
+
+model Conversation {
+  id               String   @id @default(cuid())
+  lessonId         String
+  userId           String
+  activeSlidePage  Int?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  lesson       Lesson        @relation(fields: [lessonId], references: [id])
+  user         User          @relation(fields: [userId], references: [id])
+  chatMessages ChatMessage[]
+}
+
+model ChatMessage {
+  id                  String   @id @default(cuid())
+  conversationId      String
+  role                String   // "user", "assistant", "system"
+  content             String
+  selectedText        String?
+  referencedSlidePage Int?
+  retrievalContext    String?  // JSON string
+  createdAt           DateTime @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id])
+}
+
+model IngestionJob {
+  id         String    @id @default(cuid())
+  lessonId   String
+  type       String    // "pdf_extract", "chatlog_process", "knowledge_generation"
+  status     String    @default("pending") // "pending", "running", "completed", "failed"
+  progress   Int       @default(0)
+  error      String?
+  metadata   String?   // JSON string
+  startedAt  DateTime?
+  finishedAt DateTime?
+  createdAt  DateTime  @default(now())
+
+  lesson Lesson @relation(fields: [lessonId], references: [id])
+}
+
+model Transcript {
+  id         String   @id @default(cuid())
+  lessonId   String
+  filename   String
+  content    String
+  createdAt  DateTime @default(now())
+
+  lesson Lesson @relation(fields: [lessonId], references: [id])
+}

@@ -1,124 +1,182 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
+import type { ReactNode } from "react";
 import type { ClassInsight, ReviewPack, ReviewQuestion, SummaryItem } from "@/lib/review-packs/types";
 
 type AppRole = "student" | "labcoach";
+type Screen = "home" | "course" | "reader";
+type CoachAction = "menu" | "summary" | "review" | "preview";
+type Notice = { tone: "error" | "success" | "info"; text: string };
 
 type LessonOption = {
   id: string;
   title: string;
   slide_count: number;
   pack_id: string;
-  status: string;
+  status: "ready" | "needs_review" | "missing" | string;
 };
 
-type Notice = { tone: "error" | "success" | "info"; text: string };
+type ChatMessage = {
+  id: string;
+  role: "user" | "assistant";
+  content: string;
+  citations?: string;
+};
+
+const starterChat: ChatMessage[] = [
+  {
+    id: "hello",
+    role: "assistant",
+    content: "Em đang theo ngữ cảnh slide này. Rin-chan có thể hỏi trực tiếp hoặc chọn phạm vi toàn bộ ngày học.",
+  },
+];
 
 function sourceLabel(pages: number[]): string {
-  return `Trang ${pages.join(", ")}`;
+  return pages.length ? `Slide ${pages.join(", ")}` : "Theo deck";
 }
 
 function statusLabel(status: string): string {
-  return status === "needs_review" ? "Cần duyệt" : "Sẵn sàng";
+  if (status === "missing") return "Chưa có tài liệu";
+  return status === "needs_review" ? "Cần duyệt" : "Đã có tài liệu";
 }
 
-function explainPipelineError(job: { error?: string; stdout?: string; stderr?: string }): string {
-  const detail = `${job.error || ""}\n${job.stdout || ""}\n${job.stderr || ""}`;
-  if (detail.includes("pdftotext")) return "Thiếu pdftotext/Poppler trong PATH.";
-  if (detail.includes("DEEPSEEK_API_KEY")) return "Thiếu DEEPSEEK_API_KEY trong codebase/pipeline/.env.";
-  if (detail.includes("DeepSeek API")) return "DeepSeek API trả lỗi hoặc network không gọi được.";
-  return "Pipeline thật lỗi, backend dùng artifact có sẵn.";
+function dayNumber(index: number): string {
+  return String(index + 1).padStart(2, "0");
 }
 
 export default function Home() {
   const [role, setRole] = useState<AppRole>("student");
-  const [view, setView] = useState("review");
+  const [screen, setScreen] = useState<Screen>("home");
+  const [coachAction, setCoachAction] = useState<CoachAction>("menu");
   const [lessons, setLessons] = useState<LessonOption[]>([]);
-  const [selectedLessonId, setSelectedLessonId] = useState("day1-foundation");
+  const [selectedLessonId, setSelectedLessonId] = useState("");
+  const [openLessonId, setOpenLessonId] = useState("");
   const [pack, setPack] = useState<ReviewPack | null>(null);
   const [notice, setNotice] = useState<Notice | null>(null);
+  const [loadingLessons, setLoadingLessons] = useState(true);
+  const [loadingPack, setLoadingPack] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [downloading, setDownloading] = useState(false);
-  const [expandedInsights, setExpandedInsights] = useState<string[]>([]);
-  const [openQA, setOpenQA] = useState<string[]>([]);
+  const [uploading, setUploading] = useState(false);
+  const [catalogVersion, setCatalogVersion] = useState(0);
 
   useEffect(() => {
-    document.documentElement.setAttribute("data-theme", "light");
-  }, []);
-
-  useEffect(() => {
+    let cancelled = false;
+    Promise.resolve().then(() => {
+      if (!cancelled) setLoadingLessons(true);
+    });
     fetch(`/api/review-packs?role=${role}`, { headers: { "x-vluoi-role": role } })
-      .then((res) => res.json())
-      .then((data: { lessons?: LessonOption[] }) => {
+      .then(async (res) => {
+        if (!res.ok) throw new Error("Cannot load lessons");
+        return (await res.json()) as { lessons?: LessonOption[] };
+      })
+      .then((data) => {
+        if (cancelled) return;
         const nextLessons = data.lessons || [];
         setLessons(nextLessons);
-        if (nextLessons[0] && !nextLessons.some((lesson) => lesson.id === selectedLessonId)) {
-          setSelectedLessonId(nextLessons[0].id);
-        }
+        const nextSelected = selectedLessonId && nextLessons.some((lesson) => lesson.id === selectedLessonId)
+          ? selectedLessonId
+          : nextLessons[0]?.id || "";
+        setSelectedLessonId(nextSelected);
+        setOpenLessonId((prev) => prev || nextSelected);
       })
-      .catch(() => setNotice({ tone: "error", text: "Không tải được danh sách buổi học." }));
-  }, [role, selectedLessonId]);
-
-  useEffect(() => {
-    const lesson = lessons.find((item) => item.id === selectedLessonId);
-    if (!lesson) return;
-    fetch(`/api/review-packs/${lesson.pack_id}?role=${role}`, { headers: { "x-vluoi-role": role } })
-      .then((res) => {
-        if (!res.ok) throw new Error("Cannot load pack");
-        return res.json();
-      })
-      .then((data: { pack: ReviewPack }) => {
-        setPack(data.pack);
-        setExpandedInsights([]);
-        setOpenQA([]);
-      })
-      .catch(() => setNotice({ tone: "error", text: "Không tải được gói ôn tập." }));
-  }, [lessons, role, selectedLessonId]);
+      .catch(() => setNotice({ tone: "error", text: "Không tải được danh sách ngày học từ backend." }))
+      .finally(() => {
+        if (!cancelled) setLoadingLessons(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [role, selectedLessonId, catalogVersion]);
 
   const selectedLesson = lessons.find((lesson) => lesson.id === selectedLessonId);
-  const topics = useMemo(() => {
-    return [...(pack?.class_insights || [])].sort(
-      (a, b) => b.unique_user_count - a.unique_user_count || b.question_count - a.question_count,
-    );
-  }, [pack]);
-  const maxUsers = Math.max(1, ...topics.map((topic) => topic.unique_user_count));
+  const selectedPackId = selectedLesson?.pack_id;
+
+  useEffect(() => {
+    if (!selectedPackId || selectedLesson?.status === "missing") {
+      Promise.resolve().then(() => setPack(null));
+      return;
+    }
+    let cancelled = false;
+    Promise.resolve().then(() => {
+      if (!cancelled) setLoadingPack(true);
+    });
+    fetch(`/api/review-packs/${selectedPackId}?role=${role}`, { headers: { "x-vluoi-role": role } })
+      .then(async (res) => {
+        if (res.status === 404) return null;
+        if (!res.ok) throw new Error("Cannot load pack");
+        return (await res.json()) as { pack: ReviewPack };
+      })
+      .then((data) => {
+        if (!cancelled) setPack(data?.pack || null);
+      })
+      .catch(() => {
+        if (!cancelled) setNotice({ tone: "error", text: "Không tải được tài liệu tổng hợp." });
+      })
+      .finally(() => {
+        if (!cancelled) setLoadingPack(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [role, selectedPackId, selectedLesson?.status]);
+
+  const progress = useMemo(() => {
+    if (!lessons.length) return 0;
+    return Math.round((lessons.filter((lesson) => lesson.status !== "missing").length / lessons.length) * 100);
+  }, [lessons]);
+
   const readySummary = pack?.summary.filter((item) => item.status === "ready") || [];
   const readyInsights = pack?.class_insights.filter((item) => item.status === "ready") || [];
   const readyQuestions = pack?.review_questions.filter((item) => item.status === "ready") || [];
   const needsReviewCount = pack
     ? [...pack.summary, ...pack.class_insights, ...pack.review_questions].filter((item) => item.status === "needs_review").length
     : 0;
+  const sortedInsights = useMemo(
+    () => [...(pack?.class_insights || [])].sort((a, b) => b.question_count - a.question_count),
+    [pack],
+  );
 
-  const changeRole = (nextRole: AppRole) => {
-    setRole(nextRole);
-    setView(nextRole === "student" ? "review" : "dashboard");
-    setNotice({ tone: "info", text: nextRole === "student" ? "Đang xem bằng quyền học viên." : "Đang xem bằng quyền Lab Coach." });
+  const selectDay = (lessonId: string) => {
+    setSelectedLessonId(lessonId);
+    setOpenLessonId((prev) => (prev === lessonId ? "" : lessonId));
+    setCoachAction("menu");
   };
 
-  const handleGenerate = async (runPipeline = false) => {
-    if (role !== "labcoach") return;
+  const openReader = (lessonId: string) => {
+    setSelectedLessonId(lessonId);
+    setScreen("reader");
+    setCoachAction("menu");
+  };
+
+  const openCoachSummary = (lessonId: string) => {
+    setSelectedLessonId(lessonId);
+    setScreen("course");
+    setCoachAction("summary");
+  };
+
+  const generatePack = async () => {
+    if (!selectedLesson || role !== "labcoach") return;
     setProcessing(true);
-    setNotice(null);
+    setNotice({ tone: "info", text: "Backend đang tổng hợp slide, transcript và các câu hỏi hay gặp." });
     try {
       const res = await fetch("/api/review-packs", {
         method: "POST",
         headers: { "Content-Type": "application/json", "x-vluoi-role": role },
-        body: JSON.stringify({ lesson_id: selectedLessonId, run_pipeline: runPipeline }),
+        body: JSON.stringify({ lesson_id: selectedLesson.id, run_pipeline: true }),
       });
       if (!res.ok) throw new Error("create failed");
-      const data = (await res.json()) as { pack: ReviewPack; job: { mode: string; error?: string; stdout?: string; stderr?: string } };
+      const data = (await res.json()) as { pack: ReviewPack; job: { mode: string } };
       setPack(data.pack);
+      setCatalogVersion((value) => value + 1);
+      setCoachAction(data.pack.warnings.length ? "review" : "preview");
       setNotice({
-        tone: "success",
-        text: data.job.mode === "pipeline"
-          ? "Pipeline đã chạy lại và tạo review pack mới."
-          : data.job.mode === "pipeline_failed_fallback"
-            ? `${explainPipelineError(data.job)} Backend dùng artifact có sẵn để demo tiếp.`
-            : "Đã tải review pack từ database local.",
+        tone: data.job.mode === "ai_generated" ? "success" : "info",
+        text: data.job.mode === "ai_generated" ? "Đã tạo bản tổng hợp. Các mục ngoài slide cần Lab Coach duyệt." : "Đã tạo bản fallback để Lab Coach kiểm tra.",
       });
     } catch {
-      setNotice({ tone: "error", text: "Không tạo được review pack. Kiểm tra API key hoặc artifact pipeline." });
+      setNotice({ tone: "error", text: "Không tạo được tài liệu tổng hợp. Hãy kiểm tra FastAPI hoặc API key." });
     } finally {
       setProcessing(false);
     }
@@ -126,7 +184,6 @@ export default function Home() {
 
   const updateItem = async (itemId: string, action: "approve" | "drop") => {
     if (!pack || role !== "labcoach") return;
-    setNotice(null);
     try {
       const res = await fetch(`/api/review-packs/${pack.pack_id}/items/${itemId}`, {
         method: "PATCH",
@@ -136,16 +193,15 @@ export default function Home() {
       if (!res.ok) throw new Error("patch failed");
       const data = (await res.json()) as { pack: ReviewPack };
       setPack(data.pack);
-      setNotice({ tone: "success", text: action === "approve" ? "Đã duyệt mục này." : "Đã bỏ mục này khỏi bản phát hành." });
+      setNotice({ tone: "success", text: action === "approve" ? "Đã duyệt nội dung." : "Đã bỏ nội dung khỏi tài liệu." });
     } catch {
-      setNotice({ tone: "error", text: "Không cập nhật được mục review." });
+      setNotice({ tone: "error", text: "Không cập nhật được nội dung cần duyệt." });
     }
   };
 
-  const handleDownload = async () => {
-    if (!pack || role !== "labcoach") return;
+  const downloadPdf = async () => {
+    if (!pack) return;
     setDownloading(true);
-    setNotice(null);
     try {
       const res = await fetch(`/api/review-packs/${pack.pack_id}/export-pdf`, {
         method: "POST",
@@ -154,12 +210,11 @@ export default function Home() {
       if (!res.ok) throw new Error("download failed");
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `${pack.pack_id}.pdf`;
-      a.click();
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = `${pack.pack_id}.pdf`;
+      anchor.click();
       URL.revokeObjectURL(url);
-      setNotice({ tone: "success", text: "Đã xuất PDF từ backend." });
     } catch {
       setNotice({ tone: "error", text: "Không xuất được PDF." });
     } finally {
@@ -167,521 +222,658 @@ export default function Home() {
     }
   };
 
+  const uploadLesson = async (formData: FormData) => {
+    setUploading(true);
+    setNotice({ tone: "info", text: "Backend đang lưu file và tách text từng slide." });
+    try {
+      const res = await fetch("/api/lessons", {
+        method: "POST",
+        headers: { "x-vluoi-role": "labcoach" },
+        body: formData,
+      });
+      if (!res.ok) throw new Error("upload failed");
+      const data = (await res.json()) as { lesson: { id: string }; slideDeck?: { extraction?: { sourceType?: string; emptyPages?: number[] } } };
+      setSelectedLessonId(data.lesson.id);
+      setOpenLessonId(data.lesson.id);
+      setCatalogVersion((value) => value + 1);
+      setScreen("course");
+      setNotice({ tone: "success", text: `Đã upload và ingest slide (${data.slideDeck?.extraction?.sourceType || "file"}).` });
+    } catch {
+      setNotice({ tone: "error", text: "Upload thất bại. Hãy dùng PDF/PPTX có text selectable." });
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const currentSubtitle = selectedLesson ? `${selectedLesson.title} · ${selectedLesson.slide_count} slide` : "Đang tải lớp học";
+
   return (
-    <div className="app-shell">
-      <aside className="sidebar">
-        <div className="sb-logo"><span className="dot" />VLười</div>
-        <div className="sb-section-label">Vai trò</div>
-        <div className="role-switch" role="group" aria-label="Chọn vai trò">
-          <button type="button" className={role === "student" ? "active" : ""} onClick={() => changeRole("student")}>Học viên</button>
-          <button type="button" className={role === "labcoach" ? "active" : ""} onClick={() => changeRole("labcoach")}>Lab Coach</button>
-        </div>
+    <div className={screen === "reader" ? "reader-shell" : "app-shell"}>
+      {screen === "reader" ? (
+        <ReaderTopbar
+          role={role}
+          title={role === "labcoach" ? "Không gian Lab Coach" : "Trình đọc học liệu VLười"}
+          subtitle={currentSubtitle}
+          onBack={() => setScreen("course")}
+        />
+      ) : (
+        <TopNav
+          role={role}
+          screen={screen}
+          onRoleChange={(nextRole) => {
+            setRole(nextRole);
+            setScreen("home");
+            setCoachAction("menu");
+          }}
+          onNavigate={setScreen}
+        />
+      )}
 
-        <div className="sb-section-label">Buổi học</div>
-        <select className="lesson-select" value={selectedLessonId} onChange={(event) => setSelectedLessonId(event.target.value)}>
-          {lessons.map((lesson) => (
-            <option key={lesson.id} value={lesson.id}>{lesson.title}</option>
-          ))}
-        </select>
-
-        <div className="sb-section-label">Điều hướng</div>
-        <nav className="sb-nav" aria-label="Điều hướng chức năng">
-          {role === "student" ? (
-            <>
-              <NavButton id="review" view={view} setView={setView} label="Ôn tập tổng hợp" count={readySummary.length + readyInsights.length} />
-              <NavButton id="slides" view={view} setView={setView} label="Xem slide" count={selectedLesson?.slide_count || 0} />
-            </>
-          ) : (
-            <>
-              <NavButton id="dashboard" view={view} setView={setView} label="Canvas" count={pack?.analysis.cluster_count || 0} />
-              <NavButton id="generate" view={view} setView={setView} label="Đề tài" count={selectedLesson?.slide_count || 0} />
-              <NavButton id="tutor" view={view} setView={setView} label="AI Tutor" count={pack?.analysis.student_question_count || 0} />
-              <NavButton id="blindspot" view={view} setView={setView} label="Blindspot" count={needsReviewCount} />
-              <NavButton id="release" view={view} setView={setView} label="Phát hành" count={readyQuestions.length} />
-            </>
-          )}
-        </nav>
-
-        <div className="sb-spacer" />
-        <div className="sb-user">
-          <div className="avatar">{role === "student" ? "HV" : "LC"}</div>
-          <div>
-            <div className="name">{role === "student" ? "Học viên demo" : "Lab Coach demo"}</div>
-            <div className="role">{role === "student" ? "Chỉ đọc nội dung đã duyệt" : "Quản trị review pack"}</div>
-          </div>
-        </div>
-      </aside>
-
-      <main className="main">
-        <header className="topbar">
-          <div>
-            <h1>{role === "student" ? "Không gian ôn tập" : "Lab Coach Console"}</h1>
-            <p>{selectedLesson?.title || "Đang tải buổi học"}</p>
-          </div>
-          <div className={`status-pill ${pack?.status === "needs_review" ? "review" : "ready"}`}>
-            {pack ? statusLabel(pack.status) : "Đang tải"}
-          </div>
-        </header>
-
-        <div className="content">
-          {notice && <div className={`notice notice-${notice.tone}`}>{notice.text}</div>}
-          {role === "student" ? (
-            <StudentWorkspace
-              view={view}
-              pack={pack}
-              lesson={selectedLesson}
-              readySummary={readySummary}
-              readyInsights={readyInsights}
-              readyQuestions={readyQuestions}
-              selectedLessonId={selectedLessonId}
-            />
-          ) : (
-            <LabCoachWorkspace
-              view={view}
-              pack={pack}
-              topics={topics}
-              maxUsers={maxUsers}
-              needsReviewCount={needsReviewCount}
-              processing={processing}
-              downloading={downloading}
-              expandedInsights={expandedInsights}
-              openQA={openQA}
-              setExpandedInsights={setExpandedInsights}
-              setOpenQA={setOpenQA}
-              handleGenerate={handleGenerate}
-              handleDownload={handleDownload}
-              updateItem={updateItem}
-            />
-          )}
-        </div>
-      </main>
+      {screen === "reader" ? (
+        <SlideTutor key={selectedLessonId} lesson={selectedLesson} lessonId={selectedLessonId} />
+      ) : (
+        <>
+          <Hero
+            role={role}
+            lessonCount={lessons.length}
+            progress={progress}
+            onOpenCourse={() => setScreen("course")}
+            onGenerate={() => {
+              setScreen("course");
+              setCoachAction("summary");
+            }}
+          />
+          <main className="content">
+            {notice && <div className={`notice ${notice.tone}`}>{notice.text}</div>}
+            {loadingLessons ? (
+              <SkeletonList />
+            ) : screen === "home" ? (
+              <HomeDashboard role={role} lessons={lessons} progress={progress} onOpenCourse={() => setScreen("course")} />
+            ) : (
+              <CourseWorkspace
+                role={role}
+                lessons={lessons}
+                selectedLessonId={selectedLessonId}
+                openLessonId={openLessonId}
+                selectedLesson={selectedLesson}
+                pack={pack}
+                loadingPack={loadingPack}
+                coachAction={coachAction}
+                readySummary={readySummary}
+                readyInsights={readyInsights}
+                readyQuestions={readyQuestions}
+                sortedInsights={sortedInsights}
+                needsReviewCount={needsReviewCount}
+                processing={processing}
+                downloading={downloading}
+                uploading={uploading}
+                onSelectDay={selectDay}
+                onOpenReader={openReader}
+                onOpenCoachSummary={openCoachSummary}
+                onCoachAction={setCoachAction}
+                onGenerate={generatePack}
+                onUpdate={updateItem}
+                onDownload={downloadPdf}
+                onUpload={uploadLesson}
+              />
+            )}
+          </main>
+        </>
+      )}
     </div>
   );
 }
 
-function NavButton({
-  id,
-  view,
-  setView,
-  label,
-  count,
+function TopNav({
+  role,
+  screen,
+  onRoleChange,
+  onNavigate,
 }: {
-  id: string;
-  view: string;
-  setView: (view: string) => void;
-  label: string;
-  count: number;
+  role: AppRole;
+  screen: Screen;
+  onRoleChange: (role: AppRole) => void;
+  onNavigate: (screen: Screen) => void;
 }) {
   return (
-    <button type="button" className={`sb-item ${view === id ? "active" : ""}`} onClick={() => setView(id)}>
-      <span>{label}</span>
-      <span className="count">{count}</span>
-    </button>
+    <header className="top-nav">
+      <div className="brand-lockup" aria-label="VLười">
+        <span className="brand-mark">V</span>
+        <strong>VLười</strong>
+      </div>
+      <nav className="main-tabs" aria-label="Điều hướng chính">
+        <button className={screen === "home" ? "active" : ""} type="button" onClick={() => onNavigate("home")}>Trang chủ</button>
+        <button className={screen === "course" ? "active" : ""} type="button" onClick={() => onNavigate("course")}>Khóa học của tôi</button>
+      </nav>
+      <div className="nav-actions">
+        <a className="utility-link" href="https://codelabs.developers.google.com/" target="_blank" rel="noreferrer">Mở Codelabs</a>
+        <button className="icon-btn" type="button" title="Ngôn ngữ">VI</button>
+        <div className="role-switch" role="group" aria-label="Chọn vai trò">
+          <button className={role === "student" ? "active" : ""} type="button" onClick={() => onRoleChange("student")}>Học viên</button>
+          <button className={role === "labcoach" ? "active" : ""} type="button" onClick={() => onRoleChange("labcoach")}>Lab Coach</button>
+        </div>
+      </div>
+    </header>
   );
 }
 
-function StudentWorkspace({
-  view,
+function ReaderTopbar({ title, subtitle, role, onBack }: { title: string; subtitle: string; role: AppRole; onBack: () => void }) {
+  return (
+    <header className="reader-topbar">
+      <button className="icon-btn" type="button" onClick={onBack} title="Quay lại">‹</button>
+      <div className="brand-lockup compact"><span className="brand-mark">V</span><strong>VLười</strong></div>
+      <div className="reader-title"><strong>{title}</strong><span>{subtitle}</span></div>
+      <div className="reader-tools"><span className="chip neutral">{role === "labcoach" ? "Lab Coach" : "Học viên"}</span><button className="icon-btn" type="button">VI</button></div>
+    </header>
+  );
+}
+
+function Hero({
+  role,
+  lessonCount,
+  progress,
+  onOpenCourse,
+  onGenerate,
+}: {
+  role: AppRole;
+  lessonCount: number;
+  progress: number;
+  onOpenCourse: () => void;
+  onGenerate: () => void;
+}) {
+  return (
+    <section className="hero-band">
+      <div>
+        <p className="eyebrow">VLƯỜI · VINUNI AI THỰC CHIẾN</p>
+        <h1>{role === "labcoach" ? "Bảng điều phối học liệu VLười" : "Không gian học tập VLười"}</h1>
+        <p className="hero-copy">
+          {role === "labcoach"
+            ? "Chọn ngày học, xem slide, tạo tài liệu ôn tập và duyệt các phần lấy từ chatlog trước khi phát hành."
+            : "Theo dõi ngày học, mở slide ở giữa màn hình và hỏi trợ lý theo đúng ngữ cảnh bài giảng."}
+        </p>
+        <div className="hero-actions">
+          <button className="btn primary" type="button" onClick={role === "labcoach" ? onGenerate : onOpenCourse}>
+            {role === "labcoach" ? "Tạo tài liệu" : "Vào khóa học"}
+          </button>
+          <span className="soft-pill">{lessonCount} ngày học</span>
+        </div>
+      </div>
+      <div className="progress-card">
+        <span>Tiến độ tài liệu</span>
+        <strong>{progress}%</strong>
+        <div className="progress-track"><i style={{ width: `${progress}%` }} /></div>
+      </div>
+    </section>
+  );
+}
+
+function HomeDashboard({ role, lessons, progress, onOpenCourse }: { role: AppRole; lessons: LessonOption[]; progress: number; onOpenCourse: () => void }) {
+  return (
+    <section className="dashboard-grid">
+      <Stat value={lessons.length} label="ngày học" />
+      <Stat value={lessons.reduce((sum, item) => sum + item.slide_count, 0)} label="slide" />
+      <Stat value={lessons.filter((item) => item.status !== "missing").length} label="tài liệu có sẵn" />
+      <Stat value={`${progress}%`} label="tiến độ" />
+      <button className="course-entry" type="button" onClick={onOpenCourse}>
+        <span className="entry-icon">▣</span>
+        <span><strong>{role === "labcoach" ? "Quản lý khóa học" : "Xem khóa học của tôi"}</strong><small>Danh sách ngày học, slide và tài liệu tổng hợp.</small></span>
+        <b>→</b>
+      </button>
+    </section>
+  );
+}
+
+function CourseWorkspace({
+  role,
+  lessons,
+  selectedLessonId,
+  openLessonId,
+  selectedLesson,
   pack,
-  lesson,
+  loadingPack,
+  coachAction,
   readySummary,
   readyInsights,
   readyQuestions,
-  selectedLessonId,
-}: {
-  view: string;
-  pack: ReviewPack | null;
-  lesson?: LessonOption;
-  readySummary: SummaryItem[];
-  readyInsights: ClassInsight[];
-  readyQuestions: ReviewQuestion[];
-  selectedLessonId: string;
-}) {
-  if (!pack) return <EmptyState title="Chưa có dữ liệu" text="Backend chưa trả được review pack cho buổi học này." />;
-
-  if (view === "slides") {
-    return (
-      <section className="workspace">
-        <PageHead title="Slide buổi học" text="Học viên chỉ xem tài liệu gốc và không có quyền chạy pipeline hoặc duyệt nội dung." />
-        <div className="slide-frame">
-          <iframe title={lesson?.title || "Slide"} src={`/api/lessons/${selectedLessonId}/slide`} />
-        </div>
-      </section>
-    );
-  }
-
-  return (
-    <section className="workspace">
-      <PageHead
-        title="Ôn tập tổng hợp"
-        text="Bản dành cho học viên chỉ hiển thị nội dung đã sẵn sàng, có tham chiếu về trang slide gốc."
-      />
-      <div className="stat-row">
-        <Stat value={pack.lesson.slide_count} label="slide nguồn" />
-        <Stat value={readySummary.length} label="ý chính" />
-        <Stat value={readyInsights.length} label="điểm cả lớp vướng" />
-        <Stat value={readyQuestions.length} label="câu tự kiểm tra" />
-      </div>
-
-      <div className="section-label">Lý thuyết trọng tâm</div>
-      {readySummary.map((item) => <StudySummary key={item.id} item={item} />)}
-
-      <div className="section-label">Điểm cả lớp thường hỏi</div>
-      {readyInsights.map((item) => <StudyInsight key={item.id} item={item} />)}
-
-      <div className="section-label">Tự kiểm tra</div>
-      {readyQuestions.map((item, index) => <StudyQuestion key={item.id} item={item} index={index} />)}
-    </section>
-  );
-}
-
-function LabCoachWorkspace({
-  view,
-  pack,
-  topics,
-  maxUsers,
+  sortedInsights,
   needsReviewCount,
   processing,
   downloading,
-  expandedInsights,
-  openQA,
-  setExpandedInsights,
-  setOpenQA,
-  handleGenerate,
-  handleDownload,
-  updateItem,
+  uploading,
+  onSelectDay,
+  onOpenReader,
+  onOpenCoachSummary,
+  onCoachAction,
+  onGenerate,
+  onUpdate,
+  onDownload,
+  onUpload,
 }: {
-  view: string;
+  role: AppRole;
+  lessons: LessonOption[];
+  selectedLessonId: string;
+  openLessonId: string;
+  selectedLesson?: LessonOption;
   pack: ReviewPack | null;
-  topics: ClassInsight[];
-  maxUsers: number;
+  loadingPack: boolean;
+  coachAction: CoachAction;
+  readySummary: SummaryItem[];
+  readyInsights: ClassInsight[];
+  readyQuestions: ReviewQuestion[];
+  sortedInsights: ClassInsight[];
   needsReviewCount: number;
   processing: boolean;
   downloading: boolean;
-  expandedInsights: string[];
-  openQA: string[];
-  setExpandedInsights: (value: string[] | ((prev: string[]) => string[])) => void;
-  setOpenQA: (value: string[] | ((prev: string[]) => string[])) => void;
-  handleGenerate: (runPipeline?: boolean) => void;
-  handleDownload: () => void;
-  updateItem: (itemId: string, action: "approve" | "drop") => void;
+  uploading: boolean;
+  onSelectDay: (lessonId: string) => void;
+  onOpenReader: (lessonId: string) => void;
+  onOpenCoachSummary: (lessonId: string) => void;
+  onCoachAction: (action: CoachAction) => void;
+  onGenerate: () => void;
+  onUpdate: (itemId: string, action: "approve" | "drop") => void;
+  onDownload: () => void;
+  onUpload: (formData: FormData) => void;
 }) {
-  if (!pack) return <EmptyState title="Chưa có dữ liệu" text="Tải review pack từ artifact hoặc chạy lại pipeline." />;
-
-  if (view === "generate") {
-    return (
-      <section className="workspace">
-        <PageHead title="Đề tài" text="Thiết lập dữ liệu đầu vào cho lát cắt VLười: slide là nguồn sự thật, chatlog là tín hiệu điểm khó." />
-        <div className="action-panel">
-          <div>
-            <h3>{pack.lesson.title}</h3>
-            <p>{pack.lesson.slide_count} slide, {pack.analysis.student_question_count} tin nhắn liên quan, {pack.analysis.unique_user_count} học viên đã ẩn danh.</p>
-          </div>
-          <div className="action-row">
-            <button className="btn btn-primary" disabled={processing} onClick={() => handleGenerate(false)}>
-              {processing ? "Đang tải..." : "Tải từ DB local"}
-            </button>
-            <button className="btn btn-ghost" disabled={processing} onClick={() => handleGenerate(true)}>
-              Chạy lại AI
-            </button>
-          </div>
-        </div>
-        {processing && <div className="processing-box"><span className="spinner" />Backend đang chuẩn bị artifact và kiểm tra grounding.</div>}
-      </section>
-    );
-  }
-
-  if (view === "tutor") {
-    return (
-      <section className="workspace">
-        <PageHead title="AI Tutor" text="Các cụm câu hỏi được mining từ chatlog đã ẩn danh và xếp hạng theo số học viên duy nhất." />
-        <div className="section-label">Confusion cluster</div>
-        {topics.map((topic) => (
-          <div key={topic.id} className="topic-item">
-            <button
-              type="button"
-              className="topic-main"
-              onClick={() => setExpandedInsights((prev) => prev.includes(topic.id) ? prev.filter((id) => id !== topic.id) : [...prev, topic.id])}
-            >
-              <div className="topic-top">
-                <div className="topic-name">{topic.topic}</div>
-                <div className="topic-count">{topic.unique_user_count} học viên</div>
-              </div>
-              <div className="topic-bar-track">
-                <div className="topic-bar-fill" style={{ width: `${Math.round((topic.unique_user_count / maxUsers) * 100)}%` }} />
-              </div>
-              <div className="topic-foot">
-                <span>{topic.question_count} lượt hỏi</span>
-                <span>{sourceLabel(topic.source_pages)} · {statusLabel(topic.status)}</span>
-              </div>
-            </button>
-            {expandedInsights.includes(topic.id) && <RepresentativeQuestions topic={topic} />}
-          </div>
-        ))}
-      </section>
-    );
-  }
-
-  if (view === "blindspot") {
-    return (
-      <section className="workspace">
-        <PageHead title="Blindspot" text="Lab Coach xử lý các mục có confidence thấp hoặc cần đối chiếu thêm trước khi phát hành cho học viên." />
-        <div className="stat-row compact">
-          <Stat value={needsReviewCount} label="mục cần duyệt" />
-          <Stat value={pack.warnings.length} label="cảnh báo" />
-          <Stat value={pack.analysis.excluded_noise_count} label="tin nhiễu đã loại" />
-        </div>
-
-        <div className="section-label">Lý thuyết trọng tâm</div>
-        {pack.summary.map((item) => <SummaryCard key={item.id} item={item} onUpdate={updateItem} />)}
-
-        <div className="section-label">Điểm cả lớp thường vướng</div>
-        {pack.class_insights.map((item) => <InsightCard key={item.id} item={item} onUpdate={updateItem} />)}
-
-        <div className="section-label">Câu hỏi tự kiểm tra</div>
-        {pack.review_questions.map((item) => (
-          <QuestionCard
-            key={item.id}
-            item={item}
-            open={openQA.includes(item.id)}
-            onToggle={() => setOpenQA((prev) => prev.includes(item.id) ? prev.filter((id) => id !== item.id) : [...prev, item.id])}
-            onUpdate={updateItem}
-          />
-        ))}
-      </section>
-    );
-  }
-
-  if (view === "release") {
-    return (
-      <section className="workspace">
-        <PageHead title="Phát hành" text="Bản preview chỉ dùng nội dung đang sẵn sàng; mục cần duyệt không được phát hành cho học viên." />
-        <PdfPreview pack={pack} />
-        <div className="footer-actions">
-          <button className="btn btn-primary" disabled={downloading} onClick={handleDownload}>
-            {downloading ? "Đang xuất..." : "Tải PDF"}
-          </button>
-        </div>
-      </section>
-    );
-  }
-
   return (
-    <section className="workspace">
-      <PageHead title="Canvas" text="Tổng quan theo đúng đề tài VLười: slide chính thức, chatlog ẩn danh, review pack có grounding và trạng thái duyệt." />
-      <div className="stat-row">
-        <Stat value={pack.lesson.slide_count} label="slide đã quét" />
-        <Stat value={pack.analysis.student_question_count} label="tin nhắn liên quan" />
-        <Stat value={pack.analysis.unique_user_count} label="học viên duy nhất" />
-        <Stat value={pack.analysis.cluster_count} label="cluster" />
+    <section className="course-layout">
+      <div className="course-header">
+        <div><p className="eyebrow">COMP2010 · Khóa 3 + 4 Phase 1</p><h2>{role === "labcoach" ? "Luồng Lab Coach" : "Khóa học của tôi"}</h2><span>{lessons.length} ngày học · {lessons.reduce((sum, item) => sum + item.slide_count, 0)} slide</span></div>
+        <ProgressInline lessons={lessons} />
       </div>
-      {pack.warnings.length > 0 && (
-        <div className="warning-list">
-          {pack.warnings.map((warning) => (
-            <div key={warning.message} className="warning-banner">
-              <p><strong>Cần chú ý.</strong> {warning.message}</p>
-            </div>
+      <div className="course-columns">
+        <div className="day-list">
+          {lessons.map((lesson, index) => (
+            <DayAccordion
+              key={lesson.id}
+              lesson={lesson}
+              index={index}
+              active={lesson.id === selectedLessonId}
+              open={lesson.id === openLessonId}
+              role={role}
+              onSelect={() => onSelectDay(lesson.id)}
+              onOpenReader={() => onOpenReader(lesson.id)}
+              onOpenCoachSummary={() => onOpenCoachSummary(lesson.id)}
+            />
           ))}
         </div>
-      )}
-      <div className="canvas-grid">
-        <CanvasCard title="Pain point" text="Học viên không muốn đọc lại toàn bộ slide dài, còn câu hỏi thật của lớp đang nằm rải rác trong chatlog." />
-        <CanvasCard title="Nguồn sự thật" text="Slide là cơ sở kiến thức chính thức. Chatlog chỉ dùng để phát hiện chủ đề khó và câu hỏi lặp lại." />
-        <CanvasCard title="Quyết định AI" text="Lọc noise, nhóm câu hỏi, xếp hạng blindspot và sinh nội dung có tham chiếu về trang slide." />
-        <CanvasCard title="Kết quả" text="Một gói ôn tập ngắn gồm lý thuyết trọng tâm, điểm dễ nhầm và câu tự kiểm tra." />
+        <aside className="side-panel">
+          {role === "student" ? (
+            <StudentPackPanel pack={pack} lesson={selectedLesson} loading={loadingPack} summary={readySummary} insights={readyInsights} questions={readyQuestions} downloading={downloading} onDownload={onDownload} />
+          ) : (
+            <CoachPanel
+              lesson={selectedLesson}
+              pack={pack}
+              action={coachAction}
+              loading={loadingPack}
+              processing={processing}
+              downloading={downloading}
+              uploading={uploading}
+              sortedInsights={sortedInsights}
+              needsReviewCount={needsReviewCount}
+              onAction={onCoachAction}
+              onGenerate={onGenerate}
+              onUpdate={onUpdate}
+              onDownload={onDownload}
+              onUpload={onUpload}
+            />
+          )}
+        </aside>
       </div>
     </section>
   );
 }
 
-function PageHead({ title, text }: { title: string; text: string }) {
+function DayAccordion({
+  lesson,
+  index,
+  active,
+  open,
+  role,
+  onSelect,
+  onOpenReader,
+  onOpenCoachSummary,
+}: {
+  lesson: LessonOption;
+  index: number;
+  active: boolean;
+  open: boolean;
+  role: AppRole;
+  onSelect: () => void;
+  onOpenReader: () => void;
+  onOpenCoachSummary: () => void;
+}) {
   return (
-    <div className="page-head">
-      <div>
-        <h2>{title}</h2>
-        <p>{text}</p>
-      </div>
-    </div>
+    <article className={`day-card ${active ? "active" : ""}`}>
+      <button className="day-button" type="button" onClick={onSelect}>
+        <span className="day-badge"><small>DAY</small>{dayNumber(index)}</span>
+        <span><strong>{lesson.title}</strong><small>{lesson.status === "missing" ? "Chưa hoàn thành tài liệu" : statusLabel(lesson.status)} · {lesson.slide_count} slide</small></span>
+        <b>{open ? "⌃" : "⌄"}</b>
+      </button>
+      {open && (
+        <div className="material-list">
+          <button className="material-row" type="button" onClick={role === "student" ? onOpenReader : onOpenCoachSummary}>
+            <span>▤</span>
+            <span><strong>{lesson.title}.pdf</strong><small>{lesson.slide_count} trang · slide gốc</small></span>
+          </button>
+        </div>
+      )}
+    </article>
   );
+}
+
+function StudentPackPanel({
+  pack,
+  lesson,
+  loading,
+  summary,
+  insights,
+  questions,
+  downloading,
+  onDownload,
+}: {
+  pack: ReviewPack | null;
+  lesson?: LessonOption;
+  loading: boolean;
+  summary: SummaryItem[];
+  insights: ClassInsight[];
+  questions: ReviewQuestion[];
+  downloading: boolean;
+  onDownload: () => void;
+}) {
+  if (loading) return <PanelLoading title="Đang tải tài liệu" />;
+  if (!pack) return <EmptyState title="Chưa có tài liệu tổng hợp" text="Lab Coach sẽ phát hành sau khi tạo và duyệt nội dung." />;
+  return (
+    <>
+      <PanelHead title="Tài liệu tổng hợp" text={lesson?.title || pack.lesson.title} action={<button className="btn ghost" type="button" disabled={downloading} onClick={onDownload}>{downloading ? "Đang xuất" : "Tải PDF"}</button>} />
+      <MiniStats values={[["Ý chính", summary.length], ["Hay hỏi", insights.length], ["Câu ôn", questions.length]]} />
+      <Section title="Kiến thức trọng tâm">{summary.slice(0, 4).map((item) => <StudySummary key={item.id} item={item} />)}</Section>
+      <Section title="Câu hỏi hay gặp">{insights.slice(0, 3).map((item) => <StudyInsight key={item.id} item={item} />)}</Section>
+    </>
+  );
+}
+
+function CoachPanel({
+  lesson,
+  pack,
+  action,
+  loading,
+  processing,
+  downloading,
+  uploading,
+  sortedInsights,
+  needsReviewCount,
+  onAction,
+  onGenerate,
+  onUpdate,
+  onDownload,
+  onUpload,
+}: {
+  lesson?: LessonOption;
+  pack: ReviewPack | null;
+  action: CoachAction;
+  loading: boolean;
+  processing: boolean;
+  downloading: boolean;
+  uploading: boolean;
+  sortedInsights: ClassInsight[];
+  needsReviewCount: number;
+  onAction: (action: CoachAction) => void;
+  onGenerate: () => void;
+  onUpdate: (itemId: string, action: "approve" | "drop") => void;
+  onDownload: () => void;
+  onUpload: (formData: FormData) => void;
+}) {
+  if (loading) return <PanelLoading title="Đang kiểm tra tài liệu" />;
+  if (action === "summary") {
+    return (
+      <>
+        <PanelHead title={pack ? "Tạo lại tài liệu tổng hợp" : "Tạo tài liệu tổng hợp"} text={lesson?.title || "Chọn một ngày học"} />
+        <div className="summary-builder">
+          <InfoLine label="Nguồn slide" value={`${lesson?.slide_count || 0} trang`} />
+          <InfoLine label="Kiến thức chính" value={pack ? `${pack.summary.length} mục trong bản hiện tại` : "Sẽ lấy từ nội dung slide"} />
+          <InfoLine label="Câu hỏi hay gặp" value={pack ? `${pack.class_insights.length} nhóm blindspot` : "Sẽ tổng hợp từ chatlog"} />
+          <button className="btn primary wide" type="button" disabled={processing || !lesson} onClick={onGenerate}>{processing ? "Đang tạo..." : pack ? "Tạo lại tài liệu mới" : "Tạo tài liệu tổng hợp"}</button>
+        </div>
+        <UploadLessonPanel uploading={uploading} onUpload={onUpload} />
+      </>
+    );
+  }
+  if (action === "review" && pack) {
+    return (
+      <>
+        <PanelHead title="Duyệt nội dung ngoài slide" text={`${needsReviewCount} mục đang chờ quyết định`} />
+        <Section title="Blindspot từ chatlog">
+          {sortedInsights.map((item) => <ReviewInsight key={item.id} item={item} onUpdate={onUpdate} />)}
+        </Section>
+        <Section title="Kiến thức cần duyệt">
+          {pack.summary.filter((item) => item.status === "needs_review").map((item) => <ReviewSummary key={item.id} item={item} onUpdate={onUpdate} />)}
+          {pack.review_questions.filter((item) => item.status === "needs_review").map((item) => <ReviewQuestionCard key={item.id} item={item} onUpdate={onUpdate} />)}
+        </Section>
+      </>
+    );
+  }
+  if (action === "preview" && pack) {
+    return (
+      <>
+        <PanelHead title="Xem tài liệu tổng hợp" text={pack.lesson.title} action={<button className="btn ghost" type="button" disabled={downloading} onClick={onDownload}>{downloading ? "Đang xuất" : "Tải PDF"}</button>} />
+        <PdfPreview pack={pack} />
+      </>
+    );
+  }
+  return (
+    <>
+      <PanelHead title="Thao tác với slide" text={lesson?.title || "Chọn một ngày học"} />
+      <div className="coach-menu">
+        <button type="button" onClick={() => onAction("preview")} disabled={!pack}>Xem tài liệu tổng hợp<span>{pack ? "Có bản hiện tại" : "Chưa có"}</span></button>
+        <button type="button" onClick={() => onAction("summary")}>{pack ? "Tạo lại tài liệu tổng hợp mới" : "Tạo file ôn tập cho học viên"}<span>Slide + câu hỏi hay gặp</span></button>
+        <button type="button" onClick={() => onAction("review")} disabled={!pack}>Duyệt nội dung chatlog<span>{needsReviewCount} mục cần duyệt</span></button>
+      </div>
+    </>
+  );
+}
+
+function SlideTutor({ lesson, lessonId }: { lesson?: LessonOption; lessonId: string }) {
+  const [messages, setMessages] = useState<ChatMessage[]>(starterChat);
+  const [message, setMessage] = useState("");
+  const [scope, setScope] = useState("current");
+  const [page, setPage] = useState(1);
+  const [sending, setSending] = useState(false);
+  const [slideLoading, setSlideLoading] = useState(true);
+
+  const submit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const trimmed = message.trim();
+    if (!trimmed) return;
+    const userMessage: ChatMessage = { id: crypto.randomUUID(), role: "user", content: trimmed };
+    setMessages((prev) => [...prev, userMessage]);
+    setMessage("");
+    setSending(true);
+    const scopedMessage = scope === "all" ? `Theo toàn bộ deck: ${trimmed}` : `Theo slide ${page}: ${trimmed}`;
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ lesson_id: lessonId, message: scopedMessage, current_slide_page: page, selected_text: "" }),
+      });
+      const data = (await res.json()) as { reply?: string; citations?: string };
+      setMessages((prev) => [...prev, { id: crypto.randomUUID(), role: "assistant", content: data.reply || "Backend chưa trả lời được câu hỏi này.", citations: data.citations }]);
+    } catch {
+      setMessages((prev) => [...prev, { id: crypto.randomUUID(), role: "assistant", content: "Không kết nối được chatbot." }]);
+    } finally {
+      setSending(false);
+    }
+  };
+
+  return (
+    <main className="reader-grid">
+      <aside className="reader-sidebar">
+        <PanelHead title="Học liệu môn học" text="Ngày học, slide và tài liệu đã upload" />
+        <div className="day-mini active">
+          <strong>{lesson?.title || "Đang tải slide"}</strong>
+          <span>{lesson?.slide_count || 0} trang · published</span>
+        </div>
+      </aside>
+      <section className="slide-stage">
+        {slideLoading && <div className="slide-loader"><div /><span>Đang tải slide từ CDN...</span></div>}
+        <iframe title={lesson?.title || "Slide"} src={`/api/lessons/${lessonId}/slide`} onLoad={() => setSlideLoading(false)} />
+        <button className="pager left" type="button" onClick={() => setPage((value) => Math.max(1, value - 1))}>‹</button>
+        <button className="pager right" type="button" onClick={() => setPage((value) => Math.min(lesson?.slide_count || 99, value + 1))}>›</button>
+      </section>
+      <aside className="chat-pane">
+        <div className="chat-head">
+          <span className="chat-icon">⌘</span>
+          <div><h2>VLười Tutor</h2><p>Trợ lý học theo ngữ cảnh</p></div>
+        </div>
+        <div className="chat-controls">
+          <select value={scope} onChange={(event) => setScope(event.target.value)}>
+            <option value="current">Theo slide</option>
+            <option value="all">Toàn bộ deck</option>
+          </select>
+          <input aria-label="Trang slide" min={1} max={lesson?.slide_count || 99} type="number" value={page} onChange={(event) => setPage(Number(event.target.value))} />
+        </div>
+        <div className="chat-log">
+          {messages.map((item) => (
+            <div key={item.id} className={`chat-bubble ${item.role}`}>
+              <p>{item.content}</p>
+              {item.citations && <small>{item.citations}</small>}
+            </div>
+          ))}
+        </div>
+        <form className="chat-form" onSubmit={submit}>
+          <input value={message} onChange={(event) => setMessage(event.target.value)} placeholder="Nhập câu hỏi hoặc bôi đen tài liệu..." />
+          <button className="send-btn" disabled={sending} type="submit" title="Gửi">{sending ? "..." : "➤"}</button>
+        </form>
+      </aside>
+    </main>
+  );
+}
+
+function UploadLessonPanel({ uploading, onUpload }: { uploading: boolean; onUpload: (formData: FormData) => void }) {
+  const submit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    onUpload(formData);
+    form.reset();
+  };
+  return (
+    <form className="upload-panel" onSubmit={submit}>
+      <input name="title" required placeholder="Tên ngày học mới" />
+      <input name="file" required type="file" accept=".pdf,.pptx,application/pdf,application/vnd.openxmlformats-officedocument.presentationml.presentation" />
+      <button className="btn ghost" disabled={uploading} type="submit">{uploading ? "Đang upload..." : "Upload slide"}</button>
+    </form>
+  );
+}
+
+function ProgressInline({ lessons }: { lessons: LessonOption[] }) {
+  const done = lessons.filter((lesson) => lesson.status !== "missing").length;
+  const total = lessons.length || 1;
+  const pct = Math.round((done / total) * 100);
+  return <div className="progress-inline"><span>Đã có tài liệu {done}/{lessons.length}</span><div className="progress-track"><i style={{ width: `${pct}%` }} /></div><strong>{pct}%</strong></div>;
+}
+
+function PanelHead({ title, text, action }: { title: string; text: string; action?: ReactNode }) {
+  return <div className="panel-head"><div><h3>{title}</h3><p>{text}</p></div>{action}</div>;
+}
+
+function Section({ title, children }: { title: string; children: ReactNode }) {
+  return <><div className="section-label">{title}</div>{children}</>;
 }
 
 function EmptyState({ title, text }: { title: string; text: string }) {
-  return (
-    <div className="empty-state">
-      <h2>{title}</h2>
-      <p>{text}</p>
-    </div>
-  );
+  return <div className="empty-state"><h2>{title}</h2><p>{text}</p></div>;
+}
+
+function PanelLoading({ title }: { title: string }) {
+  return <div className="empty-state loading"><h2>{title}</h2><p>Đang đồng bộ dữ liệu mới nhất...</p></div>;
+}
+
+function SkeletonList() {
+  return <div className="skeleton-list">{Array.from({ length: 5 }).map((_, index) => <span key={index} />)}</div>;
 }
 
 function Stat({ value, label }: { value: number | string; label: string }) {
-  return <div className="stat-card"><div className="stat-value">{value}</div><div className="stat-label">{label}</div></div>;
+  return <div className="stat-card"><strong>{value}</strong><span>{label}</span></div>;
 }
 
-function CanvasCard({ title, text }: { title: string; text: string }) {
-  return (
-    <div className="canvas-card">
-      <h3>{title}</h3>
-      <p>{text}</p>
-    </div>
-  );
+function MiniStats({ values }: { values: [string, number][] }) {
+  return <div className="mini-stats">{values.map(([label, value]) => <span key={label}><strong>{value}</strong>{label}</span>)}</div>;
 }
 
-function Evidence({ pages, excerpt }: { pages: number[]; excerpt: string }) {
-  return (
-    <details className="evidence-box">
-      <summary>{sourceLabel(pages)}</summary>
-      <p>{excerpt}</p>
-    </details>
-  );
+function InfoLine({ label, value }: { label: string; value: string }) {
+  return <div className="info-line"><span>{label}</span><strong>{value}</strong></div>;
 }
 
 function StudySummary({ item }: { item: SummaryItem }) {
-  return (
-    <article className="study-card">
-      <div className="study-card-head">
-        <h3>{item.title}</h3>
-        <span>{sourceLabel(item.source_pages)}</span>
-      </div>
-      <p>{item.content}</p>
-    </article>
-  );
+  return <article className="study-card"><div><h3>{item.title}</h3><span>{sourceLabel(item.source_pages)}</span></div><p>{item.content}</p></article>;
 }
 
 function StudyInsight({ item }: { item: ClassInsight }) {
   return (
     <article className="study-card accent">
-      <div className="study-card-head">
-        <h3>{item.topic}</h3>
-        <span>{item.unique_user_count} học viên</span>
-      </div>
-      <p><strong>Điểm dễ vướng:</strong> {item.common_confusion}</p>
+      <div><h3>{item.topic}</h3><span>{item.question_count} câu hỏi</span></div>
+      <p><strong>Hay vướng:</strong> {item.common_confusion}</p>
       <p><strong>Cách hiểu đúng:</strong> {item.correct_understanding}</p>
-      <div className="study-questions">
-        {item.representative_questions.slice(0, 2).map((question, index) => (
-          <span key={`${item.id}-${index}`}>{question}</span>
-        ))}
-      </div>
+      <div className="question-strip">{item.representative_questions.slice(0, 2).map((question) => <span key={question}>{question}</span>)}</div>
     </article>
   );
 }
 
-function StudyQuestion({ item, index }: { item: ReviewQuestion; index: number }) {
-  return (
-    <details className="study-question">
-      <summary>{index + 1}. {item.question}</summary>
-      <p><strong>Đáp án:</strong> {item.answer}</p>
-      <p>{item.explanation}</p>
-    </details>
-  );
+function ReviewSummary({ item, onUpdate }: { item: SummaryItem; onUpdate: (itemId: string, action: "approve" | "drop") => void }) {
+  return <ReviewCard id={item.id} status={item.status} title={item.title} body={item.content} pages={item.source_pages} excerpt={item.source_excerpt} onUpdate={onUpdate} />;
 }
 
-function ReviewActions({ item, onUpdate }: { item: { id: string; status: string }; onUpdate: (itemId: string, action: "approve" | "drop") => void }) {
-  if (item.status !== "needs_review") return <span className="chip chip-ready">Sẵn sàng</span>;
-  return (
-    <div className="review-actions">
-      <button type="button" className="btn btn-primary btn-sm" onClick={() => onUpdate(item.id, "approve")}>Duyệt</button>
-      <button type="button" className="btn btn-ghost btn-sm" onClick={() => onUpdate(item.id, "drop")}>Bỏ khỏi PDF</button>
-    </div>
-  );
+function ReviewInsight({ item, onUpdate }: { item: ClassInsight; onUpdate: (itemId: string, action: "approve" | "drop") => void }) {
+  return <ReviewCard id={item.id} status={item.status} title={item.topic} body={`${item.common_confusion}\n\nCách hiểu đúng: ${item.correct_understanding}`} pages={item.source_pages} excerpt={item.source_excerpt} onUpdate={onUpdate} />;
 }
 
-function SummaryCard({ item, onUpdate }: { item: SummaryItem; onUpdate: (itemId: string, action: "approve" | "drop") => void }) {
-  return (
-    <div className={`content-card ${item.status === "needs_review" ? "needs-review" : ""}`}>
-      <div className="content-card-head">
-        <h4>{item.title}</h4>
-        <span className={`chip ${item.status === "ready" ? "chip-ready" : "chip-review"}`}>{statusLabel(item.status)}</span>
-      </div>
-      <p>{item.content}</p>
-      <Evidence pages={item.source_pages} excerpt={item.source_excerpt} />
-      <ReviewActions item={item} onUpdate={onUpdate} />
-    </div>
-  );
+function ReviewQuestionCard({ item, onUpdate }: { item: ReviewQuestion; onUpdate: (itemId: string, action: "approve" | "drop") => void }) {
+  return <ReviewCard id={item.id} status={item.status} title={item.question} body={`${item.answer}\n${item.explanation}`} pages={item.source_pages} excerpt={item.source_excerpt} onUpdate={onUpdate} />;
 }
 
-function InsightCard({ item, onUpdate }: { item: ClassInsight; onUpdate: (itemId: string, action: "approve" | "drop") => void }) {
-  return (
-    <div className={`content-card insight-card ${item.status === "needs_review" ? "needs-review" : ""}`}>
-      <div className="content-card-head">
-        <h4>{item.topic}</h4>
-        <span className={`chip ${item.status === "ready" ? "chip-ready" : "chip-review"}`}>{statusLabel(item.status)}</span>
-      </div>
-      <p><strong>Điểm vướng:</strong> {item.common_confusion}</p>
-      <p><strong>Cách hiểu đúng:</strong> {item.correct_understanding}</p>
-      <div className="content-card-foot">
-        <span className="chip chip-evidence">{item.unique_user_count} học viên · {item.question_count} lượt</span>
-      </div>
-      <RepresentativeQuestions topic={item} compact />
-      <Evidence pages={item.source_pages} excerpt={item.source_excerpt} />
-      <ReviewActions item={item} onUpdate={onUpdate} />
-    </div>
-  );
-}
-
-function RepresentativeQuestions({ topic, compact = false }: { topic: ClassInsight; compact?: boolean }) {
-  return (
-    <div className={compact ? "representative compact" : "representative"}>
-      {topic.representative_questions.slice(0, compact ? 3 : 5).map((question, index) => (
-        <p key={`${topic.id}-${index}`}>“{question}”</p>
-      ))}
-    </div>
-  );
-}
-
-function QuestionCard({
-  item,
-  open,
-  onToggle,
+function ReviewCard({
+  id,
+  status,
+  title,
+  body,
+  pages,
+  excerpt,
   onUpdate,
 }: {
-  item: ReviewQuestion;
-  open: boolean;
-  onToggle: () => void;
+  id: string;
+  status: string;
+  title: string;
+  body: string;
+  pages: number[];
+  excerpt: string;
   onUpdate: (itemId: string, action: "approve" | "drop") => void;
 }) {
   return (
-    <div className={`qa-item ${open ? "open" : ""} ${item.status === "needs_review" ? "needs-review" : ""}`}>
-      <button type="button" className="qa-question" onClick={onToggle}>
-        <span>{item.question}</span>
-        <span className="arrow">▾</span>
-      </button>
-      <div className="qa-answer">
-        <div className="qa-answer-inner">
-          <p><strong>Đáp án:</strong> {item.answer}</p>
-          <p>{item.explanation}</p>
-          <Evidence pages={item.source_pages} excerpt={item.source_excerpt} />
-          <ReviewActions item={item} onUpdate={onUpdate} />
-        </div>
-      </div>
-    </div>
+    <article className={`review-card ${status === "needs_review" ? "needs-review" : ""}`}>
+      <header><h3>{title}</h3><span className={`chip ${status === "ready" ? "ready" : "review"}`}>{statusLabel(status)}</span></header>
+      {body.split("\n").filter(Boolean).map((line) => <p key={line}>{line}</p>)}
+      <details className="evidence"><summary>{sourceLabel(pages)}</summary><p>{excerpt || "Không có trích dẫn slide trực tiếp."}</p></details>
+      {status === "needs_review" ? <div className="actions"><button className="btn primary" onClick={() => onUpdate(id, "approve")}>Duyệt</button><button className="btn ghost" onClick={() => onUpdate(id, "drop")}>Bỏ khỏi PDF</button></div> : null}
+    </article>
   );
 }
 
 function PdfPreview({ pack }: { pack: ReviewPack }) {
-  const hasFlagged = [...pack.summary, ...pack.class_insights, ...pack.review_questions].some((item) => item.status === "needs_review");
+  const summary = pack.summary.filter((item) => item.status === "ready");
+  const insights = pack.class_insights.filter((item) => item.status === "ready");
+  const questions = pack.review_questions.filter((item) => item.status === "ready");
   return (
-    <article className="pdf-sheet">
-      <div className="pdf-header">
-        <div className="mark">VLười — Gói Ôn Tập</div>
-        <div className="meta">Nguồn: slide + chatlog ẩn danh<br />Pack: {pack.pack_id}</div>
-      </div>
-      <div className="pdf-h1">{pack.lesson.title}</div>
-      <div className="pdf-sub">{pack.lesson.slide_count} slide · {pack.analysis.unique_user_count} học viên hỏi · {pack.analysis.cluster_count} cluster</div>
-
-      <PdfBlock title="Lý thuyết trọng tâm" items={pack.summary.filter((item) => item.status === "ready").map((item) => `${item.title}. ${item.content} [${sourceLabel(item.source_pages)}]`)} />
-      <PdfBlock title="Cả lớp thường hỏi" items={pack.class_insights.filter((item) => item.status === "ready").map((item) => `${item.topic}. ${item.correct_understanding} [${sourceLabel(item.source_pages)}]`)} />
-      <PdfBlock title="Câu hỏi tự kiểm tra" items={pack.review_questions.filter((item) => item.status === "ready").map((item, index) => `${index + 1}. ${item.question} Đáp án: ${item.answer}.`)} />
-      {hasFlagged && <div className="disclaimer">Một số nội dung đang chờ Lab Coach duyệt nên chưa phát hành như kiến thức chính thức.</div>}
+    <article className="pdf-preview">
+      <header><strong>VLười - Tài liệu tổng hợp</strong><span>{pack.pack_id}</span></header>
+      <h2>{pack.lesson.title}</h2>
+      <p>{pack.lesson.slide_count} slide · {pack.analysis.unique_user_count} học viên · {pack.analysis.cluster_count} nhóm câu hỏi</p>
+      <PdfBlock title="Kiến thức quan trọng" items={summary.map((item) => `${item.title}: ${item.content}`)} />
+      <PdfBlock title="Học viên hay hỏi" items={insights.map((item) => `${item.topic}: ${item.correct_understanding}`)} />
+      <PdfBlock title="Câu tự kiểm tra" items={questions.map((item, index) => `${index + 1}. ${item.question} Đáp án: ${item.answer}`)} />
     </article>
   );
 }
 
 function PdfBlock({ title, items }: { title: string; items: string[] }) {
-  return (
-    <div className="pdf-block">
-      <h5>{title}</h5>
-      {items.map((item, index) => <p key={`${title}-${index}`}>{item}</p>)}
-    </div>
-  );
+  return <section><h3>{title}</h3>{items.length ? items.map((item) => <p key={item}>{item}</p>) : <p>Chưa có mục ready.</p>}</section>;
 }

@@ -1,0 +1,183 @@
+{
+  "schema_version": "1.0",
+  "pack_id": "pack-day4-agents-001",
+  "status": "ready",
+  "lesson": {
+    "id": "day4-agents",
+    "title": "AI Agents & Tools (Day 4)",
+    "slide_count": 39
+  },
+  "analysis": {
+    "student_question_count": 1252,
+    "unique_user_count": 369,
+    "cluster_count": 3,
+    "included_cluster_count": 3,
+    "excluded_noise_count": 0
+  },
+  "summary": [
+    {
+      "id": "summary-01",
+      "title": "Agent là gì và khi nào cần dùng",
+      "content": "Agent là hệ thống AI có khả năng tự chủ thực hiện các bước, gọi tool, và ra quyết định động. Không phải bài toán nào cũng cần agent; nếu bài toán không cần dữ liệu mới, nhiều bước, hay quyết định động thì agent thường là overkill.",
+      "source_pages": [
+        9
+      ],
+      "source_excerpt": "Nếu bài toán không cần dữ liệu mới, nhiều bước, hay quyết định động, agent thường là overkill.",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "summary-02",
+      "title": "Cơ chế Reasoning trong Agent",
+      "content": "Reasoning là khả năng suy luận từng bước của agent, thường được thực hiện qua các pattern như ReAct (Reasoning + Acting). Agent sẽ suy nghĩ, hành động (gọi tool), quan sát kết quả, rồi suy nghĩ tiếp.",
+      "source_pages": [
+        12
+      ],
+      "source_excerpt": "Reasoning",
+      "confidence": 0.9,
+      "status": "ready"
+    },
+    {
+      "id": "summary-03",
+      "title": "Context Window và hạn chế của nó",
+      "content": "Context window là lượng token tối đa model có thể 'nhìn' cùng lúc. Ví dụ: 128K token ≈ 300 trang sách. Khi context quá dài, model dễ bỏ sót thông tin ở giữa. Cần đặt thông tin quan trọng ở đầu hoặc cuối prompt.",
+      "source_pages": [
+        31
+      ],
+      "source_excerpt": "Mỗi lần trả lời, model chỉ nhìn được một lượng chữ có hạn — gọi là context. ... Bàn đầy quá thì đồ ở giữa bàn dễ bị bỏ sót",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "summary-04",
+      "title": "Memory Injection và Compression",
+      "content": "Memory injection: chỉ đưa vào facts thực sự cần cho task hiện tại, ưu tiên recent/relevant history. Compression: summarize, drop, archive để giảm tải context.",
+      "source_pages": [
+        22
+      ],
+      "source_excerpt": "Memory injection: Chỉ đưa vào facts thật sự cần cho task hiện tại. Compression: Summarize, Drop, Archive",
+      "confidence": 0.9,
+      "status": "ready"
+    }
+  ],
+  "class_insights": [
+    {
+      "id": "insight-cluster-01",
+      "topic": "Khi nào dùng agent vs không dùng",
+      "common_confusion": "Học viên nghĩ agent luôn là giải pháp tốt nhất cho mọi bài toán AI.",
+      "correct_understanding": "Agent chỉ cần thiết khi bài toán yêu cầu dữ liệu mới, nhiều bước, hoặc quyết định động. Nếu không, dùng prompt đơn giản hoặc chain là đủ.",
+      "source_pages": [
+        9
+      ],
+      "source_excerpt": "Nếu bài toán không cần dữ liệu mới, nhiều bước, hay quyết định động, agent thường là overkill.",
+      "confidence": 0.95,
+      "status": "ready",
+      "unique_user_count": 2,
+      "question_count": 2,
+      "representative_questions": [
+        "Khi nào nên dùng agent?",
+        "Có phải lúc nào cũng cần agent không?"
+      ]
+    },
+    {
+      "id": "insight-cluster-02",
+      "topic": "Cách xử lý context window quá tải",
+      "common_confusion": "Học viên nghĩ có thể nhồi nhét toàn bộ lịch sử vào context mà không ảnh hưởng.",
+      "correct_understanding": "Context có giới hạn, thông tin ở giữa dễ bị bỏ sót. Cần dùng memory injection hoặc compression để tối ưu.",
+      "source_pages": [
+        22,
+        31
+      ],
+      "source_excerpt": "Memory injection: Chỉ đưa vào facts thật sự cần. Compression: Summarize, Drop, Archive",
+      "confidence": 0.9,
+      "status": "ready",
+      "unique_user_count": 3,
+      "question_count": 3,
+      "representative_questions": [
+        "Làm sao để xử lý context dài?",
+        "Tại sao model quên thông tin ở giữa prompt?"
+      ]
+    },
+    {
+      "id": "insight-cluster-03",
+      "topic": "ReAct Pattern",
+      "common_confusion": "Học viên nhầm lẫn ReAct với các pattern khác hoặc không hiểu rõ vòng lặp Thought → Action → Observation.",
+      "correct_understanding": "ReAct là vòng lặp: suy nghĩ (Thought) → hành động (Action) → quan sát (Observation) → suy nghĩ tiếp. Giúp agent lập kế hoạch và thực thi từng bước.",
+      "source_pages": [
+        2
+      ],
+      "source_excerpt": "Designt Pattern ReAct là gì có lưu ý gì về nó?",
+      "confidence": 0.85,
+      "status": "ready",
+      "unique_user_count": 1,
+      "question_count": 1,
+      "representative_questions": [
+        "ReAct pattern hoạt động thế nào?"
+      ]
+    }
+  ],
+  "review_questions": [
+    {
+      "id": "question-01",
+      "type": "multiple_choice",
+      "question": "Khi nào KHÔNG nên dùng agent?",
+      "options": [
+        "Khi bài toán cần dữ liệu mới",
+        "Khi bài toán có nhiều bước",
+        "Khi bài toán không cần quyết định động",
+        "Khi bài toán cần gọi tool"
+      ],
+      "correct_option": 2,
+      "answer": "Khi bài toán không cần quyết định động",
+      "explanation": "Agent là overkill nếu bài toán không cần dữ liệu mới, nhiều bước, hay quyết định động.",
+      "source_pages": [
+        9
+      ],
+      "source_excerpt": "Nếu bài toán không cần dữ liệu mới, nhiều bước, hay quyết định động, agent thường là overkill.",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "question-02",
+      "type": "multiple_choice",
+      "question": "Context window 128K token tương đương khoảng bao nhiêu trang sách?",
+      "options": [
+        "100 trang",
+        "200 trang",
+        "300 trang",
+        "400 trang"
+      ],
+      "correct_option": 2,
+      "answer": "300 trang",
+      "explanation": "128K token ≈ một cuốn sách 300 trang.",
+      "source_pages": [
+        31
+      ],
+      "source_excerpt": "128K token ≈ một cuốn sách 300 trang",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "question-03",
+      "type": "multiple_choice",
+      "question": "Kỹ thuật nào giúp giảm tải context bằng cách tóm tắt phần cũ?",
+      "options": [
+        "Memory injection",
+        "Compression - Summarize",
+        "Compression - Drop",
+        "Compression - Archive"
+      ],
+      "correct_option": 1,
+      "answer": "Compression - Summarize",
+      "explanation": "Summarize là tóm tắt phần cũ, thuộc nhóm Compression.",
+      "source_pages": [
+        22
+      ],
+      "source_excerpt": "Compression: Summarize: tóm tắt phần cũ",
+      "confidence": 0.9,
+      "status": "ready"
+    }
+  ],
+  "warnings": [],
+  "generated_at": "2026-07-30T00:00:00+00:00"
+}

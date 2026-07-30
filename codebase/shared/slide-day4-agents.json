@@ -1,0 +1,207 @@
+{
+  "lesson_id": "day4-agents",
+  "source_pdf": "/Users/plxg/workspace/vinuni/B2-K3-AI-Product-Hackathon/data/vlearn-pack/slides/d4-slide-hackathon.pdf",
+  "page_count": 39,
+  "pages": [
+    {
+      "page": 1,
+      "text": "[Slide 1]\n“ef | inuniversity\nPrompt Engineering & Tool Calling\nAICB-P1 - Ngay 4 « Lam sao noi dé Al hiéu dung y?\nTén Giang Vién\nVinUniversity.-.Phase1.- Tuan 1 - 2026",
+      "extraction_method": "ocr"
+    },
+    {
+      "page": 2,
+      "text": "[Slide 2]\nHAY SUY NGHIi...\n“Hai nguoi hdi Al cung mét viéc, mét ngudi nhan\nkét qua xuat sdc, nguoi kia nhan rac. Tai sao?\nVa: cung mot agent, déi khi no ggi tool dung,\ndéi khi goi sai — do prompt hay do tool?”\nGit cau hdi nay trong dau khi hoc bai hém nay\nNoi Dung Bai Hoc tp vennivensiry\n1. Prompt fundamentals 6. Tool calling\n2. Advanced prompting techniques 7. Design principles cho tools\n3. System prompt engineering 8. Tool patterns & error handling\n4. Context engineering 9. Lab 4 + deliverable cudi budi\n5. Prompt safety & evaluation",
+      "extraction_method": "ocr"
+    },
+    {
+      "page": 3,
+      "text": "[Slide 3]\nMuc Tiéu Ngay 4 ty veunvensiry\n= Viét duoc prompt r6 rang theo cac thanh phan Role / Task / Context / Format\n= Hiéu khi nao nén dung zero-shot, few-shot, CoT, va khi nao khéng can\n= Viét duoc system prompt production-grade cho agent\n= Khai bao duoc tool schema va hiéu vong lap tool calling tly model dén tool rdi quay lai model\n= Nhan dién duoc prompt injection va viét system prompt an toan\n= Bit cach iterate va evaluate prompt quality\nMuc tiéu cia budi nay la hiéu co ché: prompt la interface gitra human intent va model be-\nhavior; tool calling la interface gia model va thé gidi bén ngoai.\nDeliverable Cudi Ngay bd \\vrunvensiry\n1 agent script chay dug’c + 1 system prompt + 2 tool schemas + 5 test questions +\nghi chu 16i prompt/tool/control flow + checklist self-review\n= 2 tools tu viét: 1 API wrapper don gian, 1 data query don gian\n= 1 system prompt cé rules, constraints, output contract\n= 5 cau test dé chtrng minh agent biét khi nao tra Idi tru tiép, khi nao goi tool\n= Self-review checklist cho system prompt (6 items)",
+      "extraction_method": "ocr"
+    },
+    {
+      "page": 4,
+      "text": "[Slide 4]\nPrompt Engineering Fundamen-\ntals\nPrompt tét khong phai prompt “hay”, ma la prompt tao ra hanh vi\nmong muén 6n dinh\nPrompt = Interface Giiva Y Dinh va Kha Nang Model  vesneversiry\nPrompt tét\n\"Viét email cho tdi\" Viét email xin Idi khach hang\nKhéng ro gui ai, vé gi, tone nao, dai bao nhiéu ve giao hang tre 2 ngay,\nKét qua: chung chung, khé ding ngay. tone lich su, duoi 120 tur,\nco CTA r6 rang.\nRo task, context, constraint, format.\nKét qua: actionable hon han\nNguyén tac vang: Specificity beats cleverness. Prompt ngan nhung ré\nnghia thuong tét hon prompt dai ma lan man.",
+      "extraction_method": "ocr"
+    },
+    {
+      "page": 5,
+      "text": "[Slide 5]\n4 Thanh Phan Cua Prompt Tot Y |vewaversiry\nROLE . TASK . CONTEXT . FORMAT\nVai trd Nhiém vu Béi canh Dinh dang\n\"Act as a senior \"Summarize the ticket For an internal \"Output as JSON\nsupport analyst” and propose operations dashboard” with 3 fields”\nnext step”\nBat dau voi Task + Format. Chi thém Role hodc Context khi chting the sw cai thién\nchat luong hoac tinh nhat quan.\nRTCF Deep Dive: Vi Du Thu Té Y jrzevenry\nComponent Vi du tét Vi du kém Tai sao\nRole “Senior Python dev, FastAPI “Developer” Anh huéng code style,\nexpert” library choices\nTask “Refactor function X to use “Fix code” Specificity giam ambigu-\nasync/await” ity\nContext “Codebase: FastAPI, —(tréng) Model doan sai stack\nPython 3.12, PostgreSQL”\nFormat “Return only the function, no —_(tréng) Model thém giai thich\nexplanation” khong can\nM6éi component thém vao prompt phai cé ly do ré rang",
+      "extraction_method": "ocr"
+    },
+    {
+      "page": 6,
+      "text": "[Slide 6]\nPrompt Iteration: Tie Kem > Tét > Xuat Sac VY |veunvenscry\nv1 — Mo’ ho v2 — Co format v3 — RTCF day du\n\"Tom tat bai bao nay\" \"Tom tat trong 3 bullets, méi bullet \"Tém tét cho executive team. 3\nKhéng ré dai bao nhiéu, cho ai doc, focus gi duroi 20 tl\" bullets, <20 tl. Focus: Q2 rev-\nRé format, nhung thiél-audience va focus. enue impact. Tone: data-driven.\"\nR6 audience, task, constraint, format.\nPrompt engineering la iterative process. Viét > test + observe > improve. Khang\nai viét prompt hoan hao lan dau.\nInstruction vs Conversation vs System Prompt ¢ vowrvensiry\nLoai prompt Muc dich chinh Khi ding\nInstruction prompt Ra lénh tryc tiép cho mot. Hoi dap 1 lugt, transform, sum-\ntac vu marize, classify\nConversation Git’ ng@ canh nhiéu luot Chatbot, support, tutor, debug-\nprompt voi user ging nhiéu budc\nSystem prompt Dat policy, boundary, output Agent, assistant production, use\ncontract case can hanh vi dn dinh\nAnthropic prompting guidance + teaching heuristics",
+      "extraction_method": "ocr"
+    },
+    {
+      "page": 7,
+      "text": "[Slide 7]\nNegative Prompting & Boundary Setting top vnwaversiry\nChi ndi ’dteng” — kém Noi ré thay thé — tét\n“DUng dung jargon” “Giai thich bang ng6n ng¢r lop 10 hiéu duc”\n“Blrng doan” “Néu khéng chac, tra loi: Téi can thém théng tin”\n“Dung tra loi qua dai” “Gidi han dui 150 ty”\nNegative prompts hiéu qua nhat khi kém positive alternative. Model can biét nén\nlam gi, khéng chi biét dteng lam gi.\nToken Budget Awareness tp veeaversiry\n= Prompt dai hon khéng déng nghia prompt tét hon.\n= Mi token thiva lam tang chi phi, latency, va d6i khi ca nhiéu.\n= Hay wu tién: instruction r6, examples dung ché, output contract ré.\n= Rule thuc dung: néu prompt dai thém nhwng khéng lam thay dai hanh vi mong\nmuén, hay cat bot.\nLuu y: Prompt engineering tét la t6i uu d6 r6 va kha nang kiém soat, khdng phai\nthi xem ai viét prompt dai hon.",
+      "extraction_method": "ocr"
+    },
+    {
+      "page": 8,
+      "text": "[Slide 8]\nTemperature & Sampling Parameters te veanavensry\nUse case Temp Ly do\nClassification, 0 Deterministic, reproducible Luu y: Temperature khéng thay\nextraction thé prompt t6t. Néu prompt mo\nChatbot, sup- 0.3-0.5 Nhat quan nhung ty nhién x an 3 wk\nport ho, giam temperature chi khién\nCreative writing 0.7-1.0 Da dang, sang tao model lap lai clung mét output\nBrainstorming 1.0-1.5 Kham pha, chap nhan noise kém\nChi xét cdc tokens cé téng xac suat < p. Thuong dung p = 0.9-0.95. Divng tune ca\ntemp va top_p cung luc.\nQuick Exercise: Viét Prompt Theo RTCF (2 phut) ty |veuuversiry\n| Ban can viét prompt cho chatbot hé tro sinh vién VinUni dang ky m6n hoc.\nXac dinh 4 thanh phan:\n= Role: Chatbot la ai? Expertise level?\n= Task: Nhiém vu cy thé la gi?\n= Context: Hé théng nao? Gidi han gi?\n= Format: Output trong nhu thé nao?\nThao luan voi ngudi bén canh. Chia sé 1-2 vi du sau 2 phut.",
+      "extraction_method": "ocr"
+    },
+    {
+      "page": 9,
+      "text": "[Slide 9]\nAdvanced Prompting Techniques\nDung ky thuat nang cao khi chung cai thién chat lwgng that sy,\nkhéng dung nhw than chu\nZero-shot, One-shot, Few-shot, CoT tp |vnniversiry\nZero-shot One-shot CoT\nKhéng co vi du mau. 1 vi dy mau. 2-5 vi du. Cho model reasoning\nNhanh, ré, nén thir truéc. Tét khi can gitr format r6 Tang consistency, nhung tng buéc.\nhon. t6n token hon. Hitu ich cho task suy\nluan.\nTht tw ther thwc dung: zero-shot -> few-shot -> decomposition / CoT. Dirng nhay\nvao prompt phtrc tap ngay tir dau.",
+      "extraction_method": "ocr"
+    },
+    {
+      "page": 10,
+      "text": "[Slide 10]\nKhi Nao Dung Few-shot? \\ jvowrversiry\n= Khi model hiéu task nhung ra sai format\n» ~ Zz . ~ z .\naI = — hoac kh6ng On dinh giira cac input\nF ' ” _— - -—:\n~ Sone yeaa .\nlle s wy = Khi can gi@ tiéu chuan danh gia, tone,\n¢ ‘ nal. , hoac cach lap luan nhat quan.\na , = Vi du mau nén relevant, da dang viva du,\nSS a al va dung format mong muén.\n- oe” = mj “ g g\n>\n— y “| ; Few-shot khéng phai dé “day lai\" model moi thtr; nd Ia cach chi\nra pattern ma ban muén model bam theo.\nNgu6én minh hoa: zero/few-shot teaching graphic trong repo\nFew-shot Prompting — Python Example ‘A \\nenvenssry\nGreat product, fast delivery!\nTerrible quality, waste of money\nLove the design but shipping was slow\nprint (prompt)",
+      "extraction_method": "ocr"
+    },
+    {
+      "page": 11,
+      "text": "[Slide 11]\nFew-shot Anti-patterns te vownvensiry\n“1 Vi du qua giéng nhau: model overfits pattern, khdng generalize sang input mdi\n(1 Vi du sai format: model copy sai format tty examples\n(1 Qua nhiéu vi dy (>5): diminishing returns, ton token, cham hon\n1 Vi du co léi: model sé reproduce Idi mét cach trung thanh\n4 Best practice: vi du da dang, dung format, cover edge cases, 2—5 examples\nla du\nChain-of-Thought (CoT) va Tree-of-Thought te vnuniversiry\nCoT phu hop khi: Tree-of-Thought:\n= Bai toan can reasoning nhiéu buéc = Héfu ich cho bai toan can explore\n= Ban muén model giai thich logic trung nhiéu huong\ngian = Phirc tap hon, t6n token va latency\n= Ban can debug xem model sai & hon\nbudc nao = Chi nén gidi thiéu nhu extension,\nkh6éng phai mac dinh cho moi task\nCoT la céng cy cai thién reasoning, khéng phai phép mau. Néu task vén di chi la\nformatting hoac extraction don gian, CoT thuong [a overkill.",
+      "extraction_method": "ocr"
+    },
+    {
+      "page": 12,
+      "text": "[Slide 12]\nChain-of-Thought — Python Example tp lveeswversiry\nStructured Output Prompting ‘A vnenversiry\nTai sao can?\nLLM output mac dinh la free-form text, khé Luu y: Luén validate JSON output.\nparse programmatically. Trong agent pipeline, Model cé thé tra sai format, dac biét\nban can JSON/structured data. vei schema phtrc tap hoac tempera-\nCac cach tiép can: ture cao.\n= JSON mode: API parameter\n(OpenAl)\n. Prompt-based: “Respond ONLY with Dua JSON schema vi dy vao prompt\nvalid JSON gitip model bam format tét hon. Vi du:\n. XML tags: {\"intent\": \"...\", \"action\": \"...\",\n<thinking>...</thinking> OEE Coos\n= Prefill: Bat dau assistant msg bang {\n(Anthropic)",
+      "extraction_method": "ocr"
+    },
+    {
+      "page": 13,
+      "text": "[Slide 13]\nKhi Nao KHONG Can Ky Thuat Nang Cao Sf |vnuniversiry\nZero-shot du\n6n dinh? (1-3 examples)\nBat dau don gian. Chi thém complexity khi output chua dat yéu\ncau.\nSystem Prompt Engineering\nSystem prompt tét lam agent nhat quan hon, dé kiém soat hon,\nva dé test hon",
+      "extraction_method": "ocr"
+    },
+    {
+      "page": 14,
+      "text": "[Slide 14]\nAnatomy cua System Prompt Production-grade W vnunversiry\nPersona: role, expertise level, communication style\nRules: viéc nén lam, viéc lu6n phai lam\nCapabilities: model dugc phép dung tools nao, di ligu nao priority\nConstraints: khéng lam gi, khi nao ttr chéi, khi nao escalate\nOutput format: JSON, markdown, bullet list, schema, language\nSystem Prompt — Python Example tp veunaversiry",
+      "extraction_method": "ocr"
+    },
+    {
+      "page": 15,
+      "text": "[Slide 15]\nSystem Prompt Iteration: v1 — v2 WA lvnunversiry\nv1 — Thiéu constraints v2 — Sau khi test & fix\nYou are a support agent. You are a support triage agent.\nHelp customers with orders. Rules: Answer in Vietnamese. Be concise.\nBe polite. Constraints: NEVER invent order status.\na If out of scope, say: “Téi chi hé tro vé don hang.”\nVan dé: model hallucinate order status,\noo. Output: JSON {intent, action, reply}\ntra lai cu hdi ngoai scope.\noutput format khong nhat quan. Cai thign: clear boundaries, output contract,\nrefusal pattern ré rang.\nx . n Kk a 7\nSystem prompt can iterate dua trén test results. Viét — test 10 cau — fix — test\nlai.\nSystem Prompt: Anthropic vs OpenAl API A vewnversiry\nAnthropic Claude OpenAl GPT\nclient.messages.create( client.chat.completions.create(\nmodel=\"\"c Llaude-sonnet-4-...\", model=\"gpt-4.1\",\nsystem=\"You are...\", messages=[\nmessages=[...], {\"role\": \"system\",\ntools=[...] \"content\": \"You are...\"},\n) {\"role\": \"user\", ...}\n1,\nHé tro’ XML tags: <rules>, <constraints> trong system toats=[...]\nprompt dé cdu tric r6 hon. )\nSystem prompt nam trong messages array.\nConcept giéng nhau, chi khac syntax. Dung markdown/XML sections dé structure system prompt\ndai.",
+      "extraction_method": "ocr"
+    },
+    {
+      "page": 16,
+      "text": "[Slide 16]\nSystem Prompt Anti-Patterns tA lvnuversiry\n1 Qua dai: nhdi moi tht vao 1 prompt 2000+ tokens rdi hy vong model luén lam\ndung\n(| Mau thuan: vira bao “ngan gon”, vira bat “giai thich chi tidt tteng buéc”\n4) Mo hé: “hay thong minh”, “hay chuyén nghiép”, nhung khéng dinh nghia chuan\noutput\n(| Khéng test edge cases: quén kiém tra cau hdi ngoai pham vi, refusal, tool failure\nM Nguyén tac: system prompt la policy layer. Cang rd boundary, cang dé predict\nhanh vi\nSystem Prompt Testing Checklist ‘A |vewnvensiry\nHappy path: cau hoi trong scope — tra loi dung format?\n™ Edge case: cau hdi mo’ hé — hdi lai hay doan btra?\nOut of scope: cau hdi ngoai pham vi > tiv chéi dung cach?\n4 Adversarial: prompt injection — cd bi bypass?\nTool decision: khi nao ggi tool vs khi nao tra loi trc tiép?\nFormat consistency: 10 cau khac nhau > output format nhat quan?",
+      "extraction_method": "ocr"
+    },
+    {
+      "page": 17,
+      "text": "[Slide 17]\nReal-world System Prompt Template ‘A |vewversiry\n## Identity\nBan la [role] cho [company/product].\n## Rules\nALWAYS: [hanh vi bat buoc]\n- NEVER: [hanh vi cam\n- WHEN [condition]: [hanh vi cu the]\n## Available Tools\n— tool_name: khi nao dung, khi nao KHONG dung\n## Output Format\n## Escalation\nKhi [dieu kien] -> chuyen cho nhan vien\nDung template nay lam starting point. Thém/bot sections tuy use case.\nMini Exercise: Critique a System Prompt (3 phut) A lvewnevensiry\nYou are a helpful assistant. Be smart and professional.\nAnswer any question the user asks. Be concise but also explain in detail.\nYou can use tools. Always respond in JSON format. If you don't know, make your\nbest guess.\nTim it nhat 3 van dé trong system prompt trén.\nGoi y: Mau thuan? Mo hd? Thiéu gi? Nguy hiém & dau?\nThao luan nhom 3 phut > chia sé.",
+      "extraction_method": "ocr"
+    },
+    {
+      "page": 18,
+      "text": "[Slide 18]\nContext Engineering\nBiéu quan trong khéng phai nhét bao nhiéu context, ma la chon\nding context can thiét\nContext Window Management ep veunivensiry\n=a\npolicy recent / relevant current task schemas buffer\nToken budget allocation can chi déng: ding dé history, tools, va examples\nan hét cho danh cho output.",
+      "extraction_method": "ocr"
+    },
+    {
+      "page": 19,
+      "text": "[Slide 19]\nLost in the Middle Problem Y \\vwvensiry\nAttention Hé qua thu tién:\nPau Cus At instructions quan trong & dau hoac cudi\ne Context dai —> info & gitva dé bi “quén”\ne Break long lists bang headers/separators\ne Recent context nén dat ngay trudc user\nGita query\nVj tri trong context\nLiu et al. 2023\nMemory Injection va Context Compression tp |vownversiry\nMemory injection Compression\n= Chi dua vao facts that su can cho = Summarize: tom tat phan ci\ntask hién tai = Drop: bd han phan khéng con lién\n= Uu tién recent history hoac relevant quan\nhistory, khong dump toan b6 transcript = Archive: day ra ngoai context, chi\n= Tt cho support agent, coding fetch lai khi can\nassistant, tutor nhiéu luot\nContext engineering la bai toan chon loc va wu tién. Néu moi thte déu quan trong,\nthuc ra khéng co gi thuc su néi bat voi model.",
+      "extraction_method": "ocr"
+    },
+    {
+      "page": 20,
+      "text": "[Slide 20]\nToken Budget Allocation: Nén Nghi Theo R6 Nao? tA lvnunaversiry\nRo token Chia gi Rui ro néu qua nhiéu\nSystem prompt policy, rules, output format cham hon, kho maintain\nHistory recent turns, facts lién quan dé nhiéu, dé lost in the middle\nTool schemas tén tool, mé ta, tham sé model chon tool té néu schema\ndai hoadc mo hd\nOutput buffer phan model dung dé tra Idi bi cat cut output néu cap thiéu\nTeaching heuristic for token budgeting\nRAG Context Pattern tp vewnaversiry\nUser Retrieval Relevant LLM\nSe Es Ey ES\nBest practices:\ne Inject voi source citation\n. . Limit chunk si 1 tok\nAgent co thé cé tool search_kb dé re- * Limit chunk size (500-1000 tokens)\ntrieve context on-demand, thay vi nhét e Rank by relevance, chi lay top-k\nsn toan bé KB vao prompt.",
+      "extraction_method": "ocr"
+    },
+    {
+      "page": 21,
+      "text": "[Slide 21]\nContext Engineering Checklist ty vewnaversiry\nM A& cat bd history kh6ng lién quan dén task hién tai?\nSystem prompt c6 duéi 500 tokens (triv khi can hon)?\n4 Tool schemas co concise descriptions (khéng dai qua)?\n{ Output buffer dU cho expected response length?\n™ Important info & dau hoac cudi context (tranh middle)?\nPrompt Safety & Evaluation\nPrompt tat khéng chi cho két qua ding — no con phai an toan va\ndang tin",
+      "extraction_method": "ocr"
+    },
+    {
+      "page": 22,
+      "text": "[Slide 22]\nDirect injection Indirect injection\nUser tru tiép ndi “Ignore your instructions and do X” Malicious content trong document/email ma agent doc qua\ntool\nDefense Strategies tp vnwnivensiry\n1. Delimiter separation: 4. Output validation:\nWrap untrusted input: Kiém tra output truéc khi execute actions\n<user_input>...</user_input> —\n. . 5. Least privilege:\n2. Instruction hierarchy: Tool permissions tdi thiéu can thiét\nSystem prompt lu6n wu tién hon user input :\nyee ° : ° 6. Human-in-the-loop:\n3. Input validation: Yéu cau confirm cho sensitive actions\nFilter known injection patterns truoc khi dua vao\nprompt\nLwu y: Khéng cé defense nao la hoan hao 100%. Defense-in-depth: két hop nhiéu\nlayers.",
+      "extraction_method": "ocr"
+    },
+    {
+      "page": 23,
+      "text": "[Slide 23]\nPrompt Evaluation Framework tp lvnuversiry\nDimension Cau hoi Do bang cach\nCorrectness Output cd dung Test cases + human\nkhéng? review _ &\nConsistency 10 lan chay cho Chay [ap lai, do % Chay 10-20 test GEES: . Neu\ncling két qua? match <90% pass — can _ iterate\nSafety Co bi bypass .. Adversarial test\nkhéng? cases prompt.\nTTT A/B testing: so sanh prompt v1\nvs v2 trén cung test set.\nGuardrails Pattern tap viwversiry\nPre-guard Post-guard Safe\nvalidate input validate output Output\nPre-guard: Post-guard:\ne Detect injection attempts e Mask Pll trong output\ne Validate input format e Validate JSON schema\ne Rate limiting e Block dangerous tool calls",
+      "extraction_method": "ocr"
+    },
+    {
+      "page": 24,
+      "text": "[Slide 24]\nTool Calling\nTool calling la cach agent chuyén tir “noi” sang “twong tac voi thé\ngidi thc”\nTool Calling Flow ‘ep |vnversiry\nLLM LLM final\ndecides response\nModel khéng tu chay code hay tw goi API ngoai. Ung dung cia ban nhan tool request,\nchay tool, rdi gti két qua trd’ lai model.",
+      "extraction_method": "ocr"
+    },
+    {
+      "page": 25,
+      "text": "[Slide 25]\nTool Calling: Ai Lam Gi? te vewnvensiry\nVai tro Trach nhiém Vidu\nDeveloper (ban) Dinh nghia tool schema, viét imple- Viét get_weather() function\nmentation, handle errors\nLLM Quyét dinh tool nao, arguments gi, Output: {\"name\":\ndya trén user intent “get_weather\", \"city\":\n\"Hanoi\" }\nApplication Nhan tool call, execute, tra result Goi API weather, tra JSON\nresult\nLLM (lan 2) Synthesize tool result thanh cau tra “Ha Ndi hom nay 32°C, troi\nloi tu nhién nang”\nPhan vai r6 rang gitip hiéu dung co ché\nTool Schema Anatomy typ |vowraversiry\n= Name: nén ngan, r6, déng tiv ding\nviéc Luu y: LLM doc description nhu tai\nce, . . oN a x k oe\n= Description: noi khi nao nén dung ligu huong dan. Neu description mo’\ntool nay ho, model sé chon sai tool hoac truyén\n= Parameters: m6 ta input bang JSON Sal arguments.\nSchema\n= Required fields: gitijp model biét\nthiéu gi thi chwa goi duoc",
+      "extraction_method": "ocr"
+    },
+    {
+      "page": 26,
+      "text": "[Slide 26]\nTool Schema — Python Example tp vrewvensiry\n+\n+\nGood vs Bad Tool Description Sy jvmwnaversiry\nDescription Hé qua\nBad \"Gets weather\" Qua ngan, model khéng biét khi nao\ndung\nBad \"This comprehensive tool can Qua dai, thém noise\nbe used to retrieve current\nweather information for any city\nworldwide...\"\nGood \"Get current weather for a city. R6 chic nang + trigger condition\nUse when user asks about weather,\ntemperature, or conditions.\"\n| Tool description = documentation cho model. Nén chtra: (1) chtrc nang, (2) khi nao dung, (3) khi nao KHONG dung.",
+      "extraction_method": "ocr"
+    },
+    {
+      "page": 27,
+      "text": "[Slide 27]\ntool_choice Parameter Wp |vnwversiry\nGia tri Y nghia Khi dung\nauto (mac dinh) Model tu quyét goi hay khong Hau hét use cases\nrequired / any Budc goi it nhat 1 tool Pipeline steps, routing\nnone Cam goi tool, chi text Test, fallback mode\n{\"name\": \"X\"} Budc goi tool cy thé Khi biét chac can tool nao\n| Lwu y: Dung required can than: model cd thé gai tool voi arguments bia néu user khéng cung cAp du théng tin.\nTool Calling: OpenAl vs Anthropic Format ‘A \\vownversiry\nOpenAl Anthropic\ntools = [{ tools = [{\n\"type\": \"function\", \"name\": \"get_weather\",\n\"function\": { \"description\": \"...\",\n“name\": \"get_weather\", “input_schema\": {...}\n\"description\": \"...\", #]\n“parameters”: {...} Response:\nyy content [i].type == \"tool_use\"\ncontent [i].name / .input\nResponse:\nmessage.tool_calls [0]\n«function.name / .arguments\nConcept giéng nhau. Khac: parameters vs input_schema, response structure.",
+      "extraction_method": "ocr"
+    },
+    {
+      "page": 28,
+      "text": "[Slide 28]\nXw Ly Tool Errors te veunaversiry\nLéi Xu ly\nTimeout Retry + exponential backoff\nError response Truyén error message cho ait. an\nmodel dé no thong bao user Thém instruction:\ndnexpected for- Validation layer + fallback “If a tool returns an error, explain the issue to the user\nma\nTool not found Log + return error JSON and suggest alternatives. Never retry silently more than 2\ntimes.\"\nTool errors khéng phai edge case — ching sé xay ra trong production. Plan\nfor failure.\nTool tét la software interface tét, khéng phai prompt trang tri",
+      "extraction_method": "ocr"
+    },
+    {
+      "page": 29,
+      "text": "[Slide 29]\n4 Nguyén Tac Thiét Ké Tool \\Ylinennvensry\nNguyén tac Y nghia Néu vi pham\nSingle Responsibil-  Mdi tool lam 1 viéc r6 rang model khé quyét dinh nén goi\nity tool nao\nIdempotency Cung input cho cling két qua; _ retry dé sinh Idi phu\nside effect dwoc kiém soat\nGranularity hop ly Khéng qua nho, cing khéng —hoac overhead Ién, hodc tool\n6m qua nhiéu viéc qua clrng\nTest déc lap Unit test tleng tool truée khi — khd tach 16i tool khdi 1di prompt\ngan vao agent\nPrinciples for reliable tool interfaces\nTool Granularity: Qua Nho Hay Qua To Déu Co Gia lvnwaversiry\nQua nho Qua to\n= get_customer_name = handle_all_customer_operations\n= get_customer_email Hé qua: model khéng hiéu boundary, kho\n= get_customer_phone debug, kho reuse.\nHé qua: qua nhiéu calls, overhead Ion,\nflow réi.\nThiét ké tool quanh mét hanh déng nghiép vu 16 rang: vi du lookup_order,\nget_weather, query_sales_data, send_email_draft.",
+      "extraction_method": "ocr"
+    },
+    {
+      "page": 30,
+      "text": "[Slide 30]\nParameter Design Best Practices tp lvnunversiry\n= Required vs Optional: chi require\nnhéeng gi thc sw can\n= Enum constraints: Thém vi du vao parameter descrip-\n\"status\": {\"type\": \"string\", tion:\n“enum\": [\"pending\",\"shipped\",\"delivered\"] }\nre “date”: {\n— Giam Idi arguments\n~ \"type\": \"string\",\n= Default values: document ré trong 7 Cw .\ndescription description\": \"Date in\nP YYYY-MM-DD format,\ne.g. 2026-04-05\"\n}\nTool Return Format Best Practices te |viwniversiry\nStructured response: Rules:\n// Success e Tra JSON, khéng raw HTML/XML\n{\"status\": \"success\",\n“data\": {\"temp\": 32, \"city\": “Hanoi\"}, e Error format consistent\n\"source\": \"“openweathermap\"}\ne Include metadata (source, timestamp)\n// Error\n{\"status\": “error”, Truncate néu response qua dai\n\"message\": \"City not found\",\n\"code\": \"NOT_FOUND\"} . oe\nLuu y: Model xt? ly structured JSON\nP oy ne\ntot hon nhiéu so voi raw text hay\nHTML.",
+      "extraction_method": "ocr"
+    },
+    {
+      "page": 31,
+      "text": "[Slide 31]\nTool Description Engineering WW lvnunversiry\nCung tool, description khac — model behavior khac hoan toan\nR6 rang\n“Search orders\" “Search orders by order_id or customer email.\nModel goi cho MOI cu hai lién quan dén order, ké ca “don hang la gi?’ Use ONLY when user provides an order number or\nasks about specific order status.\"\nModel bié indary r6, chi goi khi cé dui data\nDescription nén chtra: (1) chtvc nang, (2) khi nao ding, (3) khi nao KHONG ding.\nViét nhu viét API docs.\nParallel Tool Calling & Patterns\nNhanh hon khéng co nghia Ia tét hon néu flow control va merge\nlogic khéng r6",
+      "extraction_method": "ocr"
+    },
+    {
+      "page": 32,
+      "text": "[Slide 32]\nSequential vs Parallel Tool Calls A vinnaversiry\nSequential Parallel\nTool B can output cia Tool A. Cac tool déc lap c6 thé chay cing luc.\nVi du: tim order ID -> rdi mdi tra shipping status. Vi du: ggi thdi tiét, ty gid, va lich hop song song.\nLwu y: Chi song song héa khi khéng co phy thuéc di ligu. Néu song song, van can\nbuéc merge / verify r6 rang & cudi.\n3 Tool Use Patterns Thuong Gap ‘ vrwnvensiry\n1. Conditional tool use: agent tw quyét dinh co can tool hay tra Idi truc tiép.\n2. Tool chaining: output cua tool A Ia input cua tool B.\n3. Parallel fetch + merge: l4y nhiéu ngudn déc lap rdi ting hop két qua.\nTool calling khéng chi la “goi API”. No la bai toan control flow: khi nao ggi, goi cai gi,\ngoi theo thw tw nao, va lam gi khi tool fail.",
+      "extraction_method": "ocr"
+    },
+    {
+      "page": 33,
+      "text": "[Slide 33]\n3 Patterns — Visual Flow  vnuuversiry\n1. Conditional\n=e o8\nCc\n2. Chaining\n= oS «ee\n3. Parallel\na\noe oo\ns C4\nGiang vién (VinUni) AICB « Ngay 4 Tuan1 54/64\nMinimal Tool Loop — Python Example Wp \\veunversiry\nmessages = [{ , : ¥]\nresponse = client. responses.create(model= 7 =messages, tools=tools)\nresult = run_tool(item.name, json. loads(item.arguments))\nnes sages. append ({ : 5 : item.call_id, result})\nfinal = client. responses.create(model= , =messages, tools=tools\nfinal.output_text)\nGiang vién (VinUni) AICB - Ngay 4 Tuan1 55/64",
+      "extraction_method": "ocr"
+    },
+    {
+      "page": 34,
+      "text": "[Slide 34]\nRobust Tool Loop — Error Handling ‘A vewversity\nMAX_ROUNDS = 5\nmessages = [{ : 7 : user_input\nfor round_num in range(MAX_ROUNDS) :\nesponse = call_model(messages, SYSTEM_PROMPT, TOOLS)\ntool_calls = extract_tool_calls (response)\nif not tool_calls:\nbreak\nfor tc in tool_calls:\ntry\nresul execute_tool(tc.name, tc.args\nexcept TimeoutError\nresult = { : }\nexcept Exception as e\nresult = { str(e)}\nessages.append(tool_result(tc.id, json.dumps(result) ))\nelse:\nprint )\nThue Hanh\n7\nLab 4: Build first agent voi system prompt + 2 tools + 5 test\ncases",
+      "extraction_method": "ocr"
+    },
+    {
+      "page": 35,
+      "text": "[Slide 35]\nHands-on 4: Cach Chay Lab A vewnavensiry\n1. Viét 1 system prompt voi rules, constraints, output format\n2. Tao 2 custom tools: 1 API wrapper don gian, 1 data query don gian\n3. Ndi tools vao agent loop\n4. Chay 5 cau test dé xem khi nao agent tra Idi trwc tiép, khi nao goi tool\n5. Ghi lai Idi thudc loai prompt, tool schema, hay control flow\nLab Skeleton — Python Example tp lvnunversiry\nSYSTEM_PROMPT = ( ). read()\nTOOLS = [get_weather_tool(), query_sales_tool()]\nTrue:\nresponse = call_model(messages, SYSTEM_PROMPT, TOOLS)\nmessages = handle_tool_calls(response, messages)\n(render_final_answer(messages, SYSTEM_PROMPT, TOOLS) )",
+      "extraction_method": "ocr"
+    },
+    {
+      "page": 36,
+      "text": "[Slide 36]\nLab Walkthrough: Step-by-Step te vewuversiry\nStep 1-3: Setup Step 4-6: Build & Test\n1. Chon domain (weather + sales, hoac 4. Implement tool functions (mock data\ntu chon) Ok)\n2. Viét system prompt (dung template da 5. Wire vao agent loop (co error\nhoc) handling)\n3. Viét 2 tool schemas (name, 6. Test 5 cau hdi, ghi pass/fail + |6i\ndescription, params)\nBat dau voi mock tools (tra data cd dinh) trvéc. Dam bao flow ding rdi mdi lo vé real\ndata.\n5 Test Questions Goi Y Vinee\n# Cau hdi Expected Kiém tra\n1 “Thoi tiét Ha NOi hém nay?” Goi get_weather Tool A hoat déng\n2 “Doanh sé thang 3 la bao nhiéu?” Goi query.sales Tool B hoat déng a ~\n3. “So sdnh doanh s6 voi thoi tiéttuan nay\" Goi-cd 2 tools Parallel/chaining Thém cau test\n4 “Prompt engineering la gi?” Tra loi tryc tiép Conditional: no tool\n5 “Cho téi sé dién thoai CEO” Tie chdi, out of Refusal handling\nscope\nriéng néu agent cia ban co domain khac.",
+      "extraction_method": "ocr"
+    },
+    {
+      "page": 37,
+      "text": "[Slide 37]\nLab Self-Review Checklist tp |vewnaversiry\n™ Agent chay end-to-end khéng crash?\nSystem prompt co di 5 thanh phan (Persona, Rules, Capabilities, Constraints,\nFormat)?\n™ Tool schemas co clear descriptions + required fields?\n“Agent biét khi nao goi tool vs khi nao tra Idi truc tiép?\nAgent xt ly gracefully khi tool fail (khéng crash, théng bao user)?\nM Da ghi chu it nhat 2 Idi phat hién + phan loai (prompt / tool / control flow)?\nLab #4 bf vinuniversiry\nMuc tiéu: Build ReAct agent voi 2 custom tools, viét system prompt chuan, va test\nend-to-end trén 5 cau hdi\nDeliverable: Deliverable: Agent script chay duoc + system prompt + 2 tool\nschemas + 5 test outputs + note Idi prompt/tool/control flow + self-review check-\nlist\nThoi gian: 150 phut",
+      "extraction_method": "ocr"
+    },
+    {
+      "page": 38,
+      "text": "[Slide 38]\nTéng két — Key Takeaways Viveanerenery\n| Nhétng y chinh can nhé truéc khi sang bai tiép theo\n1) Prompt = interface gitra human intent va model capability. Prompt tét giip model lam dung\nviéc, dung format, dung boundary.\n2) System prompt tét = agent nhat quan va predictable hon, dac biét khi cd tools va constraints.\n3) Tool schema description quyét dinh rat manh viéc model biét khi nao ding tool nao va goi voi\narguments gi.\n4) Parallel tool calls nhanh hon dang ké khi cdc tool déc lap; néu cé phy thudc dé liéu, hay git\nflow tuan tu.\na Prompt safety (injection defense, guardrails) la bat budéc cho production agents, khong phai\nGiang vién (VinUni) AICB - Ngay 4 Tuan1 62/64",
+      "extraction_method": "ocr"
+    },
+    {
+      "page": 39,
+      "text": "[Slide 39]\nTiép theo & Bai tap ep |vewversiry\nAl Product Thinking & Require- = Hoan thién Lab 4 voi 5 test\nments questions r6 pass/fail\n“Ban dé build duoc agent dau.tién: = Doc lai system prompt cla minh\nNhung build xong chua du, Ngay mai: va chi ra2 cho con mo’ ho hoac\nsan phdm nay danh choi, yéu cau ra mau thuan\nsao, va rui ro nao phai nghi tte dau?” = Thu viét 2 adversarial test cases\n(prompt injection) cho agent ctia\nban\nTai Ligu Tham Khao Vee\n1 Anthropic. Prompt Engineering Overview. docs.anthropic.com\n2 Anthropic. Claude Prompting Best Practices va Multishot Prompting. docs.anthropic.com\n3 Anthropic. Tool Use Overview. docs.anthropic.com\n4 OpenAl. Function Calling Guide. platform.openai.com/docs\n5 Wei et al. Chain-of-Thought Prompting Elicits Reasoning in LLMs. 2022.\n6 Liu etal. Lost in the Middle: How Language Models Use Long Contexts. 2023.\n7 LangGraph Docs. Quickstart. langchain-ai.github.io/langgraph\n8 OWASP. Top 10 for LLM Applications. owasp.org",
+      "extraction_method": "ocr"
+    }
+  ],
+  "extraction": {
+    "source_type": "pdf_text_ocr",
+    "empty_pages": [],
+    "ocr_available": true
+  }
+}

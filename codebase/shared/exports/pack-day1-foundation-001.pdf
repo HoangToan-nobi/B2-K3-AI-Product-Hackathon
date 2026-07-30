@@ -12,7 +12,7 @@ endobj
 << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
 endobj
 5 0 obj
-<< /Length 3684 >>
+<< /Length 2825 >>
 stream
 BT
 /F1 11 Tf
@@ -21,99 +21,82 @@ BT
 0 -15 Td
 (AI & LLM Foundation \(Day 1\)) Tj
 0 -15 Td
-(29 slides | 7 hoc vien hoi | 8 chu de) Tj
+(29 slides | 369 hoc vien hoi | 3 chu de) Tj
 0 -15 Td
 () Tj
 0 -15 Td
 (Ly thuyet trong tam) Tj
 0 -15 Td
-(- Cac tang cua AI. AI la o lon nhat, bao gom Machine Learning, Deep Learning,) Tj
+(- AI, ML, Deep Learning, GenAI, LLM nam o au trong cung mot he?. AI la chiec o lon) Tj
 0 -15 Td
-(Generative AI va LLM. LLM la tang nen cua hau het trai nghiem AI hien nay. [trang 3]) Tj
+(nhat bao gom moi he thong thong minh. ML la hoc tu du lieu, DL la mang no-ron nhieu) Tj
 0 -15 Td
-(- Lich su AI 70 nam. AI trai qua cac giai oan: khai sinh, he chuyen gia \\\(1980\\\),) Tj
+(tang, GenAI sinh noi dung moi, LLM la model nen chuyen ngon ngu. LLM khong phai toan) Tj
 0 -15 Td
-(ImageNet \\\(2009\\\), Transformer \\\(2017\\\), ChatGPT \\\(2022\\\). [trang 5, 6, 7, 8, 9]) Tj
+(bo AI nhung la tang nen cua hau het trai nghiem AI hien nay. [trang 3]) Tj
 0 -15 Td
-(- LLM la bo nao nen, khong phai chatbot. LLM la mo hinh ngon ngu lon dua tren) Tj
+(- Ba nhom AI chinh: phan loai sinh noi dung hanh ong. Discriminative AI gioi phan) Tj
 0 -15 Td
-(Transformer, uoc luyen e oan token tiep theo. Chatbot chi la mot dang san pham ong goi) Tj
+(loai, du oan. Generative AI sinh ra thu moi. Agentic AI nhan muc tieu roi tu lam nhieu) Tj
 0 -15 Td
-(quanh LLM. [trang 10]) Tj
+(buoc. LLM la engine chung cua ca Generative lan Agentic. [trang 4]) Tj
 0 -15 Td
-(- Vi sao model co the tra loi sai. Model bi ong bang tai ngay ngung oc \\\(knowledge) Tj
+(- Lich su AI 70 nam: tu he chuyen gia en Transformer va ChatGPT. 1980: He chuyen gia) Tj
 0 -15 Td
-(cutoff\\\), toi uu cho cau nghe hop ly khong phai su that \\\(hallucination\\\), va context) Tj
+(\\\(expert system\\\) tap trung giai tot mot mien hep. 2009: Fei-Fei Li va ImageNet du) Tj
 0 -15 Td
-(co tran de bo sot thong tin o giua. [trang 20]) Tj
+(lieu lon anh bai thuat toan khon. 2017: Transformer cho phep moi tu nhin sang cac tu) Tj
 0 -15 Td
-(- Token va Context. Model cat van ban thanh token. Context la luong chu model co the) Tj
+(quan trong khac. 2022: ChatGPT ua LLM en ai chung. [trang 5, 6, 7, 8]) Tj
 0 -15 Td
-(nhin cung luc, co gioi han. Context cang dai cang ton tien va cham. [trang 13, 14]) Tj
+(- Ben trong LLM: Token, Context, Attention. Token la manh chu model oc, moi thu eu quy) Tj
 0 -15 Td
-(- Agent va cac muc o. Agent la LLM uoc at vao vong lam viec co muc tieu va hanh ong.) Tj
+(ra token va co gia. Context la ban lam viec co han, model chi nhin uoc luong chu nhat) Tj
 0 -15 Td
-(Co 4 muc: Level 0 \\\(LLM tran\\\), Level 1 \\\(co ket noi\\\), Level 2 \\\(biet lap ke hoach\\\),) Tj
+(inh. Attention cho phep moi token chu ong nhin lai cac token khac, cham iem muc o lien) Tj
 0 -15 Td
-(Level 3 \\\(oi agent phoi hop\\\). [trang 23, 24]) Tj
-0 -15 Td
-(- Temperature va Top_p. Temperature va top_p la hai num van chon tu, khong lam model) Tj
-0 -15 Td
-(thong minh hon. Temperature=0 chon tu chac nhat, T=1 can bang, T=2 de lac e. Top_p chi) Tj
-0 -15 Td
-(xem top au bang \\\(p=0.9\\\). [trang 29]) Tj
+(quan. [trang 11, 12, 13, 14]) Tj
 0 -15 Td
 () Tj
 0 -15 Td
 (Ca lop thuong hoi) Tj
 0 -15 Td
-(- Giai thich noi dung slide. Slide 2 trinh bay agenda cua buoi hoc. Slide 4 gioi thieu) Tj
+(- Phan biet AI, ML, DL, GenAI, LLM. LLM la mot phan cua GenAI, GenAI la mot phan cua) Tj
 0 -15 Td
-(ba nhom AI chinh: Discriminative AI, Generative AI, Agentic AI. Slide 5 tom tat lich) Tj
+(Deep Learning, Deep Learning la mot phan cua Machine Learning, Machine Learning la mot) Tj
 0 -15 Td
-(su AI 70 nam. \\\(4 hoc vien, trang 2, 4, 5\\\)) Tj
+(phan cua AI. LLM la model nen chuyen ngon ngu, khong phai toan bo AI. \\\(1 hoc vien,) Tj
 0 -15 Td
-(- Tong quan Day 1. Day 1 gioi thieu tong quan ve AI, cac tang AI, lich su 70 nam, co) Tj
+(trang 3\\\)) Tj
 0 -15 Td
-(che LLM, agent, chon model, chi phi token, va cach goi API. \\\(1 hoc vien, trang 1, 2\\\)) Tj
+(- Co che Attention va quan ly Context. Attention co han va co iem mu. at thong tin) Tj
 0 -15 Td
-(- Khai niem LLM. LLM la mo hinh ngon ngu lon dua tren Transformer, luyen tren hang) Tj
+(quan trong o au hoac cuoi prompt, tranh e o giua. Context cang dai cang ton token va) Tj
 0 -15 Td
-(nghin ty token e oan token tiep theo. No la bo nao nen, chatbot chi la lop ao ben) Tj
+(cham. \\\(1 hoc vien, trang 14, 15, 16\\\)) Tj
 0 -15 Td
-(ngoai. \\\(1 hoc vien, trang 10\\\)) Tj
+(- Token va chi phi. Tokenizer cat van ban thanh manh nho. Tieng Viet co dau thanh,) Tj
 0 -15 Td
-(- Perceptron. Slide khong e cap en perceptron. Noi dung slide 11 noi ve co che) Tj
+(code co ky tu ac biet nen bi cat nho hon, dan en nhieu token hon. Moi token eu co gia.) Tj
 0 -15 Td
-(attention trong Transformer, khong phai perceptron. \\\(1 hoc vien, trang 11\\\)) Tj
-0 -15 Td
-(- Phan biet ML va DL. Slide 3 giai thich: Machine Learning hoc tu du lieu thay vi viet) Tj
-0 -15 Td
-(luat tay; Deep Learning la mang no-ron nhieu tang tu hoc ac trung. DL la mot nhanh con) Tj
-0 -15 Td
-(cua ML. \\\(1 hoc vien, trang 3\\\)) Tj
-0 -15 Td
-(- Cac tang tri tue nhan tao. Cac tang AI tu rong en hep: AI ML Deep Learning) Tj
-0 -15 Td
-(Generative AI LLM. Moi tang la mot tap con cua tang truoc, LLM la tang nen chuyen ngon) Tj
-0 -15 Td
-(ngu. \\\(1 hoc vien, trang 3\\\)) Tj
-0 -15 Td
-(- Learning rate. Slide khong e cap en learning rate. Noi dung slide 2 la agenda, khong) Tj
-0 -15 Td
-(co thong tin ve learning rate. \\\(1 hoc vien, trang 2\\\)) Tj
+(\\\(1 hoc vien, trang 13\\\)) Tj
 0 -15 Td
 () Tj
 0 -15 Td
 (Cau tu kiem tra) Tj
 0 -15 Td
-(1. Theo slide, tang nao la tang nen chuyen ngon ngu, la 'tim cua lan song hien nay'?) Tj
+(1. LLM thuoc nhom AI nao?) Tj
 0 -15 Td
-(Dap an: LLM. [trang 3]) Tj
+(Dap an: D. [trang 4]) Tj
 0 -15 Td
-(2. Vi sao model AI co the tra loi sai du rat tu tin?) Tj
+(2. Su kien nao anh dau buoc ngoat ua Transformer tro thanh nen tang cho LLM?) Tj
 0 -15 Td
-ET
+(Dap an: C. [trang 8]) Tj
+0 -15 Td
+(3. Tai sao model co the 'quen' thong tin o giua mot prompt rat dai?) Tj
+0 -15 Td
+(Dap an: B. [trang 14, 16]) Tj
+0 -15 Td
 ET
 endstream
 endobj
@@ -129,5 +112,5 @@ xref
 trailer
 << /Size 6 /Root 1 0 R >>
 startxref
-4047
+3188
 %%EOF

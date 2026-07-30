@@ -1,98 +1,67 @@
 {
   "schema_version": "1.0",
   "pack_id": "pack-day1-foundation-001",
-  "status": "needs_review",
+  "status": "ready",
   "lesson": {
     "id": "day1-foundation",
     "title": "AI & LLM Foundation (Day 1)",
     "slide_count": 29
   },
   "analysis": {
-    "student_question_count": 38,
-    "unique_user_count": 7,
-    "cluster_count": 8,
-    "included_cluster_count": 7,
-    "excluded_noise_count": 26
+    "student_question_count": 1254,
+    "unique_user_count": 369,
+    "cluster_count": 3,
+    "included_cluster_count": 3,
+    "excluded_noise_count": 0
   },
   "summary": [
     {
       "id": "summary-01",
-      "title": "AI, ML, Deep Learning, GenAI, LLM — các tầng từ rộng đến hẹp",
-      "content": "AI là chiếc ô lớn nhất bao gồm mọi hệ thống có yếu tố thông minh. Machine learning học từ dữ liệu thay vì viết luật tay. Deep learning là mạng nơ-ron nhiều tầng tự học đặc trưng. Generative AI sinh nội dung mới. LLM là model nền chuyên ngôn ngữ, là tim của làn sóng hiện nay.",
+      "title": "AI, ML, Deep Learning, GenAI, LLM — nằm ở đâu trong cùng một hệ?",
+      "content": "AI là chiếc ô lớn nhất bao gồm mọi hệ thống thông minh. ML là học từ dữ liệu, DL là mạng nơ-ron nhiều tầng, GenAI sinh nội dung mới, LLM là model nền chuyên ngôn ngữ. LLM không phải toàn bộ AI nhưng là tầng nền của hầu hết trải nghiệm AI hiện nay.",
       "source_pages": [
         3
       ],
-      "source_excerpt": "AI — chiếc ô lớn nhất: mọi hệ thống có yếu tố “thông minh”. Machine learning — học từ dữ liệu thay vì viết luật tay. Deep learning — mạng nơ-ron nhiều tầng tự học đặc trưng. Generative AI — sinh nội dung mới: văn bản, ảnh, code. LLM — model nền chuyên ngôn ngữ, tim của làn sóng hiện nay.",
+      "source_excerpt": "ARTIFICIAL INTELLIGENCE AI — chiếc ô lớn nhất: mọi hệ thống có yếu tố “thông minh”. MACHINE LEARNING Machine learning — học từ dữ liệu thay vì viết luật tay. DEEP LEARNING Deep learning — mạng nơ-ron nhiều tầng tự học đặc trưng. GENERATIVE AI Generative AI — sinh nội dung mới: văn bản, ảnh, code. LLM — model nền chuyên ngôn ngữ, tim của làn sóng hiện nay.",
       "confidence": 1.0,
       "status": "ready"
     },
     {
       "id": "summary-02",
-      "title": "LLM là bộ não nền, chatbot là sản phẩm đóng gói",
-      "content": "LLM là mô hình ngôn ngữ lớn, thường dựa trên Transformer, được luyện trên hàng nghìn tỷ token để học đoán token tiếp theo. Chatbot chỉ là một dạng sản phẩm đóng gói quanh bộ não đó — lớp áo bên ngoài.",
+      "title": "Ba nhóm AI chính: phân loại · sinh nội dung · hành động",
+      "content": "Discriminative AI giỏi phân loại, dự đoán. Generative AI sinh ra thứ mới. Agentic AI nhận mục tiêu rồi tự làm nhiều bước. LLM là engine chung của cả Generative lẫn Agentic.",
       "source_pages": [
-        10
+        4
       ],
-      "source_excerpt": "LLM (Large Language Model) là một mô hình ngôn ngữ rất lớn, thường dựa trên kiến trúc Transformer, được luyện trên hàng nghìn tỷ mảnh chữ để học cách đoán mảnh chữ tiếp theo trong ngữ cảnh. Chatbot chỉ là một dạng sản phẩm đóng gói quanh bộ não đó — lớp áo bên ngoài.",
+      "source_excerpt": "Discriminative AI: Giỏi phân loại, dự đoán: lọc spam, phát hiện gian lận, nhận diện ảnh. Generative AI: Sinh ra thứ mới: văn bản, ảnh, code. Agentic AI: Nhận mục tiêu rồi tự làm nhiều bước: lập kế hoạch, dùng công cụ, hành động.",
       "confidence": 1.0,
       "status": "ready"
     },
     {
       "id": "summary-03",
-      "title": "Vì sao model có thể trả lời sai (hallucination, knowledge cutoff, context hạn chế)",
-      "content": "Model bị đóng băng tại ngày ngừng đọc (knowledge cutoff). Model tối ưu cho câu nghe hợp lý, không phải tra sự thật — nên có thể tự tin mà sai (hallucination). Context có trần; quá dài vừa tốn tiền vừa dễ bỏ sót thông tin ở giữa.",
+      "title": "Lịch sử AI 70 năm: từ hệ chuyên gia đến Transformer và ChatGPT",
+      "content": "1980: Hệ chuyên gia (expert system) tập trung giải tốt một miền hẹp. 2009: Fei-Fei Li và ImageNet — dữ liệu lớn đánh bại thuật toán khôn. 2017: Transformer cho phép mỗi từ nhìn sang các từ quan trọng khác. 2022: ChatGPT đưa LLM đến đại chúng.",
       "source_pages": [
-        20
+        5,
+        6,
+        7,
+        8
       ],
-      "source_excerpt": "Model bị \"đóng băng\" tại ngày ngừng đọc. Chuyện sau đó nó không biết — trừ khi bạn cung cấp thêm (knowledge cutoff). Model tối ưu cho câu nghe hợp lý, không phải tra sự thật — nên có thể tự tin mà sai (hallucination). Context có trần; quá dài vừa tốn tiền vừa dễ bỏ sót thông tin ở giữa.",
+      "source_excerpt": "1980: Hệ chuyên gia (expert system) — AI đổi chiến lược: thôi theo đuổi trí tuệ tổng quát và tập trung giải thật tốt một miền hẹp. 2009: Fei-Fei Li và ImageNet — bộ dữ liệu lớn hơn. 2017: Transformer — mỗi từ có thể nhìn sang những từ quan trọng khác. 2022: ChatGPT — lần đầu tiên đông người dùng phổ thông chạm vào LLM.",
       "confidence": 1.0,
       "status": "ready"
     },
     {
       "id": "summary-04",
-      "title": "Lịch sử AI 70 năm: từ expert system, ImageNet, Transformer đến ChatGPT",
-      "content": "1980: Hệ chuyên gia (expert system) tập trung giải tốt một miền hẹp. 2009: Fei-Fei Li và ImageNet — cuộc cách mạng dữ liệu. 2017: Transformer cho phép mỗi từ nhìn sang các từ quan trọng khác trong cả câu. 2022: ChatGPT xuất hiện như trải nghiệm đại chúng.",
+      "title": "Bên trong LLM: Token, Context, Attention",
+      "content": "Token là mảnh chữ model đọc, mọi thứ đều quy ra token và có giá. Context là bàn làm việc có hạn, model chỉ nhìn được lượng chữ nhất định. Attention cho phép mỗi token chủ động nhìn lại các token khác, chấm điểm mức độ liên quan.",
       "source_pages": [
-        6,
-        7,
-        8,
-        9
+        11,
+        12,
+        13,
+        14
       ],
-      "source_excerpt": "1980: Hệ chuyên gia (expert system) ... 2009: Fei-Fei Li và ImageNet — cuộc cách mạng của dữ liệu ... 2017: Transformer ... 2022: ChatGPT",
-      "confidence": 1.0,
-      "status": "ready"
-    },
-    {
-      "id": "summary-05",
-      "title": "Token: model đọc mảnh chữ, không đọc từ nguyên vẹn",
-      "content": "Model cắt văn bản thành các mảnh nhỏ gọi là token. Tiếng Việt, code, JSON tốn token hơn tiếng Anh thường. Mọi thứ model làm đều quy ra token — và mỗi token đều có giá.",
-      "source_pages": [
-        13
-      ],
-      "source_excerpt": "Model không nhìn từ nguyên vẹn. Nó cắt văn bản thành các mảnh nhỏ gọi là token: có từ là một mảnh, có từ vỡ ba bốn mảnh, cả dấu câu và khoảng trắng cũng là mảnh. ... Tiếng Việt, code, JSON tốn token hơn tiếng Anh thường — vì dấu thanh, ký tự đặc biệt và cấu trúc bị cắt nhỏ ra.",
-      "confidence": 1.0,
-      "status": "ready"
-    },
-    {
-      "id": "summary-06",
-      "title": "Temperature và top_p: hai núm vặn chọn từ",
-      "content": "Temperature điều chỉnh độ 'liều': T=0 luôn chọn từ chắc nhất, T=1 cân bằng, T=2 dễ lạc đề. Top_p chỉ xem top đầu bảng (p=0.9): giữ nhóm cộng dồn ≥ 90% rồi chuẩn hóa lại. Hai núm này không làm model thông minh hơn — chỉ đổi cách chọn từ.",
-      "source_pages": [
-        29
-      ],
-      "source_excerpt": "temperature — “núm vặn độ liều” ... top_p — “chỉ xem top đầu bảng” (p = 0.9) ... Hai núm này không làm model thông minh hơn — chỉ đổi cách chọn từ, không thêm tri thức.",
-      "confidence": 1.0,
-      "status": "ready"
-    },
-    {
-      "id": "summary-07",
-      "title": "Agent: LLM được đặt vào vòng làm việc có mục tiêu và hành động",
-      "content": "Agent gồm 5 bộ phận: Goal, Reasoning (LLM), Tools, Memory, Action — chạy thành vòng lặp cho tới khi xong việc. Agent không phải một loại model khác, mà là LLM được đặt vào vòng làm việc có mục tiêu và hành động.",
-      "source_pages": [
-        23,
-        24
-      ],
-      "source_excerpt": "Agent không phải “một loại model khác” — đó là LLM được đặt vào vòng làm việc có mục tiêu và hành động. ... Agent = Goal + Reasoning + Tools + Memory + Action — chạy thành vòng lặp cho tới khi xong việc.",
+      "source_excerpt": "Token: model không đọc 'từ', model đọc mảnh chữ. Context: bàn làm việc có hạn của model. Attention: mỗi từ được 'nhìn sang' những từ quan trọng khác.",
       "confidence": 1.0,
       "status": "ready"
     }
@@ -100,144 +69,55 @@
   "class_insights": [
     {
       "id": "insight-cluster-01",
-      "topic": "Giải thích nội dung slide",
-      "common_confusion": "Học viên yêu cầu giải thích nội dung slide, có thể chưa hiểu rõ các khái niệm hoặc cần làm rõ thông tin.",
-      "correct_understanding": "Slide 2 trình bày agenda của buổi học. Slide 4 giới thiệu ba nhóm AI chính: Discriminative AI, Generative AI, Agentic AI. Slide 5 là lịch sử AI 70 năm với các mốc chính.",
+      "topic": "Phân biệt AI, ML, DL, GenAI, LLM",
+      "common_confusion": "Nhiều học viên nhầm lẫn LLM là toàn bộ AI, hoặc không phân biệt được GenAI và LLM.",
+      "correct_understanding": "LLM là một phần của GenAI, GenAI là một phần của Deep Learning, Deep Learning là một phần của Machine Learning, Machine Learning là một phần của AI. LLM là model nền chuyên ngôn ngữ, không phải toàn bộ AI.",
       "source_pages": [
-        2,
-        4,
-        5
+        3
       ],
-      "source_excerpt": "Agenda ... Ba nhóm AI chính: phân loại · sinh nội dung · hành động ... Lịch sử AI 70 năm",
+      "source_excerpt": "LLM không phải toàn bộ AI — nhưng nó là tầng nền của gần hết trải nghiệm AI bạn dùng hôm nay",
       "confidence": 1.0,
       "status": "ready",
-      "unique_user_count": 4,
-      "question_count": 4,
+      "unique_user_count": 1,
+      "question_count": 1,
       "representative_questions": [
-        "Giải thích đoạn bôi đen ở Trang 5.",
-        "Giải thích đoạn bôi đen ở Trang 4.",
-        "Slide này đang nói về nội dung gì?",
-        "chỗ tôi vừa khoanh đấy là gì"
+        "tóm tắt nội dung chính trong slide này"
       ]
     },
     {
       "id": "insight-cluster-02",
-      "topic": "Tổng quan Day 1",
-      "common_confusion": "Học viên muốn tóm tắt nội dung chính của Day 1.",
-      "correct_understanding": "Day 1 giới thiệu bức tranh AI & các tầng của AI, lịch sử AI 70 năm, bên trong LLM: cơ chế vận hành, từ LLM đến AI Agent, landscape model, chọn model & chi phí token, gọi API lần đầu, và tổng kết.",
+      "topic": "Cơ chế Attention và quản lý Context",
+      "common_confusion": "Học viên thắc mắc tại sao model có thể 'quên' thông tin ở giữa context dài, và làm thế nào để tối ưu prompt.",
+      "correct_understanding": "Attention có hạn và có điểm mù. Đặt thông tin quan trọng ở đầu hoặc cuối prompt, tránh để ở giữa. Context càng dài càng tốn token và chậm.",
       "source_pages": [
-        2
+        14,
+        15,
+        16
       ],
-      "source_excerpt": "Agenda ... Bức tranh AI & các tầng của AI · Lịch sử AI 70 năm · Bên trong LLM: cơ chế vận hành · Từ LLM đến AI Agent · Landscape: model hôm nay & cuộc đua hiện tại · Chọn model & chi phí token · Gọi API lần đầu · Tổng kết — những ý để mang về",
+      "source_excerpt": "Bàn đầy quá thì đồ ở giữa bàn dễ bị bỏ sót — đặt điều quan trọng ở giữa một prompt rất dài, model có thể 'quên' mất.",
       "confidence": 1.0,
       "status": "ready",
       "unique_user_count": 1,
-      "question_count": 2,
+      "question_count": 1,
       "representative_questions": [
-        "Day 1 giới thiệu những chủ đề chính nào? Hãy trả lời ngắn gọn và trích dẫn trang.",
-        "Tóm tắt ngắn gọn nội dung chính của Day 1 và trích dẫn trang slide."
+        "Giải thích đoạn bôi đen ở Trang 31"
       ]
     },
     {
       "id": "insight-cluster-03",
-      "topic": "Giải thích khái niệm LLM",
-      "common_confusion": "Học viên muốn giải thích ngắn gọn LLM là gì.",
-      "correct_understanding": "LLM (Large Language Model) là mô hình ngôn ngữ lớn, thường dựa trên Transformer, được luyện trên hàng nghìn tỷ token để học đoán token tiếp theo. Nó là bộ não nền, chatbot chỉ là sản phẩm đóng gói.",
+      "topic": "Token và chi phí",
+      "common_confusion": "Học viên không hiểu tại sao tiếng Việt, code, JSON tốn nhiều token hơn tiếng Anh.",
+      "correct_understanding": "Tokenizer cắt văn bản thành mảnh nhỏ. Tiếng Việt có dấu thanh, code có ký tự đặc biệt nên bị cắt nhỏ hơn, dẫn đến nhiều token hơn. Mỗi token đều có giá.",
       "source_pages": [
-        10
+        13
       ],
-      "source_excerpt": "LLM (Large Language Model) là một mô hình ngôn ngữ rất lớn, thường dựa trên kiến trúc Transformer, được luyện trên hàng nghìn tỷ mảnh chữ để học cách đoán mảnh chữ tiếp theo trong ngữ cảnh.",
+      "source_excerpt": "Tiếng Việt, code, JSON tốn token hơn tiếng Anh thường — vì dấu thanh, ký tự đặc biệt và cấu trúc bị cắt nhỏ ra.",
       "confidence": 1.0,
       "status": "ready",
       "unique_user_count": 1,
       "question_count": 1,
       "representative_questions": [
-        "Hãy giải thích ngắn gọn LLM là gì và trích dẫn slide."
-      ]
-    },
-    {
-      "id": "insight-cluster-04",
-      "topic": "Giải thích perceptron",
-      "common_confusion": "Học viên yêu cầu giải thích perceptron, nhưng slide không đề cập đến perceptron.",
-      "correct_understanding": "Slide không đề cập đến perceptron. Perceptron là một khái niệm trong machine learning, không nằm trong nội dung slide được cung cấp.",
-      "source_pages": [
-        11
-      ],
-      "source_excerpt": "Bên trong Transformer: đầu ra luôn là một phân bố xác suất",
-      "confidence": 0.3,
-      "status": "needs_review",
-      "unique_user_count": 1,
-      "question_count": 1,
-      "representative_questions": [
-        "trong slide số 11 bạn hãy giài thích rõ về perceptrons"
-      ]
-    },
-    {
-      "id": "insight-cluster-05",
-      "topic": "Phân biệt ML và DL",
-      "common_confusion": "Học viên chưa rõ sự khác nhau giữa ML và DL, tham chiếu slide 18 nhưng slide 18 không có nội dung đó.",
-      "correct_understanding": "Slide 18 không đề cập đến ML và DL. Tuy nhiên, từ slide 3: Machine learning học từ dữ liệu thay vì viết luật tay; Deep learning là mạng nơ-ron nhiều tầng tự học đặc trưng. Deep learning là một nhánh con của machine learning.",
-      "source_pages": [
-        3
-      ],
-      "source_excerpt": "Machine learning — học từ dữ liệu thay vì viết luật tay. Deep learning — mạng nơ-ron nhiều tầng tự học đặc trưng.",
-      "confidence": 0.5,
-      "status": "needs_review",
-      "unique_user_count": 1,
-      "question_count": 1,
-      "representative_questions": [
-        "slide số 18: sự khác nhau giữa ML và DL chưa rõ lắm"
-      ]
-    },
-    {
-      "id": "insight-cluster-06",
-      "topic": "Các tầng trí tuệ nhân tạo",
-      "common_confusion": "Học viên muốn giải thích sự giống và khác nhau của các tầng AI.",
-      "correct_understanding": "Các tầng AI từ rộng đến hẹp: AI (ô lớn nhất) → Machine Learning (học từ dữ liệu) → Deep Learning (mạng nơ-ron nhiều tầng) → Generative AI (sinh nội dung mới) → LLM (model nền ngôn ngữ). Mỗi tầng là một tập con của tầng trước.",
-      "source_pages": [
-        3
-      ],
-      "source_excerpt": "AI — chiếc ô lớn nhất: mọi hệ thống có yếu tố “thông minh”. Machine learning — học từ dữ liệu thay vì viết luật tay. Deep learning — mạng nơ-ron nhiều tầng tự học đặc trưng. Generative AI — sinh nội dung mới: văn bản, ảnh, code. LLM — model nền chuyên ngôn ngữ, tim của làn sóng hiện nay.",
-      "confidence": 1.0,
-      "status": "ready",
-      "unique_user_count": 1,
-      "question_count": 1,
-      "representative_questions": [
-        "bạn hãy giải thích giúp tôi sự giống và khác nhau của các tầng trí tuệ nhân tạo."
-      ]
-    },
-    {
-      "id": "insight-cluster-07",
-      "topic": "Thông tin cá nhân trên slide",
-      "common_confusion": "Học viên hỏi 'đây là ai' trên slide, không phải câu hỏi học thuật.",
-      "correct_understanding": "Đây là câu hỏi logistics, không liên quan đến kiến thức học thuật. Slide không đề cập đến cá nhân cụ thể.",
-      "source_pages": [
-        2
-      ],
-      "source_excerpt": "Agenda",
-      "confidence": 0.1,
-      "status": "needs_review",
-      "unique_user_count": 1,
-      "question_count": 1,
-      "representative_questions": [
-        "đây là ai"
-      ]
-    },
-    {
-      "id": "insight-cluster-08",
-      "topic": "Learning rate",
-      "common_confusion": "Học viên hỏi về learning rate, nhưng slide không đề cập đến khái niệm này.",
-      "correct_understanding": "Slide không đề cập đến learning rate. Learning rate là một khái niệm trong huấn luyện mô hình, không nằm trong nội dung slide được cung cấp.",
-      "source_pages": [
-        2
-      ],
-      "source_excerpt": "Agenda",
-      "confidence": 0.2,
-      "status": "needs_review",
-      "unique_user_count": 1,
-      "question_count": 1,
-      "representative_questions": [
-        "Learning rate là gì? Giải thích ngắn gọn."
+        "Giải thích đoạn bôi đen ở Trang 13"
       ]
     }
   ],
@@ -245,134 +125,65 @@
     {
       "id": "question-01",
       "type": "multiple_choice",
-      "question": "Theo slide, AI, ML, Deep Learning, GenAI, LLM được sắp xếp theo thứ tự nào từ rộng đến hẹp?",
+      "question": "LLM thuộc nhóm AI nào?",
       "options": [
-        "AI → ML → Deep Learning → GenAI → LLM",
-        "LLM → GenAI → Deep Learning → ML → AI",
-        "AI → GenAI → ML → Deep Learning → LLM",
-        "ML → AI → Deep Learning → LLM → GenAI"
+        "Discriminative AI",
+        "Generative AI",
+        "Agentic AI",
+        "Cả Generative và Agentic"
       ],
-      "correct_option": 0,
-      "answer": "AI → ML → Deep Learning → GenAI → LLM",
-      "explanation": "Slide 3 mô tả AI là chiếc ô lớn nhất, ML là tập con của AI, Deep Learning là tập con của ML, GenAI là tập con của Deep Learning, và LLM là tập con của GenAI.",
+      "correct_option": 3,
+      "answer": "D",
+      "explanation": "LLM là engine chung của cả Generative AI (sinh văn bản) và Agentic AI (lập kế hoạch, dùng công cụ).",
       "source_pages": [
-        3
+        4
       ],
-      "source_excerpt": "AI — chiếc ô lớn nhất: mọi hệ thống có yếu tố “thông minh”. Machine learning — học từ dữ liệu thay vì viết luật tay. Deep learning — mạng nơ-ron nhiều tầng tự học đặc trưng. Generative AI — sinh nội dung mới: văn bản, ảnh, code. LLM — model nền chuyên ngôn ngữ, tim của làn sóng hiện nay.",
+      "source_excerpt": "LLM là engine chung của cả Generative lẫn Agentic",
       "confidence": 1.0,
       "status": "ready"
     },
     {
       "id": "question-02",
       "type": "multiple_choice",
-      "question": "Vì sao model AI có thể trả lời sai (hallucination) dù rất tự tin?",
+      "question": "Sự kiện nào đánh dấu bước ngoặt đưa Transformer trở thành nền tảng cho LLM?",
       "options": [
-        "Vì model được tối ưu cho câu nghe hợp lý, không phải tra sự thật",
-        "Vì model không có đủ tham số",
-        "Vì model chỉ được huấn luyện trên dữ liệu tiếng Anh",
-        "Vì model không có cơ chế attention"
+        "1980: Hệ chuyên gia",
+        "2009: ImageNet",
+        "2017: Transformer",
+        "2022: ChatGPT"
       ],
-      "correct_option": 0,
-      "answer": "Vì model được tối ưu cho câu nghe hợp lý, không phải tra sự thật",
-      "explanation": "Slide 20 giải thích: 'Model tối ưu cho câu nghe hợp lý, không phải tra sự thật — nên có thể tự tin mà sai (hallucination).'",
+      "correct_option": 2,
+      "answer": "C",
+      "explanation": "Transformer ra đời năm 2017 cho phép mỗi từ nhìn sang các từ quan trọng khác, trở thành nền móng cho GPT, BERT và các LLM sau này.",
       "source_pages": [
-        20
+        8
       ],
-      "source_excerpt": "Model tối ưu cho câu nghe hợp lý, không phải tra sự thật — nên có thể tự tin mà sai (hallucination).",
+      "source_excerpt": "Transformer là bước ngoặt vì nó cho mô hình hiểu ngôn ngữ theo cách linh hoạt hơn",
       "confidence": 1.0,
       "status": "ready"
     },
     {
       "id": "question-03",
       "type": "multiple_choice",
-      "question": "Theo slide, token là gì?",
+      "question": "Tại sao model có thể 'quên' thông tin ở giữa một prompt rất dài?",
       "options": [
-        "Một từ nguyên vẹn trong văn bản",
-        "Một mảnh chữ nhỏ mà model cắt từ văn bản",
-        "Một câu hoàn chỉnh",
-        "Một ký tự đơn lẻ"
+        "Vì model chỉ nhớ được 100 token",
+        "Vì attention có điểm mù ở giữa context",
+        "Vì model không có cơ chế attention",
+        "Vì tokenizer bỏ qua phần giữa"
       ],
       "correct_option": 1,
-      "answer": "Một mảnh chữ nhỏ mà model cắt từ văn bản",
-      "explanation": "Slide 13: 'Model không nhìn từ nguyên vẹn. Nó cắt văn bản thành các mảnh nhỏ gọi là token.'",
+      "answer": "B",
+      "explanation": "Attention có hạn và có điểm mù: thông tin ở giữa context dễ bị bỏ sót hơn so với đầu hoặc cuối.",
       "source_pages": [
-        13
+        14,
+        16
       ],
-      "source_excerpt": "Model không nhìn từ nguyên vẹn. Nó cắt văn bản thành các mảnh nhỏ gọi là token.",
-      "confidence": 1.0,
-      "status": "ready"
-    },
-    {
-      "id": "question-04",
-      "type": "multiple_choice",
-      "question": "Khi temperature = 0, model sẽ chọn từ như thế nào?",
-      "options": [
-        "Luôn chọn từ có xác suất cao nhất",
-        "Chọn ngẫu nhiên từ tất cả các từ",
-        "Chỉ chọn từ trong top 90% xác suất",
-        "Chọn từ có xác suất thấp nhất để tăng đa dạng"
-      ],
-      "correct_option": 0,
-      "answer": "Luôn chọn từ có xác suất cao nhất",
-      "explanation": "Slide 29: 'T=0 luôn chọn từ chắc nhất' và 'ổn định, lặp lại, hợp code & phân tích'.",
-      "source_pages": [
-        29
-      ],
-      "source_excerpt": "T=0 luôn chọn từ chắc nhất → ổn định, lặp lại, hợp code & phân tích",
-      "confidence": 1.0,
-      "status": "ready"
-    },
-    {
-      "id": "question-05",
-      "type": "multiple_choice",
-      "question": "Theo slide, agent khác LLM trần ở điểm nào?",
-      "options": [
-        "Agent có thêm khả năng lập kế hoạch, dùng công cụ, và hành động",
-        "Agent là một loại model khác hoàn toàn",
-        "Agent không cần LLM",
-        "Agent chỉ có thể trả lời câu hỏi đơn giản"
-      ],
-      "correct_option": 0,
-      "answer": "Agent có thêm khả năng lập kế hoạch, dùng công cụ, và hành động",
-      "explanation": "Slide 23: 'Agent không phải “một loại model khác” — đó là LLM được đặt vào vòng làm việc có mục tiêu và hành động.' Slide 24 mô tả agent gồm Goal, Reasoning, Tools, Memory, Action.",
-      "source_pages": [
-        23,
-        24
-      ],
-      "source_excerpt": "Agent không phải “một loại model khác” — đó là LLM được đặt vào vòng làm việc có mục tiêu và hành động. ... Agent = Goal + Reasoning + Tools + Memory + Action — chạy thành vòng lặp cho tới khi xong việc.",
+      "source_excerpt": "Bàn đầy quá thì đồ ở giữa bàn dễ bị bỏ sót — đặt điều quan trọng ở giữa một prompt rất dài, model có thể 'quên' mất.",
       "confidence": 1.0,
       "status": "ready"
     }
   ],
-  "warnings": [
-    {
-      "code": "LOW_CONFIDENCE_SCORE",
-      "message": "insight 'insight-cluster-04' chưa xác minh chắc chắn với slide (grounded=True, confidence=0.3), cần Lab Coach duyệt.",
-      "item_ids": [
-        "insight-cluster-04"
-      ]
-    },
-    {
-      "code": "LOW_CONFIDENCE_SCORE",
-      "message": "insight 'insight-cluster-05' chưa xác minh chắc chắn với slide (grounded=True, confidence=0.5), cần Lab Coach duyệt.",
-      "item_ids": [
-        "insight-cluster-05"
-      ]
-    },
-    {
-      "code": "LOW_CONFIDENCE_SCORE",
-      "message": "insight 'insight-cluster-07' chưa xác minh chắc chắn với slide (grounded=True, confidence=0.1), cần Lab Coach duyệt.",
-      "item_ids": [
-        "insight-cluster-07"
-      ]
-    },
-    {
-      "code": "LOW_CONFIDENCE_SCORE",
-      "message": "insight 'insight-cluster-08' chưa xác minh chắc chắn với slide (grounded=True, confidence=0.2), cần Lab Coach duyệt.",
-      "item_ids": [
-        "insight-cluster-08"
-      ]
-    }
-  ],
-  "generated_at": "2026-07-30T10:44:55.975130Z"
+  "warnings": [],
+  "generated_at": "2026-07-30T00:00:00+00:00"
 }

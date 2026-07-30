@@ -1,0 +1,186 @@
+{
+  "schema_version": "1.0",
+  "pack_id": "pack-day2-prompting-001",
+  "status": "ready",
+  "lesson": {
+    "id": "day2-prompting",
+    "title": "Prompting & Context (Day 2)",
+    "slide_count": 29
+  },
+  "analysis": {
+    "student_question_count": 1252,
+    "unique_user_count": 369,
+    "cluster_count": 3,
+    "included_cluster_count": 3,
+    "excluded_noise_count": 0
+  },
+  "summary": [
+    {
+      "id": "summary-01",
+      "title": "Double Diamond & Problem Discovery",
+      "content": "Quy trình hai giai đoạn: Diamond 1 (tìm đúng vấn đề) gồm Discover (phân kỳ) và Define (hội tụ); Diamond 2 (tìm đúng giải pháp) gồm Develop và Deliver. Công cụ: 5 Whys, Impact-Effort Matrix, Problem Statement.",
+      "source_pages": [
+        3,
+        4
+      ],
+      "source_excerpt": "D I A M O N D 1 — T Ì M Đ Ú N G VẤ N Đ Ề Discover: Mở rộng — khảo sát vấn đề căn bản. Define: Thu hẹp — xác định đúng bài toán gốc.",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "summary-02",
+      "title": "Quick Problem Card",
+      "content": "Khung 6 trường: Problem, Actor, Workflow, Bottleneck & Impact, Success Metric, Direction (No AI/Rule/Workflow/Agent). Giúp định hình bài toán trước khi chọn giải pháp.",
+      "source_pages": [
+        9
+      ],
+      "source_excerpt": "Bài toán (1 câu) problem Vấn đề cụ thể cần giải quyết (không bao gồm giải pháp). Đối tượng ảnh hưởng actor...",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "summary-03",
+      "title": "Anti-patterns & PAIR Reframe",
+      "content": "Sai lầm: Solution-first, No baseline, No evaluation, No boundary. PAIR: thay 'Can we use AI to...?' bằng 'How might we solve...?' và 'Can AI solve this in a unique way?'.",
+      "source_pages": [
+        7,
+        8
+      ],
+      "source_excerpt": "Sai lầm thường gặp — Anti-patterns — Dấu hiệu cảnh báo bài toán chưa được định hình rõ...",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "summary-04",
+      "title": "Định lượng hóa & Success Metric",
+      "content": "Cần lượng hóa tổn thất hiện tại (thời gian, chi phí, SLA) và thiết lập chỉ số đo thành công cụ thể. Ví dụ: giảm thời gian xử lý từ 2 giờ xuống 15 phút.",
+      "source_pages": [
+        10,
+        11
+      ],
+      "source_excerpt": "Hao phí hiện tại là bao nhiêu? Thời gian, chi phí nhân sự, SLA, cơ hội bỏ lỡ? Tiêu chí thành công đo bằng gì?",
+      "confidence": 0.9,
+      "status": "ready"
+    }
+  ],
+  "class_insights": [
+    {
+      "id": "insight-cluster-01",
+      "topic": "Ma trận Tác động – Nỗ lực (Impact-Effort Matrix)",
+      "common_confusion": "Học viên thường đặt nhầm trục (impact vs effort) hoặc khó ước lượng effort cho các bài toán cá nhân.",
+      "correct_understanding": "Trục dọc là Impact (tác động), trục ngang là Effort (nỗ lực). Quick win là ô Impact cao, Effort thấp. Cần ưu tiên quick win để tạo động lực.",
+      "source_pages": [
+        4
+      ],
+      "source_excerpt": "Ma trận Tác động – Nỗ lực (Impact-Effort)",
+      "confidence": 0.9,
+      "status": "ready",
+      "unique_user_count": 5,
+      "question_count": 3,
+      "representative_questions": [
+        "Giải thích 4 chiến lược",
+        "tại sao có lưu ý như trang 25"
+      ]
+    },
+    {
+      "id": "insight-cluster-02",
+      "topic": "Phân biệt Automate vs Augment",
+      "common_confusion": "Học viên khó phân biệt khi nào AI nên tự động hóa hoàn toàn (Automate) và khi nào chỉ hỗ trợ con người (Augment).",
+      "correct_understanding": "Automate: AI thay thế con người trong tác vụ lặp, ít biến động. Augment: AI hỗ trợ con người ra quyết định, cần Human-in-the-loop. Quyết định dựa trên rủi ro và độ phức tạp.",
+      "source_pages": [
+        2,
+        7
+      ],
+      "source_excerpt": "PAIR ② Automate/Augment → Rule/Workflow/Agent",
+      "confidence": 0.85,
+      "status": "ready",
+      "unique_user_count": 3,
+      "question_count": 2,
+      "representative_questions": [
+        "giải thích 4 chiến lược"
+      ]
+    },
+    {
+      "id": "insight-cluster-03",
+      "topic": "Định lượng hóa bài toán (Success Metric)",
+      "common_confusion": "Học viên thường đưa ra chỉ số mơ hồ như 'cải thiện hiệu suất' thay vì con số cụ thể.",
+      "correct_understanding": "Cần đo lường baseline hiện tại (thời gian, chi phí, sai sót) và đặt mục tiêu cụ thể (vd: giảm 50% thời gian xử lý). Success metric phải định lượng và có thể kiểm chứng.",
+      "source_pages": [
+        10,
+        11
+      ],
+      "source_excerpt": "Hao phí hiện tại là bao nhiêu? Thời gian, chi phí nhân sự, SLA, cơ hội bỏ lỡ? Tiêu chí thành công đo bằng gì?",
+      "confidence": 0.9,
+      "status": "ready",
+      "unique_user_count": 4,
+      "question_count": 2,
+      "representative_questions": [
+        "tóm tắt nội dung chính trong slide này"
+      ]
+    }
+  ],
+  "review_questions": [
+    {
+      "id": "question-01",
+      "type": "multiple_choice",
+      "question": "Theo mô hình Double Diamond, giai đoạn nào thuộc Diamond 1 (Tìm đúng vấn đề)?",
+      "options": [
+        "Discover và Define",
+        "Develop và Deliver",
+        "Discover và Develop",
+        "Define và Deliver"
+      ],
+      "correct_option": 0,
+      "answer": "A",
+      "explanation": "Diamond 1 gồm Discover (phân kỳ) và Define (hội tụ) để tìm đúng vấn đề. Diamond 2 gồm Develop và Deliver để tìm giải pháp.",
+      "source_pages": [
+        3
+      ],
+      "source_excerpt": "D I A M O N D 1 — T Ì M Đ Ú N G VẤ N Đ Ề Discover: Mở rộng — khảo sát vấn đề căn bản. Define: Thu hẹp — xác định đúng bài toán gốc.",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "question-02",
+      "type": "multiple_choice",
+      "question": "Đâu là anti-pattern (sai lầm thường gặp) khi định hình bài toán AI?",
+      "options": [
+        "Xây dựng chatbot trước khi làm rõ quy trình vận hành",
+        "Phỏng vấn người dùng để hiểu nhu cầu",
+        "Thiết lập chỉ số đo lường thành công",
+        "Xác định phạm vi tự chủ của AI"
+      ],
+      "correct_option": 0,
+      "answer": "A",
+      "explanation": "Solution-first (ưu tiên giải pháp) là anti-pattern: xây chatbot/agent trước khi hiểu rõ quy trình và điểm nghẽn thực tế.",
+      "source_pages": [
+        7
+      ],
+      "source_excerpt": "Ưu tiên giải pháp (Solution-first) Xây dựng chatbot/agent trước khi làm rõ quy trình vận hành và điểm nghẽn thực tế.",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "question-03",
+      "type": "multiple_choice",
+      "question": "Trong Quick Problem Card, trường 'Direction' dùng để làm gì?",
+      "options": [
+        "Xác định hướng giải pháp (No AI, Rule, Workflow, Agent...)",
+        "Mô tả quy trình hiện tại",
+        "Đo lường tác động của vấn đề",
+        "Liệt kê các bên liên quan"
+      ],
+      "correct_option": 0,
+      "answer": "A",
+      "explanation": "Direction là định hướng giải pháp, bao gồm các lựa chọn: No AI, Rule, Workflow, Agent, hoặc Chưa xác định.",
+      "source_pages": [
+        9
+      ],
+      "source_excerpt": "Định hướng giải pháp direction - No AI / Rule / Workflow / Agent / Chưa xác định.",
+      "confidence": 0.95,
+      "status": "ready"
+    }
+  ],
+  "warnings": [],
+  "generated_at": "2026-07-30T00:00:00+00:00"
+}

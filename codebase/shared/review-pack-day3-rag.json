@@ -1,0 +1,193 @@
+{
+  "schema_version": "1.0",
+  "pack_id": "pack-day3-rag-001",
+  "status": "ready",
+  "lesson": {
+    "id": "day3-rag",
+    "title": "RAG & Knowledge Grounding (Day 3)",
+    "slide_count": 31
+  },
+  "analysis": {
+    "student_question_count": 1252,
+    "unique_user_count": 369,
+    "cluster_count": 3,
+    "included_cluster_count": 3,
+    "excluded_noise_count": 0
+  },
+  "summary": [
+    {
+      "id": "summary-01",
+      "title": "Giới thiệu giảng viên và định hướng khóa học",
+      "content": "Giảng viên là AI Research Engineer tại startup Mỹ về AI design platform, có kinh nghiệm về computer vision, xe tự hành, robot giao hàng. Khóa học tập trung vào kỹ thuật thực hành và kinh nghiệm thực tế, không chỉ lý thuyết. Slide được xây dựng bởi nhiều người, giảng viên chọn slide phù hợp với phong cách của mình.",
+      "source_pages": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "source_excerpt": "Mình tên đầy đủ là [giảng viên], hiện tại đang là AI Research Engineer tại một startup của Mỹ. ... mình sẽ tập trung vào những kỹ thuật thực hành và những kinh nghiệm làm việc thực tế.",
+      "confidence": 0.9,
+      "status": "ready"
+    },
+    {
+      "id": "summary-02",
+      "title": "Sử dụng AI hiệu quả và tầm quan trọng của kiến thức nền",
+      "content": "Thời đại AI, việc sử dụng AI là cần thiết trong học tập và công việc. Sự khác biệt giữa người dùng AI hiệu quả và không hiệu quả nằm ở khả năng đánh giá chất lượng đầu ra, phụ thuộc vào kiến thức lĩnh vực của người dùng. Prompt chuẩn chưa đủ nếu thiếu kiến thức nền.",
+      "source_pages": [
+        5,
+        6
+      ],
+      "source_excerpt": "Về sự khác biệt giữa một người sử dụng AI hiệu quả với một người không hiệu quả — chỉ khác biệt nhau ở một chỗ thôi. ... nếu bạn không có kiến thức về lĩnh vực đấy thì khả năng đảm bảo chất lượng câu trả lời từ AI gần như phụ thuộc vào may mắn",
+      "confidence": 0.85,
+      "status": "ready"
+    },
+    {
+      "id": "summary-03",
+      "title": "Khuôn mẫu hệ thống công nghệ hiện tại: Agent System",
+      "content": "Khóa học hướng đến phát triển agent system như một khuôn mẫu cho hệ thống công nghệ hiện tại. Tương tự như sự chuyển dịch từ web sang mobile, hiện nay trọng tâm là xây dựng ứng dụng đáp ứng đúng và tạo niềm tin người dùng. Nguyên tắc này áp dụng cho nhiều lĩnh vực khác nhau.",
+      "source_pages": [
+        6,
+        7
+      ],
+      "source_excerpt": "Nên khoá học này, mặc dù các bạn sẽ thấy đa phần buổi học xuyên suốt chương trình tập trung vào làm sao để các bạn phát triển được một cái agent system, nhưng thật ra các bạn có thể xem đấy là một cái khuôn mẫu của hệ thống công nghệ hiện tại.",
+      "confidence": 0.8,
+      "status": "ready"
+    },
+    {
+      "id": "summary-04",
+      "title": "Computer Vision và Robotics đang thu hẹp, AI Agentic mở rộng",
+      "content": "Các lĩnh vực chuyên sâu như computer vision, robotics đang thu hẹp cơ hội việc làm, đòi hỏi đầu tư lớn. Ngược lại, AI agentic (hệ thống AI có kịch bản, tương tác) đang bùng nổ, mở ra nhiều ứng dụng như robot tư vấn cho trẻ tự kỷ, giáo dục.",
+      "source_pages": [
+        7,
+        8,
+        9
+      ],
+      "source_excerpt": "computer vision hay những cái robotics ... nó cũng đang khá là thu hẹp. ... Thế thì các bạn chỉ cần nghĩ đến việc làm được một hệ thống AI chuyên biệt hoá.",
+      "confidence": 0.75,
+      "status": "ready"
+    }
+  ],
+  "class_insights": [
+    {
+      "id": "insight-cluster-01",
+      "topic": "Sự khác biệt giữa người dùng AI hiệu quả và không hiệu quả",
+      "common_confusion": "Nhiều học viên cho rằng chỉ cần prompt tốt là đủ để có kết quả chất lượng từ AI.",
+      "correct_understanding": "Chất lượng đầu ra phụ thuộc vào kiến thức nền của người dùng để đánh giá và điều chỉnh, không chỉ prompt.",
+      "source_pages": [
+        5,
+        6
+      ],
+      "source_excerpt": "Về sự khác biệt giữa một người sử dụng AI hiệu quả với một người không hiệu quả — chỉ khác biệt nhau ở một chỗ thôi.",
+      "confidence": 0.9,
+      "status": "ready",
+      "unique_user_count": 1,
+      "question_count": 1,
+      "representative_questions": [
+        "giải thích 4 chiến lược"
+      ]
+    },
+    {
+      "id": "insight-cluster-02",
+      "topic": "Agent system là khuôn mẫu cho hệ thống công nghệ hiện tại",
+      "common_confusion": "Học viên có thể nghĩ agent system chỉ áp dụng cho các dự án AI cụ thể, không liên quan đến lĩnh vực khác.",
+      "correct_understanding": "Agent system là mẫu hình chung cho việc xây dựng ứng dụng đáp ứng đúng và tạo niềm tin, áp dụng được cho nhiều lĩnh vực như xe tự hành, giám sát camera, giải mã gen.",
+      "source_pages": [
+        6,
+        7
+      ],
+      "source_excerpt": "Nên khoá học này, mặc dù các bạn sẽ thấy đa phần buổi học xuyên suốt chương trình tập trung vào làm sao để các bạn phát triển được một cái agent system, nhưng thật ra các bạn có thể xem đấy là một cái khuôn mẫu của hệ thống công nghệ hiện tại.",
+      "confidence": 0.85,
+      "status": "ready",
+      "unique_user_count": 1,
+      "question_count": 1,
+      "representative_questions": [
+        "tóm tắt nội dung chính trong slide này"
+      ]
+    },
+    {
+      "id": "insight-cluster-03",
+      "topic": "Computer Vision và Robotics đang thu hẹp cơ hội",
+      "common_confusion": "Học viên lo lắng nếu không học chuyên sâu CV/robotics thì khó có việc.",
+      "correct_understanding": "Các lĩnh vực này đang thu hẹp, đòi hỏi đầu tư lớn; AI agentic mở ra nhiều cơ hội hơn với yêu cầu thấp hơn về chuyên môn hẹp.",
+      "source_pages": [
+        7,
+        8
+      ],
+      "source_excerpt": "computer vision hay những cái robotics ... nó cũng đang khá là thu hẹp. ... Thế thì các bạn chỉ cần nghĩ đến việc làm được một hệ thống AI chuyên biệt hoá.",
+      "confidence": 0.8,
+      "status": "ready",
+      "unique_user_count": 1,
+      "question_count": 1,
+      "representative_questions": [
+        "tại sao có lưu ý như trang 25"
+      ]
+    }
+  ],
+  "review_questions": [
+    {
+      "id": "question-01",
+      "type": "multiple_choice",
+      "question": "Theo giảng viên, sự khác biệt chính giữa người sử dụng AI hiệu quả và không hiệu quả là gì?",
+      "options": [
+        "Khả năng viết prompt dài và chi tiết",
+        "Kiến thức nền về lĩnh vực để đánh giá chất lượng đầu ra",
+        "Sử dụng nhiều công cụ AI khác nhau",
+        "Có tài khoản trả phí cho các dịch vụ AI"
+      ],
+      "correct_option": 1,
+      "answer": "Kiến thức nền về lĩnh vực để đánh giá chất lượng đầu ra",
+      "explanation": "Giảng viên nhấn mạnh rằng dù prompt chuẩn, nếu thiếu kiến thức lĩnh vực thì chất lượng câu trả lời phụ thuộc vào may mắn.",
+      "source_pages": [
+        5,
+        6
+      ],
+      "source_excerpt": "Về sự khác biệt giữa một người sử dụng AI hiệu quả với một người không hiệu quả — chỉ khác biệt nhau ở một chỗ thôi.",
+      "confidence": 0.9,
+      "status": "ready"
+    },
+    {
+      "id": "question-02",
+      "type": "multiple_choice",
+      "question": "Tại sao giảng viên cho rằng computer vision và robotics đang thu hẹp cơ hội việc làm?",
+      "options": [
+        "Vì các công ty không còn đầu tư vào lĩnh vực này",
+        "Vì yêu cầu chuyên môn rất cao và đầu tư lớn, chỉ phù hợp với người đã học chuyên sâu từ đầu",
+        "Vì AI agentic đã thay thế hoàn toàn các lĩnh vực này",
+        "Vì thị trường lao động bão hòa"
+      ],
+      "correct_option": 1,
+      "answer": "Vì yêu cầu chuyên môn rất cao và đầu tư lớn, chỉ phù hợp với người đã học chuyên sâu từ đầu",
+      "explanation": "Giảng viên nói: 'Trừ khi bạn học từ đại học và làm chuyên về mảng đấy, hoặc bạn phải bỏ rất nhiều công sức... thì may ra mới có khả năng có công việc chuyên về mảng bạn muốn.'",
+      "source_pages": [
+        7,
+        8
+      ],
+      "source_excerpt": "computer vision hay những cái robotics ... nó cũng đang khá là thu hẹp. ... Trừ khi bạn học từ đại học và làm chuyên về mảng đấy, hoặc bạn phải bỏ rất nhiều công sức...",
+      "confidence": 0.85,
+      "status": "ready"
+    },
+    {
+      "id": "question-03",
+      "type": "multiple_choice",
+      "question": "Theo giảng viên, khóa học này tập trung vào điều gì?",
+      "options": [
+        "Lý thuyết nền tảng về AI",
+        "Kỹ thuật thực hành và kinh nghiệm làm việc thực tế",
+        "Các thuật toán computer vision",
+        "Cách sử dụng các công cụ AI phổ biến"
+      ],
+      "correct_option": 1,
+      "answer": "Kỹ thuật thực hành và kinh nghiệm làm việc thực tế",
+      "explanation": "Giảng viên nói: 'mình sẽ tập trung vào những kỹ thuật thực hành và những kinh nghiệm làm việc thực tế.'",
+      "source_pages": [
+        4,
+        5
+      ],
+      "source_excerpt": "mình sẽ tập trung vào những kỹ thuật thực hành và những kinh nghiệm làm việc thực tế.",
+      "confidence": 0.95,
+      "status": "ready"
+    }
+  ],
+  "warnings": [],
+  "generated_at": "2026-07-30T00:00:00+00:00"
+}

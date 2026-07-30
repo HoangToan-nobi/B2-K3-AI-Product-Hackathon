@@ -1,0 +1,186 @@
+{
+  "schema_version": "1.0",
+  "pack_id": "pack-lesson_e76c9dd83f0b4af4bc2bf31c-001",
+  "status": "ready",
+  "lesson": {
+    "id": "lesson_e76c9dd83f0b4af4bc2bf31c",
+    "title": "Day01",
+    "slide_count": 29
+  },
+  "analysis": {
+    "student_question_count": 1256,
+    "unique_user_count": 369,
+    "cluster_count": 3,
+    "included_cluster_count": 3,
+    "excluded_noise_count": 0
+  },
+  "summary": [
+    {
+      "id": "summary-01",
+      "title": "AI, ML, Deep Learning, GenAI, LLM — các tầng của AI",
+      "content": "AI là ô lớn nhất, bao gồm Machine Learning (học từ dữ liệu), Deep Learning (mạng nơ-ron nhiều tầng), Generative AI (sinh nội dung mới), và LLM (mô hình ngôn ngữ lớn, nền tảng cho chatbot và agent). LLM không phải toàn bộ AI nhưng là engine chính cho Generative và Agentic AI.",
+      "source_pages": [
+        3
+      ],
+      "source_excerpt": "ARTIFICIAL INTELLIGENCE AI — chiếc ô lớn nhất... LLM — model nền chuyên ngôn ngữ, tim của làn sóng hiện nay.",
+      "confidence": 1.0,
+      "status": "ready"
+    },
+    {
+      "id": "summary-02",
+      "title": "Ba nhóm AI chính: Discriminative, Generative, Agentic",
+      "content": "Discriminative AI phân loại/dự đoán (lọc spam, nhận diện ảnh). Generative AI sinh nội dung mới (văn bản, ảnh, code). Agentic AI nhận mục tiêu, lập kế hoạch, dùng công cụ, hành động nhiều bước. LLM là engine chung cho Generative và Agentic.",
+      "source_pages": [
+        4
+      ],
+      "source_excerpt": "Discriminative AI... Generative AI... Agentic AI... LLM là engine chung của cả Generative lẫn Agentic",
+      "confidence": 1.0,
+      "status": "ready"
+    },
+    {
+      "id": "summary-03",
+      "title": "Lịch sử AI 70 năm: từ hệ chuyên gia đến Transformer và ChatGPT",
+      "content": "1980: Hệ chuyên gia (expert system) tập trung giải bài toán hẹp. 2009: Fei-Fei Li và ImageNet — dữ liệu lớn đánh bại thuật toán thông minh. 2017: Transformer cho phép mỗi từ nhìn sang các từ khác trong câu. 2022: ChatGPT đưa AI đến đại chúng.",
+      "source_pages": [
+        5,
+        6,
+        7,
+        8
+      ],
+      "source_excerpt": "1980: Hệ chuyên gia... 2009: Fei-Fei Li và ImageNet... 2017: Transformer... 2022: ChatGPT",
+      "confidence": 1.0,
+      "status": "ready"
+    },
+    {
+      "id": "summary-04",
+      "title": "Cơ chế vận hành của LLM: Token, Context, Attention",
+      "content": "LLM cắt văn bản thành token (mảnh chữ), mỗi token có giá. Context là lượng chữ model có thể 'thấy' (ví dụ 128K token ≈ 300 trang sách). Attention cho phép mỗi token chủ động nhìn sang các token khác để hiểu ngữ cảnh. Sinh văn bản là vòng lặp: đoán token → nối vào câu → đoán tiếp.",
+      "source_pages": [
+        11,
+        12,
+        13,
+        14
+      ],
+      "source_excerpt": "Token: model không đọc 'từ', model đọc mảnh chữ... Context: bàn làm việc có hạn... Attention: mỗi từ được 'nhìn sang' những từ quan trọng khác",
+      "confidence": 1.0,
+      "status": "ready"
+    }
+  ],
+  "class_insights": [
+    {
+      "id": "insight-cluster-01",
+      "topic": "LLM không phải chatbot",
+      "common_confusion": "Nhiều học viên nghĩ LLM và chatbot là một. Thực tế LLM là bộ não nền, chatbot chỉ là lớp áo bên ngoài.",
+      "correct_understanding": "LLM là mô hình ngôn ngữ lớn, có thể làm nhiều việc (tóm tắt, dịch, viết code) ngoài chat. Chatbot là một ứng dụng đóng gói quanh LLM.",
+      "source_pages": [
+        10
+      ],
+      "source_excerpt": "LLM là gì? — một bộ não nền, không phải một chatbot... Chatbot chỉ là một dạng sản phẩm đóng gói quanh bộ não đó",
+      "confidence": 1.0,
+      "status": "ready",
+      "unique_user_count": 1,
+      "question_count": 1,
+      "representative_questions": [
+        "LLM là gì? — một bộ não nền, không phải một chatbot"
+      ]
+    },
+    {
+      "id": "insight-cluster-02",
+      "topic": "Context và hiện tượng 'quên phần giữa'",
+      "common_confusion": "Học viên cho rằng context càng dài càng tốt, không biết rằng model có thể bỏ sót thông tin ở giữa prompt dài.",
+      "correct_understanding": "Context có hạn, và thông tin ở giữa prompt dài dễ bị bỏ sót (Lost in the Middle). Nên đặt thông tin quan trọng ở đầu hoặc cuối prompt.",
+      "source_pages": [
+        14
+      ],
+      "source_excerpt": "Bàn đầy quá thì đồ ở giữa bàn dễ bị bỏ sót — đặt điều quan trọng ở giữa một prompt rất dài, model có thể 'quên' mất",
+      "confidence": 1.0,
+      "status": "ready",
+      "unique_user_count": 1,
+      "question_count": 1,
+      "representative_questions": [
+        "Context là gì?"
+      ]
+    },
+    {
+      "id": "insight-cluster-03",
+      "topic": "Token và chi phí",
+      "common_confusion": "Học viên không biết tiếng Việt, code, JSON tốn nhiều token hơn tiếng Anh, dẫn đến chi phí cao hơn.",
+      "correct_understanding": "Model cắt văn bản thành token. Tiếng Việt có dấu thanh, ký tự đặc biệt nên tốn token hơn. Mỗi token đều có giá, cần tối ưu prompt để giảm token.",
+      "source_pages": [
+        13
+      ],
+      "source_excerpt": "Tiếng Việt, code, JSON tốn token hơn tiếng Anh thường — vì dấu thanh, ký tự đặc biệt và cấu trúc bị cắt nhỏ ra",
+      "confidence": 1.0,
+      "status": "ready",
+      "unique_user_count": 1,
+      "question_count": 1,
+      "representative_questions": [
+        "Token: model không đọc 'từ', model đọc mảnh chữ"
+      ]
+    }
+  ],
+  "review_questions": [
+    {
+      "id": "question-01",
+      "type": "multiple_choice",
+      "question": "LLM thuộc nhóm AI nào?",
+      "options": [
+        "Discriminative AI",
+        "Generative AI",
+        "Agentic AI",
+        "Cả Generative và Agentic"
+      ],
+      "correct_option": 3,
+      "answer": "Cả Generative và Agentic",
+      "explanation": "LLM là engine chung cho cả Generative AI (sinh nội dung) và Agentic AI (hành động nhiều bước).",
+      "source_pages": [
+        4
+      ],
+      "source_excerpt": "LLM là engine chung của cả Generative lẫn Agentic",
+      "confidence": 1.0,
+      "status": "ready"
+    },
+    {
+      "id": "question-02",
+      "type": "multiple_choice",
+      "question": "Sự kiện nào đánh dấu bước ngoặt về dữ liệu trong lịch sử AI?",
+      "options": [
+        "Hệ chuyên gia 1980",
+        "ImageNet 2009",
+        "Transformer 2017",
+        "ChatGPT 2022"
+      ],
+      "correct_option": 1,
+      "answer": "ImageNet 2009",
+      "explanation": "Fei-Fei Li xây dựng ImageNet với 14 triệu ảnh gán nhãn, chứng minh dữ liệu lớn đánh bại thuật toán thông minh.",
+      "source_pages": [
+        7
+      ],
+      "source_excerpt": "Fei-Fei Li và ImageNet — cuộc cách mạng của dữ liệu",
+      "confidence": 1.0,
+      "status": "ready"
+    },
+    {
+      "id": "question-03",
+      "type": "multiple_choice",
+      "question": "Tại sao tiếng Việt tốn token hơn tiếng Anh?",
+      "options": [
+        "Vì tiếng Việt có nhiều từ hơn",
+        "Vì dấu thanh và ký tự đặc biệt bị cắt nhỏ",
+        "Vì model không hỗ trợ tiếng Việt",
+        "Vì tokenizer của model chỉ tối ưu cho tiếng Anh"
+      ],
+      "correct_option": 1,
+      "answer": "Vì dấu thanh và ký tự đặc biệt bị cắt nhỏ",
+      "explanation": "Tiếng Việt có dấu thanh, ký tự đặc biệt nên tokenizer cắt thành nhiều mảnh hơn, dẫn đến số token cao hơn.",
+      "source_pages": [
+        13
+      ],
+      "source_excerpt": "Tiếng Việt, code, JSON tốn token hơn tiếng Anh thường — vì dấu thanh, ký tự đặc biệt và cấu trúc bị cắt nhỏ ra",
+      "confidence": 1.0,
+      "status": "ready"
+    }
+  ],
+  "warnings": [],
+  "generated_at": "2026-07-30T00:00:00+00:00"
+}
