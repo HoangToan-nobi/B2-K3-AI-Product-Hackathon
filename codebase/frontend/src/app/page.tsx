@@ -9,6 +9,7 @@ type Screen = "home" | "course" | "reader" | "review-pack";
 type CoachAction = "menu" | "summary" | "review" | "preview";
 type Notice = { tone: "error" | "success" | "info"; text: string };
 type ProgressKind = "review" | "upload" | "add-slide";
+type AppTheme = "dark" | "light";
 
 type ProgressState = {
   active: boolean;
@@ -83,6 +84,7 @@ function dayNumber(index: number): string {
 
 export default function Home() {
   const [role, setRole] = useState<AppRole>("student");
+  const [theme, setTheme] = useState<AppTheme>("dark");
   const [screen, setScreen] = useState<Screen>("home");
   const [coachAction, setCoachAction] = useState<CoachAction>("menu");
   const [lessons, setLessons] = useState<LessonOption[]>([]);
@@ -99,6 +101,21 @@ export default function Home() {
   const [progressJob, setProgressJob] = useState<ProgressState | null>(null);
   const [progressPanelVisible, setProgressPanelVisible] = useState(true);
   const [catalogVersion, setCatalogVersion] = useState(0);
+
+  useEffect(() => {
+    const savedTheme = window.localStorage.getItem("vluoi-theme");
+    if (savedTheme === "light" || savedTheme === "dark") {
+      setTheme(savedTheme);
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    setTheme((current) => {
+      const next = current === "dark" ? "light" : "dark";
+      window.localStorage.setItem("vluoi-theme", next);
+      return next;
+    });
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -418,12 +435,14 @@ export default function Home() {
   const readerDeckId = selectedDeckId || selectedLesson?.slideDecks?.[0]?.id || "";
 
   return (
-    <div className={screen === "reader" || screen === "review-pack" ? "reader-shell" : "app-shell"}>
+    <div className={screen === "reader" || screen === "review-pack" ? "reader-shell" : "app-shell"} data-theme={theme}>
       {screen === "reader" ? (
         <ReaderTopbar
           role={role}
           title={role === "labcoach" ? "Lab Coach" : "VLười Tutor"}
           subtitle={currentSubtitle}
+          theme={theme}
+          onToggleTheme={toggleTheme}
           onBack={() => setScreen("course")}
         />
       ) : screen === "review-pack" ? (
@@ -431,18 +450,22 @@ export default function Home() {
           role={role}
           title="Tài liệu tổng hợp"
           subtitle={currentSubtitle}
+          theme={theme}
+          onToggleTheme={toggleTheme}
           onBack={() => setScreen("course")}
         />
       ) : (
         <TopNav
           role={role}
           screen={screen}
+          theme={theme}
           onRoleChange={(nextRole) => {
             setRole(nextRole);
             setScreen("home");
             setCoachAction("menu");
           }}
           onNavigate={setScreen}
+          onToggleTheme={toggleTheme}
         />
       )}
 
@@ -568,13 +591,17 @@ function ProgressPanel({ progress, onClose }: { progress: ProgressState; onClose
 function TopNav({
   role,
   screen,
+  theme,
   onRoleChange,
   onNavigate,
+  onToggleTheme,
 }: {
   role: AppRole;
   screen: Screen;
+  theme: AppTheme;
   onRoleChange: (role: AppRole) => void;
   onNavigate: (screen: Screen) => void;
+  onToggleTheme: () => void;
 }) {
   return (
     <header className="top-nav">
@@ -591,6 +618,7 @@ function TopNav({
         </button>
       </nav>
       <div className="nav-actions">
+        <ThemeToggle theme={theme} onToggle={onToggleTheme} />
         <div className="role-switch" role="group" aria-label="Chọn vai trò">
           <button id="role-student" className={role === "student" ? "active" : ""} type="button" onClick={() => onRoleChange("student")}>
             Học viên
@@ -604,7 +632,46 @@ function TopNav({
   );
 }
 
-function ReaderTopbar({ title, subtitle, role, onBack }: { title: string; subtitle: string; role: AppRole; onBack: () => void }) {
+function ThemeToggle({ theme, onToggle }: { theme: AppTheme; onToggle: () => void }) {
+  const isLight = theme === "light";
+  return (
+    <button className="theme-toggle" type="button" onClick={onToggle} aria-label={isLight ? "Chuyển sang giao diện tối" : "Chuyển sang giao diện sáng"} title={isLight ? "Giao diện tối" : "Giao diện sáng"}>
+      {isLight ? (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.5 6.5 0 0 0 9.8 9.8z" />
+        </svg>
+      ) : (
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <circle cx="12" cy="12" r="4" />
+          <path d="M12 2v2" />
+          <path d="M12 20v2" />
+          <path d="m4.93 4.93 1.41 1.41" />
+          <path d="m17.66 17.66 1.41 1.41" />
+          <path d="M2 12h2" />
+          <path d="M20 12h2" />
+          <path d="m6.34 17.66-1.41 1.41" />
+          <path d="m19.07 4.93-1.41 1.41" />
+        </svg>
+      )}
+    </button>
+  );
+}
+
+function ReaderTopbar({
+  title,
+  subtitle,
+  role,
+  theme,
+  onToggleTheme,
+  onBack,
+}: {
+  title: string;
+  subtitle: string;
+  role: AppRole;
+  theme: AppTheme;
+  onToggleTheme: () => void;
+  onBack: () => void;
+}) {
   return (
     <header className="reader-topbar">
       <button className="back-btn" type="button" onClick={onBack} title="Quay lại">
@@ -621,6 +688,7 @@ function ReaderTopbar({ title, subtitle, role, onBack }: { title: string; subtit
         <span>{subtitle}</span>
       </div>
       <div className="reader-tools">
+        <ThemeToggle theme={theme} onToggle={onToggleTheme} />
         <span className={`chip ${role === "labcoach" ? "coach" : "student"}`}>{role === "labcoach" ? "Lab Coach" : "Học viên"}</span>
       </div>
     </header>
