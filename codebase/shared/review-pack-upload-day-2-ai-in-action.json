@@ -1,0 +1,772 @@
+{
+  "schema_version": "1.0",
+  "pack_id": "pack-upload-day-2-ai-in-action-001",
+  "status": "ready",
+  "lesson": {
+    "id": "upload-day-2-ai-in-action",
+    "title": "Day 2 - AI In Action",
+    "slide_count": 29
+  },
+  "analysis": {
+    "student_question_count": 62,
+    "unique_user_count": 29,
+    "cluster_count": 8,
+    "included_cluster_count": 8,
+    "excluded_noise_count": 31
+  },
+  "summary": [
+    {
+      "id": "summary-01",
+      "title": "Mục tiêu và lộ trình Day 02",
+      "content": "Day 02 tập trung vào việc biến yêu cầu mơ hồ thành Problem Statement rõ ràng để ra quyết định. Buổi sáng học khung lý thuyết về Problem Discovery (Double Diamond, HCD), Problem Statement và định lượng hóa, cùng các bước PAIR. Buổi chiều thực hành lab: tìm 5 bài toán, điền Problem Cards, phản biện chéo, chốt bài toán, xác thực dữ liệu, vẽ quy trình, xác định giải pháp và ra quyết định. Cuối buổi nộp Problem Statement hoàn chỉnh (nhóm) và nhật ký phản tư (cá nhân).",
+      "source_pages": [
+        2
+      ],
+      "source_excerpt": "Mục tiêu: Biến yêu cầu mơ hồ thành Problem Statement rõ ràng để ra quyết định",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "summary-02",
+      "title": "Mô hình Double Diamond",
+      "content": "Double Diamond là mô hình do Don Norman / British Design Council (2005) đề xuất, gồm hai giai đoạn: Diamond 1 - Tìm đúng vấn đề (Discover: mở rộng khảo sát vấn đề căn bản; Define: thu hẹp xác định đúng bài toán gốc) và Diamond 2 - Tìm đúng giải pháp (Develop: mở rộng nhiều giải pháp tiềm năng; Deliver: thu hẹp chọn và triển khai). Nguyên tắc cốt lõi: giải pháp xuất sắc cho sai vấn đề có thể còn tệ hơn không có giải pháp.",
+      "source_pages": [
+        3
+      ],
+      "source_excerpt": "Giải pháp xuất sắc cho sai vấn đề có thể còn tệ hơn không có giải pháp.",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "summary-03",
+      "title": "Diamond 1 - Tìm đúng vấn đề",
+      "content": "Giai đoạn Discover (phân kỳ) sử dụng các phương pháp như quan sát thực tế, phỏng vấn người dùng, khảo sát, nhật ký hành vi, câu hỏi mở How Might We, bản đồ các bên liên quan. Giai đoạn Define (hội tụ) dùng sơ đồ đồng cảm, gom nhóm (Affinity Mapping), kỹ thuật 5 Whys, ma trận Tác động – Nỗ lực (Impact-Effort), biểu quyết bằng chấm tròn (Dot Voting), và phát biểu bài toán (Problem Statement).",
+      "source_pages": [
+        4
+      ],
+      "source_excerpt": "Khám phá / mở rộng góc nhìn ... Định nghĩa / chọn lọc dựa vào dữ liệu",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "summary-04",
+      "title": "Bài học từ case study: Cursor, Artifact, NotebookLM",
+      "content": "Ba case study minh họa tầm quan trọng của việc bắt đầu từ bài toán, không bắt đầu từ AI. Cursor từ bỏ mảng AI thiết kế cơ khí (CAD) để tập trung vào AI code editor – nơi đội ngũ am hiểu sâu sắc quy trình nghiệp vụ (bài học: lệch năng lực cốt lõi). Artifact có sản phẩm tốt nhưng thị trường quá hẹp để thương mại hóa (bài học: sản phẩm tốt ≠ thị trường lớn). NotebookLM tập trung giải quyết nhu cầu hỏi đáp, tóm tắt trên tài liệu cá nhân và đối chiếu nguồn gốc bằng trích dẫn (bài học: định vị đúng điểm đau). Lộ trình: Bài toán → Quy trình vận hành → Chỉ số đo lường → Giải pháp AI.",
+      "source_pages": [
+        5
+      ],
+      "source_excerpt": "Lộ trình: Bài toán → Quy trình vận hành → Chỉ số đo lường → Giải pháp AI",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "summary-05",
+      "title": "Bốn lăng kính tìm bài toán AI",
+      "content": "Để tìm bài toán AI, hãy quan sát các hoạt động thực tế qua bốn lăng kính: (1) Repetitive – tác vụ lặp lại, diễn ra thường xuyên, cần chuẩn hóa để tự động hóa; (2) Time-consuming – tác vụ tiêu tốn thời gian, khối lượng xử lý lớn, hao phí ở bước tìm kiếm, đọc hiểu, chờ đợi, định dạng; (3) AI Advantage – tác vụ đòi hỏi phân tích ngữ cảnh, xử lý ngôn ngữ tự nhiên, tổng hợp đa nguồn; (4) User Pain Points – người dùng gặp khó khăn, phàn nàn hoặc bị tắc nghẽn liên tục. Tập trung nhận diện vấn đề, chưa vội đề xuất giải pháp.",
+      "source_pages": [
+        6
+      ],
+      "source_excerpt": "Tập trung nhận diện vấn đề; chưa vội đề xuất giải pháp.",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "summary-06",
+      "title": "Anti-patterns – Sai lầm thường gặp",
+      "content": "Các sai lầm thường gặp khi định hình bài toán: (1) Solution-first – ưu tiên giải pháp, xây dựng chatbot/agent trước khi làm rõ quy trình vận hành và điểm nghẽn; (2) No baseline – không lượng hóa tổn thất hiện tại, mất căn cứ đánh giá hiệu quả; (3) No evaluation – không thiết lập kịch bản kiểm thử, chỉ số đo lường hoặc phương án đối chứng; (4) No boundary – không rõ phạm vi tự chủ của AI và thời điểm cần con người phê duyệt (Human-in-the-loop). Nếu phát hiện các sai lầm này, cần quay lại làm rõ Problem Statement trước khi chọn công nghệ.",
+      "source_pages": [
+        7
+      ],
+      "source_excerpt": "Nếu phát hiện mắc các sai lầm trên, hãy quay lại làm rõ Problem Statement trước khi chọn công nghệ.",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "summary-07",
+      "title": "PAIR Reframe – Đặt câu hỏi đúng",
+      "content": "Thay vì hỏi 'Can we use AI to ______?', hãy hỏi hai câu: 'How might we solve ______?' và 'Can AI solve this problem in a unique way?'. Nguyên tắc: hỏi về bài toán trước, về AI sau – AI chỉ là một phương án trong nhiều phương án khả dĩ. Câu hỏi đúng quyết định bài toán bạn giải và giải pháp bạn chọn.",
+      "source_pages": [
+        8
+      ],
+      "source_excerpt": "Hỏi về bài toán trước, về AI sau — AI chỉ là một phương án trong nhiều phương án khả dĩ.",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "summary-08",
+      "title": "Quick Problem Card – Khung định hình bài toán",
+      "content": "Quick Problem Card gồm 6 trường: (1) Problem – vấn đề cụ thể cần giải quyết (không bao gồm giải pháp); (2) Actor – cá nhân hoặc bộ phận chịu tác động trực tiếp; (3) Workflow – các bước vận hành hiện tại (3-7 bước); (4) Bottleneck & Impact – khâu gây chậm trễ, sai sót, lặp lại và hệ quả/tổn thất; (5) Success Metric – chỉ số định lượng cụ thể để chứng minh hiệu quả; (6) Direction – định hướng giải pháp: No AI / Rule / Workflow / Agent / Chưa xác định.",
+      "source_pages": [
+        9
+      ],
+      "source_excerpt": "Bottleneck + impact: Khâu gây chậm trễ, sai sót hoặc lặp lại; hệ quả hay tổn thất cụ thể.",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "summary-09",
+      "title": "Sáu câu hỏi khai thác bài toán",
+      "content": "Bộ câu hỏi giúp định hình vấn đề: (1) Quy trình hiện tại như thế nào? (công cụ, các bước, cơ chế bàn giao); (2) Nút thắt nằm ở đâu? (bước nào chậm, dễ sai sót, lặp lại); (3) Hao phí hiện tại là bao nhiêu? (thời gian, chi phí nhân sự, SLA, cơ hội bỏ lỡ); (4) Tiêu chí thành công đo bằng gì? (hiệu quả cải tiến định lượng); (5) Hậu quả khi xảy ra sai sót? (phạm vi tự quyết của AI, điểm cần con người phê duyệt); (6) Có giải pháp phi AI đơn giản hơn? (quy tắc, checklist, quy trình, tài liệu hướng dẫn).",
+      "source_pages": [
+        10
+      ],
+      "source_excerpt": "Quy trình hiện tại như thế nào? ... Có giải pháp phi AI đơn giản hơn?",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "summary-10",
+      "title": "Định lượng hóa bài toán",
+      "content": "Điểm đau chưa được định lượng thì không thể xác định giá trị thực tế của AI. Ba thành phần: (1) Baseline – hiện trạng, mức hao phí hiện tại bằng con số cụ thể; (2) Target – mục tiêu, kỳ vọng cải thiện ở mức độ nào, ngưỡng cụ thể; (3) Measurement – cách đo lường, chỉ số nào chứng minh hiệu quả. Ví dụ: rút ngắn thời gian hoàn thành từ 90 phút xuống dưới 30 phút; giảm tỷ lệ lỗi phân loại từ 20% xuống dưới 5%; cắt giảm 40% câu hỏi trùng lặp cần Trợ giảng xử lý.",
+      "source_pages": [
+        11
+      ],
+      "source_excerpt": "Rút ngắn từ 90 phút xuống dưới 30 phút. Giảm tỷ lệ lỗi phân loại từ 20% xuống dưới 5%. Cắt giảm 40% câu hỏi trùng lặp cần Trợ giảng xử lý.",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "summary-11",
+      "title": "Output Metric và Input Metrics",
+      "content": "Output metric là kết quả cuối cùng (what we optimize), ví dụ: thời lượng hoàn tất quy trình giảm bao nhiêu, tỷ lệ sai sót thay đổi thế nào, giá trị người dùng nhận được. Input metrics là các đòn bẩy có thể tác động (what we can move), ví dụ: tỷ lệ câu hỏi được phân loại chính xác, tỷ lệ yêu cầu được chuyển tiếp hỗ trợ kịp thời, thời gian Trợ giảng hiệu chỉnh bản nháp phản hồi. Lưu ý: 'Nâng cao hiệu suất' không phải chỉ số – cần gắn với hiện trạng, mục tiêu và phương pháp đo.",
+      "source_pages": [
+        12
+      ],
+      "source_excerpt": "\"Nâng cao hiệu suất\" không phải chỉ số — cần gắn với hiện trạng, mục tiêu và phương pháp đo.",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "summary-12",
+      "title": "Ba bước quyết định AI theo PAIR",
+      "content": "PAIR đề xuất ba bước: (1) Giao điểm nhu cầu × thế mạnh AI – bài toán có nằm trong nhóm việc AI làm tốt hơn hẳn rule/heuristic không; (2) Automate hay Augment – AI thay thế hay hỗ trợ con người, mức tự động hóa tăng dần theo độ tin cậy và rủi ro; (3) Reward function & tiêu chí thành công – định nghĩa 'đúng/sai' của hệ thống (precision ↔ recall) và ngưỡng thành công. Đi hết 3 bước này trả lời được 4 câu hỏi: có cần AI, cấp độ nào, đủ rõ để đo, và Go/Not Yet/No-Go.",
+      "source_pages": [
+        13
+      ],
+      "source_excerpt": "Đi hết 3 bước này, bạn trả lời được cả 4 câu hỏi của ngày hôm nay — từ \"có thực sự cần AI?\" đến \"Go, Not Yet hay No-Go\".",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "summary-13",
+      "title": "Khi nào AI có lợi thế?",
+      "content": "PAIR liệt kê 8 trường hợp 'AI probably better': (1) Gợi ý theo từng người (recommendation); (2) Dự đoán tương lai (prediction); (3) Cá nhân hóa (personalization); (4) Hiểu ngôn ngữ tự nhiên (natural language); (5) Nhận diện cả một lớp thực thể (ví dụ mọi khuôn mặt); (6) Phát hiện cái hiếm & biến đổi (ví dụ gian lận); (7) Agent/bot cho một lĩnh vực cụ thể; (8) Nội dung động thay giao diện tĩnh. AI chỉ đáng làm khi bài toán nằm trong nhóm này.",
+      "source_pages": [
+        14
+      ],
+      "source_excerpt": "AI chỉ đáng làm khi bài toán nằm trong nhóm này.",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "summary-14",
+      "title": "Khi nào AI KHÔNG tốt hơn?",
+      "content": "PAIR liệt kê 6 trường hợp 'AI probably NOT better': (1) Cần duy trì tính dự đoán được (nút Home/Cancel phải cố định); (2) Thông tin tĩnh, ít thay đổi (hiển thị trực tiếp, không cần AI sinh lại); (3) Lỗi quá tốn kém (chi phí sai lớn hơn lợi ích đúng); (4) Yêu cầu minh bạch tuyệt đối (mọi quyết định giải thích được, truy vết được); (5) Tối ưu tốc độ & chi phí thấp (time-to-market, vận hành rẻ); (6) Tác vụ giá trị cao người dùng muốn tự làm. Rule/heuristic dễ build, dễ giải thích, dễ debug và bảo trì hơn – nếu giải quyết được, đó là lựa chọn tối ưu.",
+      "source_pages": [
+        15
+      ],
+      "source_excerpt": "Rule/heuristic dễ build, dễ giải thích, dễ debug và bảo trì hơn — nếu nó giải quyết được, đó là lựa chọn tối ưu.",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "summary-15",
+      "title": "Hệ thống AI = Model + Context + Planning + Tools",
+      "content": "Một giải pháp AI thực tế là một hệ thống nhiều thành phần, không chỉ dừng lại ở mô hình ngôn ngữ. Model đảm nhiệm tư duy & sáng tạo (đọc hiểu, soạn thảo, tổng hợp, phân loại, gợi ý). Context cung cấp tri thức chuyên biệt (cơ sở dữ liệu, tài liệu nghiệp vụ, hồ sơ lịch sử). Planning điều phối quy trình (tự động phân rã tác vụ phức tạp, linh hoạt điều chỉnh). Tools liên kết hệ thống (CRM, database, lịch làm việc, API bên thứ ba).",
+      "source_pages": [
+        16
+      ],
+      "source_excerpt": "Giải pháp AI là một HỆ THỐNG — model chỉ là một thành phần.",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "summary-16",
+      "title": "Automation vs Augmentation",
+      "content": "Automate (AI làm thay) chọn khi: việc khó, nhàm chán, nguy hiểm hoặc cần scale; người dùng thiếu kiến thức/khả năng tự làm; có 'đáp án đúng' mà mọi người đồng thuận; sở thích khó diễn đạt thành lời. Augment (AI hỗ trợ con người) chọn khi: người dùng thích tự làm việc đó; stakes cao (tiền bạc, pháp lý, sức khỏe); kết quả cần trách nhiệm cá nhân/social capital. Đo thành công: automate bằng hiệu quả tăng, an toàn hơn, giảm việc tẻ nhạt; augment bằng mức độ thích thú, cảm giác kiểm soát, sáng tạo tăng. Việc đã automate vẫn gần như luôn cần human oversight – preview, edit, undo.",
+      "source_pages": [
+        17
+      ],
+      "source_excerpt": "Việc đã automate vẫn gần như luôn cần human oversight — preview, edit, undo.",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "summary-17",
+      "title": "Ba mức giải pháp: Rule / Workflow / Agent",
+      "content": "Rule/Script: đầu vào ổn định, logic viết được if/else, cần kết quả đúng 100%, ví dụ tính thuế, chặn email spam. LLM Feature/Workflow: đầu vào đa dạng, đầu ra linh hoạt (tóm tắt, dịch, phân loại), có cách đo chất lượng, ví dụ tóm tắt email, chatbot FAQ. Agent: tình huống thay đổi liên tục, cần tự ra quyết định giữa các bước, ví dụ agent nghiên cứu thị trường, coding agent. Thứ tự ưu tiên thực dụng: bắt đầu từ bên trái, chỉ đi sang bên phải khi giá trị tăng hơn độ phức tạp.",
+      "source_pages": [
+        18
+      ],
+      "source_excerpt": "Thứ tự ưu tiên thực dụng: bắt đầu từ bên trái, chỉ đi sang bên phải khi giá trị tăng hơn độ phức tạp.",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "summary-18",
+      "title": "Một tình huống, ba cấp độ giải pháp",
+      "content": "Ví dụ minh họa: (1) Rule – trả lời tự động FAQ, gửi link thời khóa biểu, tài liệu sửa lỗi cài đặt, nhắc nhở checklist nộp bài (khi logic tường minh, kết quả cố định); (2) Workflow – duyệt Problem Card, AI kiểm tra độ đầy đủ, yêu cầu bổ sung, chuyển Trợ giảng giải quyết (khi có quy trình rõ, AI hỗ trợ từng bước); (3) Agent – đề xuất can thiệp chủ động, tự động theo dõi tiến độ nộp bài, phát hiện nhóm học viên bị kẹt lâu, chuẩn bị câu trả lời đề xuất TA duyệt (khi tình huống động, đa công cụ). Không bắt buộc nâng cấp tuần tự từ Rule lên Agent – dừng ở cấp tối giản nhất nếu đã đáp ứng mục tiêu.",
+      "source_pages": [
+        19
+      ],
+      "source_excerpt": "Không bắt buộc nâng cấp tuần tự từ Rule lên Agent → dừng ở cấp tối giản nhất nếu đã đáp ứng mục tiêu đề ra.",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "summary-19",
+      "title": "Workflow patterns – Ba mô hình cơ bản",
+      "content": "Theo Anthropic, ba mô hình workflow đủ cho hầu hết bài toán: (1) Prompt Chaining – chia task thành chuỗi bước tuần tự, có gate kiểm tra giữa các bước (ví dụ viết outline → check → viết bài), đổi độ trễ lấy độ chính xác; (2) Routing – phân loại input → đưa vào nhánh chuyên biệt (ví dụ CS query → FAQ/refund/kỹ thuật), câu dễ đi model rẻ, câu khó đi model mạnh; (3) Parallelization – chạy song song rồi tổng hợp (sectioning) hoặc chạy nhiều lần lấy vote (guardrail + response), vote để giảm rủi ro một đầu ra sai. Nguyên tắc Anthropic: luôn ưu tiên giải pháp đơn giản nhất, chỉ tăng độ phức tạp khi thực sự cần thiết.",
+      "source_pages": [
+        20
+      ],
+      "source_excerpt": "Luôn ưu tiên giải pháp đơn giản nhất; chỉ tăng độ phức tạp khi thực sự cần thiết.",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "summary-20",
+      "title": "Cây quyết định lựa chọn cấp độ giải pháp",
+      "content": "Cây quyết định giúp lựa chọn Rule, Workflow hay Agent bằng cách đi từ trên xuống, mỗi nhánh 'KHÔNG' là một lần tránh được độ phức tạp không cần thiết. Nguồn tham khảo: Anthropic – Building effective agents, Google – Rules of ML.",
+      "source_pages": [
+        21
+      ],
+      "source_excerpt": "Đi từ trên xuống — mỗi nhánh \"KHÔNG\" là một lần tránh được độ phức tạp không cần thiết.",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "summary-21",
+      "title": "Reward function và bốn kết quả có thể xảy ra",
+      "content": "Reward function là công thức quyết định đâu là dự đoán 'đúng', đâu là 'sai', định hình trải nghiệm người dùng cuối, phải được thiết kế liên chức năng (UX × Product × Engineering). Bốn kết quả: TP (True Positive) – đúng-tích cực, AI gợi ý đúng câu trả lời; TN (True Negative) – đúng-tiêu cực, AI không can thiệp khi đã có tài liệu; FP (False Positive) – báo động giả, AI gợi ý sai (hallucination) gửi thẳng cho học viên; FN (False Negative) – bỏ sót, học viên kẹt thật nhưng AI không gợi ý. Chi phí FP và FN không đối xứng – báo cháy giả ≠ bỏ sót đám cháy.",
+      "source_pages": [
+        22
+      ],
+      "source_excerpt": "Chi phí của FP và FN KHÔNG đối xứng — báo cháy giả ≠ bỏ sót đám cháy.",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "summary-22",
+      "title": "Precision ↔ Recall: đánh đổi không tránh khỏi",
+      "content": "Precision = TP/(TP+FP) – ít gợi ý nhưng gợi ý nào cũng chắc đúng, người dùng tin vào từng gợi ý. Recall = TP/(TP+FN) – bao trọn mọi trường hợp cần giúp, không học viên nào bị bỏ lại. Hai chỉ số này là hai hướng vặn nút ngược nhau: tăng precision thì nhiều False Negative (bỏ sót học viên cần giúp), tăng recall thì nhiều False Positive (gợi ý sai nhiều, TA phải lọc thủ công). Không có cấu hình đúng tuyệt đối – phải test điểm cân bằng với chính người dùng.",
+      "source_pages": [
+        23
+      ],
+      "source_excerpt": "Không có cấu hình đúng tuyệt đối — phải test điểm cân bằng với chính người dùng.",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "summary-23",
+      "title": "Viết tiêu chí thành công hành động được",
+      "content": "Template của PAIR: 'If {chỉ số cụ thể} for {tính năng AI} {drops below / goes above} {ngưỡng có nghĩa}, we will {hành động cụ thể}.' Ví dụ: 'Nếu tỷ lệ câu trả lời AI gợi ý bị TA sửa > 30% trong 2 tuần, ta sẽ hạ mức tự động về pha 1 (chỉ gợi ý, không gửi thẳng cho học viên).' Checklist trước khi chốt metric: (1) Metric có ý nghĩa với MỌI người dùng không? (2) Có nhóm nào bị ảnh hưởng tiêu cực không? (3) Đây là thành công của ngày 1 – còn ngày 1000 thì sao? Đừng quên lên lịch review metric định kỳ.",
+      "source_pages": [
+        24
+      ],
+      "source_excerpt": "Nếu tỷ lệ câu trả lời AI gợi ý bị TA sửa > 30% trong 2 tuần, ta sẽ hạ mức tự động về pha 1 (chỉ gợi ý, không gửi thẳng cho học viên).",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "summary-24",
+      "title": "Khoảng cách giữa Demo và Production",
+      "content": "Phản hồi chính xác trong vài lần thử chưa đủ cơ sở để triển khai hệ thống thực tế. Bốn khía cạnh cần xem xét: (1) Baseline – thiết lập đối chứng với quy tắc tĩnh, nhân sự hay quy trình hiện tại; (2) Evaluation – bộ dữ liệu kiểm thử, kịch bản biên (edge cases), tiêu chí nghiệm thu; (3) Controls – logging, fallback, rollback, nhân sự chịu trách nhiệm; (4) Operations – ai giám sát lỗi, cập nhật tri thức nền, tối ưu hệ thống. Mục tiêu Day 02 là xác định tính khả thi để tiếp tục nghiên cứu – chưa phải quyết định triển khai ngay.",
+      "source_pages": [
+        25
+      ],
+      "source_excerpt": "Mục tiêu Day 02 là xác định tính khả thi để tiếp tục nghiên cứu — chưa phải quyết định triển khai ngay.",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "summary-25",
+      "title": "Từ Problem Statement đến Eval Plan",
+      "content": "Problem Statement rõ ràng giúp định hình cụ thể các tiêu chí kiểm thử. Ba thành phần: (1) Input – Problem Statement với 9 trường hoàn chỉnh (Actor, Workflow, Bottleneck, Boundary & HITL); (2) Test Cases – dữ liệu thực tế và các trường hợp biên (edge cases); (3) Success – chỉ số hiệu năng: đạt yêu cầu (pass) / không đạt (fail) / chuyển tiếp kiểm duyệt thủ công (HITL). Các loại kiểm thử: tác vụ đơn lẻ (phân loại chính xác câu hỏi đầu vào), hiệu năng quy trình (học viên hoàn thành lab nhanh hơn, ít kẹt hơn), rủi ro & sai số (hệ thống phản hồi sai lệch có chuyển tiếp cho Lab Coach phê duyệt không).",
+      "source_pages": [
+        26
+      ],
+      "source_excerpt": "Problem Statement rõ ràng giúp định hình cụ thể các tiêu chí kiểm thử",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "summary-26",
+      "title": "Problem Statement cho hệ thống AI – 9 trường",
+      "content": "6 yếu tố bài toán cốt lõi: (1) Actor – đối tượng ảnh hưởng; (2) Workflow – quy trình hiện tại gồm các bước cụ thể; (3) Bottleneck – nút thắt gây chậm trễ, sai sót, lặp lại; (4) Impact – tác động, tổn thất lượng hóa bằng thời gian, chi phí, SLA, chất lượng; (5) Success Metric – chỉ số đo lường cụ thể; (6) Boundary – ranh giới, AI không được làm gì, khâu nào bắt buộc có con người. 3 yếu tố quyết định AI: (1) Điểm AI can thiệp – AI hỗ trợ hoặc tự động hóa ở bước cụ thể nào; (2) Mức chọn – Rule / Workflow / Agent; (3) Rủi ro & HITL – phương án xử lý khi AI sai sót và quy trình phê duyệt thủ công.",
+      "source_pages": [
+        27
+      ],
+      "source_excerpt": "6 YẾU TỐ BÀI TOÁN CỐT LÕI ... 3 YẾU TỐ QUYẾT ĐỊNH AI",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "summary-27",
+      "title": "Khung ra quyết định: Go / Not Yet / No-Go",
+      "content": "Go (thực hiện) khi: bài toán rõ ràng, chỉ số đo lường khả thi, điểm can thiệp AI phù hợp, kiểm soát được rủi ro, xác định ranh giới. Not Yet (tạm hoãn) khi: có triển vọng nhưng cần bổ sung dữ liệu thực tế, chuẩn hóa quy trình, thiết lập chỉ số. No-Go (không triển khai) khi: AI không mang giá trị vượt trội, rủi ro vận hành quá cao, giải pháp không dùng AI tối ưu hơn. Quyết định 'Not Yet' thể hiện sự chín chắn trong tư duy thiết kế sản phẩm, không phải sự thất bại.",
+      "source_pages": [
+        28
+      ],
+      "source_excerpt": "Quyết định \"Not Yet\" thể hiện sự chín chắn trong tư duy thiết kế sản phẩm, không phải sự thất bại.",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "summary-28",
+      "title": "Sáu nguyên tắc cốt lõi sau Day 02",
+      "content": "1. Brief mơ hồ không thay thế Problem Statement. 2. Mô hình hóa workflow trước khi tích hợp AI. 3. Pain point phải được lượng hóa bằng baseline và chỉ số đo lường cụ thể. 4. Phức tạp không đồng nghĩa với hiệu quả – Rule, Workflow, Agent là ba cấp độ khác nhau. 5. Quyết định dựa trên lập luận thực tế – Go/Not Yet/No-Go phải dựa trên số liệu kiểm thử rõ ràng. 6. Đo reward function bằng trải nghiệm người dùng, không chỉ accuracy – thiết kế đánh đổi precision ↔ recall theo lợi ích người dùng và kiểm chứng với người dùng thật.",
+      "source_pages": [
+        29
+      ],
+      "source_excerpt": "Đo reward function bằng trải nghiệm người dùng, không chỉ accuracy.",
+      "confidence": 0.95,
+      "status": "ready"
+    }
+  ],
+  "class_insights": [
+    {
+      "id": "insight-fallback-page-11",
+      "topic": "Trang 11: Lớp học 1000 học viên (khóa K3 & K4, số lượng Trợ giảng có hạn. Dùng",
+      "common_confusion": "Có 6 lượt hỏi từ 5 học viên quanh nội dung trang 11. Câu hỏi thường gặp: Giải thích đoạn bôi đen ở Trang 11..",
+      "correct_understanding": "Theo slide, phần này cần được hiểu dựa trên nội dung: Định lượng hóa bài toán — Điểm đau chưa được định lượng thì không thể xác định giá trị thực tế của AI 01 · BASELINE 0 2 · TA R G E T 03 · MEASUREMENT Hiện trạng / where we are Mục tiêu / where to go Đo lường / how we",
+      "source_pages": [
+        11
+      ],
+      "source_excerpt": "Định lượng hóa bài toán — Điểm đau chưa được định lượng thì không thể xác định giá trị thực tế của AI 01 · BASELINE 0 2 · TA R G E T 03 · MEASUREMENT Hiện trạng / where we are Mục tiêu / where to go Đo lường / how we",
+      "confidence": 0.72,
+      "status": "ready",
+      "unique_user_count": 5,
+      "question_count": 6,
+      "representative_questions": [
+        "Giải thích đoạn bôi đen ở Trang 11.",
+        "Lớp học 1000 học viên (khóa K3 & K4, số lượng Trợ giảng có hạn. Dùng AI giải quyết thế nào",
+        "giải quyết như napf?",
+        "Bạn trả lời câu hỏi này đi"
+      ]
+    },
+    {
+      "id": "insight-fallback-page-1",
+      "topic": "Trang 1: tôi muốn tải slide về tải được không",
+      "common_confusion": "Có 5 lượt hỏi từ 4 học viên quanh nội dung trang 1. Câu hỏi thường gặp: tôi muốn tải slide về tải được không.",
+      "correct_understanding": "Theo slide, phần này cần được hiểu dựa trên nội dung: AI IN ACTION · DAY 02 Xác định bài toán cho AI.A C Từ yêu cầu mơ hồ đến Problem Statement rõ ràng.",
+      "source_pages": [
+        1
+      ],
+      "source_excerpt": "AI IN ACTION · DAY 02 Xác định bài toán cho AI.A C Từ yêu cầu mơ hồ đến Problem Statement rõ ràng.",
+      "confidence": 0.72,
+      "status": "ready",
+      "unique_user_count": 4,
+      "question_count": 5,
+      "representative_questions": [
+        "tôi muốn tải slide về tải được không",
+        "tôi đang bị lỗi gì mà không xem được tài liệu nhỉ",
+        "Giải thích đoạn bôi đen ở Trang 1: \"i Toán Kinh Doan\"",
+        "không đúng, chưa chính xác"
+      ]
+    },
+    {
+      "id": "insight-fallback-page-17",
+      "topic": "Trang 17: Ma trận Tác động – Nỗ lực Impact-Effort",
+      "common_confusion": "Có 4 lượt hỏi từ 3 học viên quanh nội dung trang 17. Câu hỏi thường gặp: Giải thích đoạn bôi đen ở Trang 17..",
+      "correct_understanding": "Theo slide, phần này cần được hiểu dựa trên nội dung: Automation vs Augmentation ① ② ③ — Bước ② của PAIR: với từng tác vụ, AI nên làm thay hay hỗ trợ con người? A U T O M AT E AUGMENT AI làm thay AI hỗ trợ con người Chọn khi: Chọn khi: · Việc khó, nhàm chán, nguy hiểm hoặc",
+      "source_pages": [
+        17
+      ],
+      "source_excerpt": "Automation vs Augmentation ① ② ③ — Bước ② của PAIR: với từng tác vụ, AI nên làm thay hay hỗ trợ con người? A U T O M AT E AUGMENT AI làm thay AI hỗ trợ con người Chọn khi: Chọn khi: · Việc khó, nhàm chán, nguy hiểm hoặc",
+      "confidence": 0.72,
+      "status": "ready",
+      "unique_user_count": 3,
+      "question_count": 4,
+      "representative_questions": [
+        "Giải thích đoạn bôi đen ở Trang 17.",
+        "tạo một chatbot high impact low effort",
+        "là gì",
+        "Giải thích chi tiết 3 nội dung này"
+      ]
+    },
+    {
+      "id": "insight-fallback-page-16",
+      "topic": "Trang 16: Mô hình Double Diamond — Don Norman / British Design Council 2005",
+      "common_confusion": "Có 4 lượt hỏi từ 3 học viên quanh nội dung trang 16. Câu hỏi thường gặp: giải thích hình ảnh này.",
+      "correct_understanding": "Theo slide, phần này cần được hiểu dựa trên nội dung: Hệ thống AI = Model + Context + Planning + Tools — Một giải pháp AI thực tế là một hệ thống nhiều thành phần, không chỉ dừng lại ở mô hình ngôn ngữ MODEL Tư duy & Sáng tạo Xử lý đọc hiểu, soạn thảo, tổng hợp, phân loại",
+      "source_pages": [
+        16
+      ],
+      "source_excerpt": "Hệ thống AI = Model + Context + Planning + Tools — Một giải pháp AI thực tế là một hệ thống nhiều thành phần, không chỉ dừng lại ở mô hình ngôn ngữ MODEL Tư duy & Sáng tạo Xử lý đọc hiểu, soạn thảo, tổng hợp, phân loại",
+      "confidence": 0.72,
+      "status": "ready",
+      "unique_user_count": 3,
+      "question_count": 4,
+      "representative_questions": [
+        "giải thích hình ảnh này",
+        "vậy nó liên quan gì đến diamond ?",
+        "Giải thích đoạn bôi đen ở Trang 16.",
+        "giải thích trang 16,cho ví dụ"
+      ]
+    },
+    {
+      "id": "insight-fallback-page-8",
+      "topic": "Trang 8: User Needs + Defining Success 2. Data Collection + Evaluation 3",
+      "common_confusion": "Có 3 lượt hỏi từ 3 học viên quanh nội dung trang 8. Câu hỏi thường gặp: dich nghia.",
+      "correct_understanding": "Theo slide, phần này cần được hiểu dựa trên nội dung: PA I R · C H Ư Ơ N G 1 — R E F R A M E C Â U H Ỏ I \"Can we use AI to ______?\" ↓ thay bằng hai câu hỏi: ↓ K A \"How might we A C\"Can AI solve this problem solve ______?\" - H in a unique way?\" Hỏi về bài toán trước, về AI",
+      "source_pages": [
+        8
+      ],
+      "source_excerpt": "PA I R · C H Ư Ơ N G 1 — R E F R A M E C Â U H Ỏ I \"Can we use AI to ______?\" ↓ thay bằng hai câu hỏi: ↓ K A \"How might we A C\"Can AI solve this problem solve ______?\" - H in a unique way?\" Hỏi về bài toán trước, về AI",
+      "confidence": 0.72,
+      "status": "ready",
+      "unique_user_count": 3,
+      "question_count": 3,
+      "representative_questions": [
+        "dich nghia",
+        "Giải thích đoạn bôi đen ở Trang 8.",
+        "Giải thích đoạn bôi đen ở Trang 8: \"User Needs + Defining Success 2. Data Collection + Evaluation 3. Mental Models 4. Explainability + Trust 5. Feedback + Control 6. Errors + Graceful Failure\""
+      ]
+    },
+    {
+      "id": "insight-fallback-page-6",
+      "topic": "Trang 6: hii",
+      "common_confusion": "Có 4 lượt hỏi từ 2 học viên quanh nội dung trang 6. Câu hỏi thường gặp: hii.",
+      "correct_understanding": "Theo slide, phần này cần được hiểu dựa trên nội dung: Tìm bài toán AI ở đâu? — Bắt đầu từ việc quan sát các hoạt động thực tế xung quanh REPETITIVE TIME-CONSUMING A I A D V A N TA G E U S E R PA I N P O I N T S Tác vụ lặp lại Tiêu tốn thời gian Lợi thế của AI Điểm đau",
+      "source_pages": [
+        6
+      ],
+      "source_excerpt": "Tìm bài toán AI ở đâu? — Bắt đầu từ việc quan sát các hoạt động thực tế xung quanh REPETITIVE TIME-CONSUMING A I A D V A N TA G E U S E R PA I N P O I N T S Tác vụ lặp lại Tiêu tốn thời gian Lợi thế của AI Điểm đau",
+      "confidence": 0.72,
+      "status": "ready",
+      "unique_user_count": 2,
+      "question_count": 4,
+      "representative_questions": [
+        "hii",
+        "tài liệu này nói về cái chi dợ.",
+        "define -> build -> test -> deploy. Tôi chưa hình dung được bước 1 và bước 4 là như nào ?",
+        "Giải thích đoạn bôi đen ở Trang 6: \"Phát triển Sản phẩm AI (AI Product)\" giải thích hình biểu diễn"
+      ]
+    },
+    {
+      "id": "insight-fallback-page-3",
+      "topic": "Trang 3: Problem Statemen",
+      "common_confusion": "Có 3 lượt hỏi từ 2 học viên quanh nội dung trang 3. Câu hỏi thường gặp: Giải thích đoạn bôi đen ở Trang 3..",
+      "correct_understanding": "Theo slide, phần này cần được hiểu dựa trên nội dung: Tìm đúng vấn đề trước khi tìm giải pháp — Mô hình Double Diamond — Don Norman / British Design Council (2005) D I A M O N D 1 — T Ì M Đ Ú N G VẤ N Đ Ề Discover: Mở rộng — khảo sát vấn đề căn bản. Define: Thu hẹp — xác",
+      "source_pages": [
+        3
+      ],
+      "source_excerpt": "Tìm đúng vấn đề trước khi tìm giải pháp — Mô hình Double Diamond — Don Norman / British Design Council (2005) D I A M O N D 1 — T Ì M Đ Ú N G VẤ N Đ Ề Discover: Mở rộng — khảo sát vấn đề căn bản. Define: Thu hẹp — xác",
+      "confidence": 0.72,
+      "status": "ready",
+      "unique_user_count": 2,
+      "question_count": 3,
+      "representative_questions": [
+        "Giải thích đoạn bôi đen ở Trang 3.",
+        "pain point là gì",
+        "nghĩa là ntn"
+      ]
+    },
+    {
+      "id": "insight-fallback-page-13",
+      "topic": "Trang 13: bạn có thể trả lời những gì? chỉ một slide đơn lẻ thôi à",
+      "common_confusion": "Có 2 lượt hỏi từ 2 học viên quanh nội dung trang 13. Câu hỏi thường gặp: bạn có thể trả lời những gì? chỉ một slide đơn lẻ thôi à?.",
+      "correct_understanding": "Theo slide, phần này cần được hiểu dựa trên nội dung: Ba bước quyết định AI theo PAIR — Google People + AI Guidebook · Chương 1: User Needs + Defining Success BƯỚC ① BƯỚC ② BƯỚC ③ Giao điểm: nhu cầu × thế mạnh Automate hay Augment? Reward function & tiêu chí AI AI thay thế",
+      "source_pages": [
+        13
+      ],
+      "source_excerpt": "Ba bước quyết định AI theo PAIR — Google People + AI Guidebook · Chương 1: User Needs + Defining Success BƯỚC ① BƯỚC ② BƯỚC ③ Giao điểm: nhu cầu × thế mạnh Automate hay Augment? Reward function & tiêu chí AI AI thay thế",
+      "confidence": 0.72,
+      "status": "ready",
+      "unique_user_count": 2,
+      "question_count": 2,
+      "representative_questions": [
+        "bạn có thể trả lời những gì? chỉ một slide đơn lẻ thôi à?",
+        "Giải thích đoạn bôi đen ở Trang 13."
+      ]
+    }
+  ],
+  "review_questions": [
+    {
+      "id": "question-01",
+      "type": "multiple_choice",
+      "question": "Mô hình Double Diamond gồm những giai đoạn nào?",
+      "options": [
+        "Discover, Define, Develop, Deliver",
+        "Discover, Define, Design, Deploy",
+        "Define, Develop, Deliver, Deploy",
+        "Discover, Design, Develop, Deliver"
+      ],
+      "correct_option": 0,
+      "answer": "Discover, Define, Develop, Deliver",
+      "explanation": "Theo slide, Double Diamond gồm Diamond 1 (Discover, Define) và Diamond 2 (Develop, Deliver).",
+      "source_pages": [
+        3
+      ],
+      "source_excerpt": "Discover: Mở rộng — khảo sát vấn đề căn bản. Define: Thu hẹp — xác định đúng bài toán gốc. Develop: Mở rộng — nhiều giải pháp tiềm năng. Deliver: Thu hẹp — chọn và triển khai.",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "question-02",
+      "type": "multiple_choice",
+      "question": "Kỹ thuật nào thuộc giai đoạn Define trong Diamond 1?",
+      "options": [
+        "Phỏng vấn người dùng",
+        "Khảo sát",
+        "Ma trận Tác động – Nỗ lực",
+        "Quan sát thực tế"
+      ],
+      "correct_option": 2,
+      "answer": "Ma trận Tác động – Nỗ lực",
+      "explanation": "Theo slide, Ma trận Tác động – Nỗ lực (Impact-Effort) thuộc giai đoạn Define (hội tụ). Các lựa chọn khác thuộc Discover.",
+      "source_pages": [
+        4
+      ],
+      "source_excerpt": "Ma trận Tác động – Nỗ lực (Impact-Effort)",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "question-03",
+      "type": "multiple_choice",
+      "question": "Bài học nào được rút ra từ case study Artifact?",
+      "options": [
+        "Lệch năng lực cốt lõi",
+        "Sản phẩm tốt ≠ Thị trường lớn",
+        "Định vị đúng điểm đau",
+        "Cần bắt đầu từ AI"
+      ],
+      "correct_option": 1,
+      "answer": "Sản phẩm tốt ≠ Thị trường lớn",
+      "explanation": "Theo slide, Artifact có sản phẩm tốt nhưng quy mô thị trường quá hẹp để thương mại hóa thành công.",
+      "source_pages": [
+        5
+      ],
+      "source_excerpt": "Sản phẩm tốt ≠ Thị trường lớn",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "question-04",
+      "type": "multiple_choice",
+      "question": "Đâu là một trong bốn lăng kính để tìm bài toán AI?",
+      "options": [
+        "Repetitive",
+        "Creative",
+        "Expensive",
+        "Complex"
+      ],
+      "correct_option": 0,
+      "answer": "Repetitive",
+      "explanation": "Theo slide, bốn lăng kính gồm Repetitive, Time-consuming, AI Advantage, User Pain Points.",
+      "source_pages": [
+        6
+      ],
+      "source_excerpt": "REPETITIVE: Tác vụ lặp lại",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "question-05",
+      "type": "multiple_choice",
+      "question": "Anti-pattern nào mô tả việc không lượng hóa tổn thất hiện tại?",
+      "options": [
+        "Solution-first",
+        "No baseline",
+        "No evaluation",
+        "No boundary"
+      ],
+      "correct_option": 1,
+      "answer": "No baseline",
+      "explanation": "Theo slide, No baseline là không lượng hóa tổn thất hiện tại, dẫn đến mất căn cứ đánh giá hiệu quả cải tiến.",
+      "source_pages": [
+        7
+      ],
+      "source_excerpt": "Không lượng hóa tổn thất hiện tại, dẫn đến mất căn cứ đánh giá hiệu quả cải tiến.",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "question-06",
+      "type": "multiple_choice",
+      "question": "Theo PAIR, thay vì hỏi 'Can we use AI to ______?', ta nên hỏi câu nào?",
+      "options": [
+        "How might we solve ______?",
+        "What AI model should we use?",
+        "How to build a chatbot?",
+        "Can we automate everything?"
+      ],
+      "correct_option": 0,
+      "answer": "How might we solve ______?",
+      "explanation": "Theo slide, thay bằng hai câu hỏi: 'How might we solve ______?' và 'Can AI solve this problem in a unique way?'.",
+      "source_pages": [
+        8
+      ],
+      "source_excerpt": "How might we solve ______?",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "question-07",
+      "type": "multiple_choice",
+      "question": "Trong Quick Problem Card, trường nào mô tả 'khâu gây chậm trễ, sai sót hoặc lặp lại'?",
+      "options": [
+        "Problem",
+        "Actor",
+        "Bottleneck & Impact",
+        "Success Metric"
+      ],
+      "correct_option": 2,
+      "answer": "Bottleneck & Impact",
+      "explanation": "Theo slide, Bottleneck & Impact là khâu gây chậm trễ, sai sót hoặc lặp lại; hệ quả hay tổn thất cụ thể.",
+      "source_pages": [
+        9
+      ],
+      "source_excerpt": "Khâu gây chậm trễ, sai sót hoặc lặp lại; hệ quả hay tổn thất cụ thể.",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "question-08",
+      "type": "multiple_choice",
+      "question": "Câu hỏi nào sau đây thuộc bộ 6 câu hỏi khai thác bài toán?",
+      "options": [
+        "Công cụ, các bước, cơ chế bàn giao thông tin?",
+        "Mô hình AI nào tốt nhất?",
+        "Chi phí GPU là bao nhiêu?",
+        "Cần bao nhiêu dữ liệu?"
+      ],
+      "correct_option": 0,
+      "answer": "Công cụ, các bước, cơ chế bàn giao thông tin?",
+      "explanation": "Theo slide, câu hỏi 01 là 'Quy trình hiện tại như thế nào? Công cụ, các bước, cơ chế bàn giao thông tin?'.",
+      "source_pages": [
+        10
+      ],
+      "source_excerpt": "Quy trình hiện tại như thế nào? Công cụ, các bước, cơ chế bàn giao thông tin?",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "question-09",
+      "type": "multiple_choice",
+      "question": "Ví dụ nào sau đây là một Target (mục tiêu) được định lượng?",
+      "options": [
+        "Cải thiện hiệu suất",
+        "Rút ngắn thời gian hoàn thành từ 90 phút xuống dưới 30 phút",
+        "Tăng chất lượng công việc",
+        "Giảm tải cho trợ giảng"
+      ],
+      "correct_option": 1,
+      "answer": "Rút ngắn thời gian hoàn thành từ 90 phút xuống dưới 30 phút",
+      "explanation": "Theo slide, Target là kỳ vọng cải thiện ở mức độ nào, ngưỡng cụ thể. Ví dụ: rút ngắn từ 90 phút xuống dưới 30 phút.",
+      "source_pages": [
+        11
+      ],
+      "source_excerpt": "Rút ngắn từ 90 phút xuống dưới 30 phút.",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "question-10",
+      "type": "multiple_choice",
+      "question": "Output metric là gì?",
+      "options": [
+        "Kết quả cuối cùng / what we optimize",
+        "Các đòn bẩy / what we can move",
+        "Chỉ số đầu vào",
+        "Số lượng model"
+      ],
+      "correct_option": 0,
+      "answer": "Kết quả cuối cùng / what we optimize",
+      "explanation": "Theo slide, Output metric là kết quả cuối cùng / what we optimize.",
+      "source_pages": [
+        12
+      ],
+      "source_excerpt": "Kết quả cuối cùng / what we optimize",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "question-11",
+      "type": "multiple_choice",
+      "question": "Trong ba bước PAIR, bước nào xác định AI thay thế hay hỗ trợ con người?",
+      "options": [
+        "Bước 1: Giao điểm nhu cầu × thế mạnh AI",
+        "Bước 2: Automate hay Augment",
+        "Bước 3: Reward function & tiêu chí thành công",
+        "Không có bước nào"
+      ],
+      "correct_option": 1,
+      "answer": "Bước 2: Automate hay Augment",
+      "explanation": "Theo slide, bước ② Automate hay Augment: AI thay thế hay hỗ trợ con người? Mức tự động hóa tăng dần theo độ tin cậy và rủi ro.",
+      "source_pages": [
+        13
+      ],
+      "source_excerpt": "Automate hay Augment? AI thay thế hay hỗ trợ con người?",
+      "confidence": 0.95,
+      "status": "ready"
+    },
+    {
+      "id": "question-12",
+      "type": "multiple_choice",
+      "question": "Trường hợp nào sau đây PAIR cho rằng AI 'probably better'?",
+      "options": [
+        "Cần duy trì tính dự đoán được",
+        "Thông tin tĩnh, ít thay đổi",
+        "Hiểu ngôn ngữ tự nhiên",
+        "Lỗi quá tốn kém"
+      ],
+      "correct_option": 2,
+      "answer": "Hiểu ngôn ngữ tự nhiên",
+      "explanation": "Theo slide, hiểu ngôn ngữ tự nhiên là một trong 8 trường hợp AI probably better.",
+      "source_pages": [
+        14
+      ],
+      "source_excerpt": "Hiểu ngôn ngữ tự nhiên · natural language",
+      "confidence": 0.95,
+      "status": "ready"
+    }
+  ],
+  "warnings": [
+    {
+      "code": "LOW_CONFIDENCE_SCORE",
+      "message": "insight 'insight-cluster-03' chưa xác minh chắc chắn với slide (grounded=true, confidence=0.4), cần Lab Coach duyệt.",
+      "item_ids": [
+        "insight-cluster-03"
+      ]
+    },
+    {
+      "code": "LOW_CONFIDENCE_SCORE",
+      "message": "insight 'insight-cluster-06' chưa xác minh chắc chắn với slide (grounded=true, confidence=0.4), cần Lab Coach duyệt.",
+      "item_ids": [
+        "insight-cluster-06"
+      ]
+    },
+    {
+      "code": "LOW_CONFIDENCE_SCORE",
+      "message": "insight 'insight-cluster-07' chưa xác minh chắc chắn với slide (grounded=true, confidence=0.4), cần Lab Coach duyệt.",
+      "item_ids": [
+        "insight-cluster-07"
+      ]
+    },
+    {
+      "code": "LOW_CONFIDENCE_SCORE",
+      "message": "insight 'insight-cluster-08' chưa xác minh chắc chắn với slide (grounded=true, confidence=0.4), cần Lab Coach duyệt.",
+      "item_ids": [
+        "insight-cluster-08"
+      ]
+    },
+    {
+      "code": "LOW_CONFIDENCE_SCORE",
+      "message": "insight 'insight-cluster-10' chưa xác minh chắc chắn với slide (grounded=true, confidence=0.2), cần Lab Coach duyệt.",
+      "item_ids": [
+        "insight-cluster-10"
+      ]
+    },
+    {
+      "code": "LOW_CONFIDENCE_SCORE",
+      "message": "insight 'insight-cluster-14' chưa xác minh chắc chắn với slide (grounded=true, confidence=0.2), cần Lab Coach duyệt.",
+      "item_ids": [
+        "insight-cluster-14"
+      ]
+    }
+  ],
+  "generated_at": "2026-07-31T03:10:26.971574Z"
+}

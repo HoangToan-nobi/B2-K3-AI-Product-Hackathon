@@ -82,6 +82,12 @@ export interface LessonMapping {
   mapping_signals: string[];
 }
 
+export interface UploadedLesson extends LessonMapping {
+  source_type: "uploaded";
+  created_at: string;
+  updated_at: string;
+}
+
 export interface CreateReviewPackInput {
   lesson_id?: string;
   run_pipeline?: boolean;
@@ -89,11 +95,17 @@ export interface CreateReviewPackInput {
 
 export type ReviewPackJob =
   | { mode: "pipeline"; stdout?: string }
+  | { mode: "typescript_pipeline_live"; note: string }
   | { mode: "existing_artifact" }
   | { mode: "pipeline_failed_fallback"; error: string; stdout?: string; stderr?: string };
 
 export interface UpdateReviewItemInput {
-  action: "approve" | "drop";
+  action: "approve" | "drop" | "edit";
+  title?: string;
+  content?: string;
+  source_pages?: number[];
+  source_excerpt?: string;
+  status?: ApprovalStatus;
 }
 
 export interface LocalDbUser {
@@ -106,4 +118,6 @@ export interface LocalDb {
   users: LocalDbUser[];
   active_lesson_id: string;
   published_pack_ids: string[];
+  hidden_lesson_ids: string[];
+  uploaded_lessons: UploadedLesson[];
 }

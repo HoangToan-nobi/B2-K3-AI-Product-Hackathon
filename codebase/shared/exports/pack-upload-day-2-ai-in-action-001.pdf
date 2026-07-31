@@ -1,0 +1,133 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+5 0 obj
+<< /Length 4246 >>
+stream
+BT
+/F1 11 Tf
+50 760 Td
+(VLuoi - Goi On Tap) Tj
+0 -15 Td
+(Day 2 - AI In Action) Tj
+0 -15 Td
+(29 slides | 29 hoc vien hoi | 8 chu de) Tj
+0 -15 Td
+() Tj
+0 -15 Td
+(Ly thuyet trong tam) Tj
+0 -15 Td
+(- Muc tieu va lo trinh Day 02. Day 02 tap trung vao viec bien yeu cau mo ho thanh) Tj
+0 -15 Td
+(Problem Statement ro rang e ra quyet inh. Buoi sang hoc khung ly thuyet ve Problem) Tj
+0 -15 Td
+(Discovery \\\(Double Diamond, HCD\\\), Problem Statement va inh luong hoa, cung cac buoc) Tj
+0 -15 Td
+(PAIR. Buoi chieu thuc hanh lab: tim 5 bai toan, ien Problem Cards, phan bien cheo,) Tj
+0 -15 Td
+(chot bai toan, xac thuc du lieu, ve quy trinh, xac inh giai phap va ra quyet inh. Cuoi) Tj
+0 -15 Td
+(buoi nop Problem Statement hoan chinh \\\(nhom\\\) va nhat ky phan tu \\\(ca nhan\\\). [trang) Tj
+0 -15 Td
+(2]) Tj
+0 -15 Td
+(- Mo hinh Double Diamond. Double Diamond la mo hinh do Don Norman / British Design) Tj
+0 -15 Td
+(Council \\\(2005\\\) e xuat, gom hai giai oan: Diamond 1 - Tim ung van e \\\(Discover: mo) Tj
+0 -15 Td
+(rong khao sat van e can ban; Define: thu hep xac inh ung bai toan goc\\\) va Diamond 2 -) Tj
+0 -15 Td
+(Tim ung giai phap \\\(Develop: mo rong nhieu giai phap tiem nang; Deliver: thu hep chon) Tj
+0 -15 Td
+(va trien khai\\\). Nguyen tac cot loi: giai phap xuat sac cho sai van e co the con te) Tj
+0 -15 Td
+(hon khong co giai phap. [trang 3]) Tj
+0 -15 Td
+(- Diamond 1 - Tim ung van e. Giai oan Discover \\\(phan ky\\\) su dung cac phuong phap nhu) Tj
+0 -15 Td
+(quan sat thuc te, phong van nguoi dung, khao sat, nhat ky hanh vi, cau hoi mo How) Tj
+0 -15 Td
+(Might We, ban o cac ben lien quan. Giai oan Define \\\(hoi tu\\\) dung so o ong cam, gom) Tj
+0 -15 Td
+(nhom \\\(Affinity Mapping\\\), ky thuat 5 Whys, ma tran Tac ong No luc \\\(Impact-Effort\\\),) Tj
+0 -15 Td
+(bieu quyet bang cham tron \\\(Dot Voting\\\), va phat bieu bai toan \\\(Problem Statement\\\).) Tj
+0 -15 Td
+([trang 4]) Tj
+0 -15 Td
+(- Bai hoc tu case study: Cursor, Artifact, NotebookLM. Ba case study minh hoa tam quan) Tj
+0 -15 Td
+(trong cua viec bat au tu bai toan, khong bat au tu AI. Cursor tu bo mang AI thiet ke) Tj
+0 -15 Td
+(co khi \\\(CAD\\\) e tap trung vao AI code editor noi oi ngu am hieu sau sac quy trinh) Tj
+0 -15 Td
+(nghiep vu \\\(bai hoc: lech nang luc cot loi\\\). Artifact co san pham tot nhung thi) Tj
+0 -15 Td
+(truong qua hep e thuong mai hoa \\\(bai hoc: san pham tot = thi truong lon\\\). NotebookLM) Tj
+0 -15 Td
+(tap trung giai quyet nhu cau hoi ap, tom tat tren tai lieu ca nhan va oi chieu nguon) Tj
+0 -15 Td
+(goc bang trich dan \\\(bai hoc: inh vi ung iem au\\\). Lo trinh: Bai toan Quy trinh van) Tj
+0 -15 Td
+(hanh Chi so o luong Giai phap AI. [trang 5]) Tj
+0 -15 Td
+(- Bon lang kinh tim bai toan AI. e tim bai toan AI, hay quan sat cac hoat ong thuc te) Tj
+0 -15 Td
+(qua bon lang kinh: \\\(1\\\) Repetitive tac vu lap lai, dien ra thuong xuyen, can chuan) Tj
+0 -15 Td
+(hoa e tu ong hoa; \\\(2\\\) Time-consuming tac vu tieu ton thoi gian, khoi luong xu ly) Tj
+0 -15 Td
+(lon, hao phi o buoc tim kiem, oc hieu, cho oi, inh dang; \\\(3\\\) AI Advantage tac vu oi) Tj
+0 -15 Td
+(hoi phan tich ngu canh, xu ly ngon ngu tu nhien, tong hop a nguon; \\\(4\\\) User Pain) Tj
+0 -15 Td
+(Points nguoi dung gap kho khan, phan nan hoac bi tac nghen lien tuc. Tap trung nhan) Tj
+0 -15 Td
+(dien van e, chua voi e xuat giai phap. [trang 6]) Tj
+0 -15 Td
+(- Anti-patterns Sai lam thuong gap. Cac sai lam thuong gap khi inh hinh bai toan:) Tj
+0 -15 Td
+(\\\(1\\\) Solution-first uu tien giai phap, xay dung chatbot/agent truoc khi lam ro quy) Tj
+0 -15 Td
+(trinh van hanh va iem nghen; \\\(2\\\) No baseline khong luong hoa ton that hien tai, mat) Tj
+0 -15 Td
+(can cu anh gia hieu qua; \\\(3\\\) No evaluation khong thiet lap kich ban kiem thu, chi so) Tj
+0 -15 Td
+(o luong hoac phuong an oi chung; \\\(4\\\) No boundary khong ro pham vi tu chu cua AI va) Tj
+0 -15 Td
+(thoi iem can con nguoi phe duyet \\\(Human-in-the-loop\\\). Neu phat hien cac sai lam nay,) Tj
+0 -15 Td
+(can quay lai lam ro Problem Statement truoc khi chon cong nghe. [trang 7]) Tj
+0 -15 Td
+(- PAIR Reframe at cau hoi ung. Thay vi hoi 'Can we use AI to ______?', hay hoi hai) Tj
+0 -15 Td
+(cau: 'How might we solve ______?' va 'Can AI solve this problem in a unique way?'.) Tj
+0 -15 Td
+ET
+ET
+endstream
+endobj
+
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000000311 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+4609
+%%EOF

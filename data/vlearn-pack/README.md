@@ -1,22 +1,18 @@
-# Data pack — VLearn
+# Data Pack Demo — VLearn
 
-## Có sẵn trong pack
+Repo demo này chỉ giữ lại dữ liệu cần cho lát cắt **VLười Day 1**.
 
-- `chatlog/chat_history_anonymized_for_hackathon.csv` — **2.522 dòng hội thoại thật** học viên × AI tutor, đã ẩn danh toàn bộ ID (user/conversation/turn/message → mã U/C/T/M) và đã quét sạch thông tin nhạy cảm.
-- `chatlog/DATA_DICTIONARY.md` — mô tả từng field của file trên (đọc trước khi mining).
-- `transcript/` — **6 transcript bài giảng bản sạch** (~700 đoạn có mã trích dẫn `[Txx-NNN]`): Day 1 Foundation, Day 2 xác định bài toán (3 file), và 2 buổi theo chủ đề. Đã sửa lỗi nhận dạng giọng nói, ẩn danh tên học viên, rút gọn phần hoạt động lớp — xem `transcript/README.md`.
+## Có Sẵn
 
-## Sẽ bổ sung trước sự kiện
+- `slides/d1-slide-hackathon.pdf`: slide nguồn cho lesson `day1-foundation`.
+- `chatlog/chat_history_anonymized_for_hackathon.csv`: chatlog AI Tutor đã ẩn danh.
+- `chatlog/DATA_DICTIONARY.md`: mô tả schema của chatlog.
 
-- `slides/` — slide bài giảng · `hoc-lieu/` — tài liệu đọc.
+Các transcript và slide ngoài Day 1 đã được bỏ khỏi bản demo để repo gọn và đúng flow deploy.
 
-## Luật dùng & bảo mật
+## Bảo Mật
 
-- Dùng để mining evidence, dựng golden set, và làm context cho prototype — **chỉ trong phạm vi hackathon**.
-- Không chia sẻ ra ngoài khoá học: không đăng mạng xã hội, không gửi người ngoài, không đưa vào dataset/repo công khai.
-- Không đổ nguyên file lên repo nộp bài của nhóm — trích ngắn để minh hoạ; golden set ghi mã đoạn/mã hội thoại thay vì dán nguyên văn dài.
-- Đưa vào công cụ AI ngoài: chỉ phần tối thiểu cần thiết; lưu ý free tier có thể dùng dữ liệu để huấn luyện.
+- Dữ liệu chỉ dùng cho demo/prototype hackathon.
+- Không chia sẻ ra ngoài lớp/khoá học.
 - Không cố suy ngược danh tính từ mã ẩn danh.
-- Sau sự kiện, xoá bản sao data khỏi máy và công cụ đã upload nếu ban tổ chức yêu cầu.
-
-Chi tiết quy định: README gốc của repo, mục "Bảo mật dữ liệu được cung cấp".
+- Khi đưa vào AI API, chỉ gửi phần tối thiểu cần thiết.

@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""Ghep ket qua tung buoc pipeline thanh 1 file dung schema review-pack.json
-(giong het cau truc codebase/shared/mock-review-pack.json de frontend doc duoc
-ma khong can sua component).
+"""Ghep ket qua tung buoc pipeline thanh 1 file dung schema review-pack.json.
 
 Dung: python3 05_build_pack.py <lesson_id> <lesson_title> <slide_count> \
   <questions.json> <clusters.json> <generated.json> <output.json>

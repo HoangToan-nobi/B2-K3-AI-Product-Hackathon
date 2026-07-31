@@ -67,7 +67,9 @@ def preprocess(csv_path: str, lesson_id: str, day_codes: set, max_page: int):
     with open(csv_path, newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
         for row in reader:
-            if row["role"] != "student" or row["day_code"] not in day_codes:
+            # Empty day_codes means "all lesson codes" for an uploaded file. The UI lets
+            # Lab Coach omit the mapping when the CSV already contains one lesson only.
+            if row["role"] != "student" or (day_codes and row["day_code"] not in day_codes):
                 continue
 
             page, selected_text, clean_question = split_prefix(row["content"])
@@ -105,7 +107,7 @@ def main():
         print(__doc__)
         sys.exit(1)
     csv_path, lesson_id, day_codes_csv, max_page_s, out_path = sys.argv[1:6]
-    day_codes = {d.strip() for d in day_codes_csv.split(",")}
+    day_codes = {d.strip() for d in day_codes_csv.split(",") if d.strip()}
     max_page = int(max_page_s)
 
     records = preprocess(csv_path, lesson_id, day_codes, max_page)

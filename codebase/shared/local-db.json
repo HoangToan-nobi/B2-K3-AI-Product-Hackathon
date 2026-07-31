@@ -3,6 +3,29 @@
   "published_pack_ids": [
     "pack-day1-foundation-001"
   ],
+  "hidden_lesson_ids": [
+    "upload-day-2-ai-in-action"
+  ],
+  "uploaded_lessons": [
+    {
+      "lesson_id": "upload-day-2-ai-in-action",
+      "title": "Day 2 AI In Action",
+      "slide_pdf": "/home/toan/Lab_AI_Vinuni/B2-K3-AI-Product-Hackathon/codebase/shared/uploads/upload-day-2-ai-in-action/slide.pdf",
+      "chatlog_csv": "/home/toan/Lab_AI_Vinuni/B2-K3-AI-Product-Hackathon/codebase/shared/uploads/upload-day-2-ai-in-action/chatlog.csv",
+      "day_codes": [
+        "day02-c301",
+        "Day 2"
+      ],
+      "max_page": 29,
+      "mapping_signals": [
+        "Uploaded by Lab Coach",
+        "Slide PDF + chatlog CSV stored locally"
+      ],
+      "source_type": "uploaded",
+      "created_at": "2026-07-31T02:35:29.052Z",
+      "updated_at": "2026-07-31T02:35:29.052Z"
+    }
+  ],
   "users": [
     {
       "id": "student-demo",

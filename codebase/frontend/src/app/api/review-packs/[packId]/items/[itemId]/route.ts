@@ -15,7 +15,7 @@ export async function PATCH(
   try {
     const { packId, itemId } = await context.params;
     const body = (await request.json()) as UpdateReviewItemInput;
-    if (body.action !== "approve" && body.action !== "drop") {
+    if (body.action !== "approve" && body.action !== "drop" && body.action !== "edit") {
       return Response.json({ error: "Invalid action" }, { status: 400 });
     }
     const pack = await updateReviewPackItem(packId, itemId, body);

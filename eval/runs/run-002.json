@@ -75,7 +75,7 @@
       "difficulty": "rare",
       "source": "real",
       "passed": true,
-      "detail": "tất cả 1 turn bị excluded, reason thực tế: {'T0332': 'gibberish'}"
+      "detail": "tất cả 1 turn bị excluded, reason thực tế: {'T0332': 'other'}"
     },
     {
       "id": "GS-09",
@@ -120,7 +120,7 @@
       "difficulty": "normal",
       "source": "real",
       "passed": true,
-      "detail": "cluster-07 bị skip khỏi nội dung (an toàn vì không tự tin trả lời)"
+      "detail": "T0102 bị loại thẳng khỏi cluster (reason=off_topic)"
     },
     {
       "id": "GS-14",
@@ -129,7 +129,7 @@
       "difficulty": "normal",
       "source": "real",
       "passed": true,
-      "detail": "T0802 bị loại (reason=off_topic), không vào class_insights"
+      "detail": "T0802 bị loại (reason=other), không vào class_insights"
     },
     {
       "id": "GS-15",
@@ -138,7 +138,7 @@
       "difficulty": "normal",
       "source": "real",
       "passed": true,
-      "detail": "insight-cluster-04 confidence=0.3 status=needs_review"
+      "detail": "insight-cluster-05 confidence=0.3 status=needs_review"
     },
     {
       "id": "GS-16",
@@ -156,7 +156,7 @@
       "difficulty": "rare",
       "source": "real",
       "passed": true,
-      "detail": "insight-cluster-05 needs_review (nhánh b) - confidence=0.5"
+      "detail": "insight-cluster-06 needs_review (nhánh b) - confidence=0.5"
     },
     {
       "id": "GS-18",
@@ -174,7 +174,7 @@
       "difficulty": "normal",
       "source": "real",
       "passed": true,
-      "detail": "question-04 giữ nguyên ký hiệu kỹ thuật: 'T=0'"
+      "detail": "question-06 giữ nguyên ký hiệu kỹ thuật: '128K'"
     },
     {
       "id": "GS-20",
@@ -192,7 +192,7 @@
       "difficulty": "normal",
       "source": "real",
       "passed": true,
-      "detail": "summary-02: summary nêu đúng quan hệ chatbot/LLM"
+      "detail": "summary-03: summary nêu đúng quan hệ chatbot/LLM"
     },
     {
       "id": "GS-22",
@@ -201,7 +201,7 @@
       "difficulty": "rare",
       "source": "real",
       "passed": false,
-      "detail": "LỖI khi chạy check: [Errno 2] No such file or directory: '/Users/plxg/workspace/vinuni/B2-K3-AI-Product-Hackathon/codebase/pipeline/../frontend/app.js'"
+      "detail": "LỖI khi chạy check: [Errno 2] No such file or directory: '/home/toan/Lab_AI_Vinuni/B2-K3-AI-Product-Hackathon/codebase/pipeline/../frontend/app.js'"
     },
     {
       "id": "GS-23",
