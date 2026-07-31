@@ -267,16 +267,14 @@ class ReviewPackService:
             lesson_id = lesson["id"]
             if not self._visible_lesson(lesson):
                 continue
-            pack_path = get_pack_path(lesson_id)
             pack_id = f"pack-{lesson_id}-001"
             status = "missing"
-            if pack_path.exists():
-                try:
-                    pack = self.filter_pack_for_role(json.loads(pack_path.read_text(encoding="utf-8")), role)
-                    status = pack.get("status", "ready")
-                    pack_id = pack.get("pack_id", pack_id)
-                except Exception:
-                    status = "missing"
+            try:
+                pack = self.filter_pack_for_role(await self.read_review_pack(lesson_id), role)
+                status = pack.get("status", "ready")
+                pack_id = pack.get("pack_id", pack_id)
+            except Exception:
+                status = "missing"
             lessons.append(
                 {
                     "id": lesson_id,
@@ -337,14 +335,14 @@ class ReviewPackService:
             "VLười đang lấy chữ trên từng trang slide để xác định kiến thức chính.",
         )
         slide = await self._slide_payload(lesson_id)
-        slide_context = self._slide_context(slide)
+        slide_context = self._slide_context(slide, limit=14000)
         await self._emit_progress(
             progress,
             24,
             "Đọc transcript buổi học",
             "VLười đang kiểm tra phần lời giảng hoặc ghi chú đi kèm nếu có.",
         )
-        transcript_context = self._safe_transcript_excerpt(lesson_id)
+        transcript_context = self._safe_transcript_excerpt(lesson_id, limit=8000)
         await self._emit_progress(
             progress,
             36,
@@ -352,6 +350,7 @@ class ReviewPackService:
             "VLười đang gom các câu hỏi thật từ chatlog để biết lớp hay vướng ở đâu.",
         )
         chat_questions = await self._chat_questions_for_lesson(mapping)
+        await self._release_read_transaction()
         await self._emit_progress(
             progress,
             48,
@@ -359,7 +358,7 @@ class ReviewPackService:
             "VLười đang gộp các câu hỏi giống nhau và giữ lại những câu đại diện nhất.",
             detail=f"Đã tìm thấy {len(chat_questions)} câu hỏi phù hợp.",
         )
-        selected_chat_questions = self._select_chat_context_questions(chat_questions)
+        selected_chat_questions = self._select_chat_context_questions(chat_questions, limit=30)
         chat_context = "\n".join(self._format_chat_context_item(item) for item in selected_chat_questions)
         generated: dict[str, Any] | None = None
         job: dict[str, Any] = {"mode": "ai_generated"}
@@ -419,6 +418,15 @@ class ReviewPackService:
         output_path.write_text(json.dumps(pack, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         return pack, job
 
+    async def _release_read_transaction(self) -> None:
+        session = self.repository.session
+        if session is None or not session.in_transaction():
+            return
+        try:
+            await session.rollback()
+        except Exception:
+            pass
+
     @staticmethod
     async def _emit_progress(
         progress: Any | None,
@@ -448,9 +456,9 @@ class ReviewPackService:
             }
 
     @staticmethod
-    def _safe_transcript_excerpt(lesson_id: str) -> str:
+    def _safe_transcript_excerpt(lesson_id: str, limit: int = 20000) -> str:
         try:
-            return read_transcript_excerpt(lesson_id)
+            return read_transcript_excerpt(lesson_id, limit=limit)
         except Exception:
             return ""
 
@@ -602,7 +610,7 @@ class ReviewPackService:
             self._question_item(item, index, slide_pages)
             for index, item in enumerate(raw_questions[:5], start=1)
         ]
-        needs_review = [item["id"] for item in [*summary, *insights, *questions] if item["status"] == "needs_review"]
+        needs_review = [item["id"] for item in insights if item["status"] == "needs_review"]
         return {
             "schema_version": "1.0",
             "pack_id": f"pack-{lesson_id}-001",
@@ -619,7 +627,7 @@ class ReviewPackService:
             "class_insights": insights,
             "review_questions": questions,
             "warnings": [
-                {"code": "LOW_CONFIDENCE", "message": "Một số mục cần Lab Coach đối chiếu slide trước khi phát hành.", "item_ids": needs_review}
+                {"code": "OUTSIDE_SLIDE_QUESTION", "message": "Một số câu hỏi học viên nằm ngoài nội dung slide và cần Lab Coach quyết định.", "item_ids": needs_review}
             ] if needs_review else [],
             "generated_at": "2026-07-30T00:00:00+00:00",
         }

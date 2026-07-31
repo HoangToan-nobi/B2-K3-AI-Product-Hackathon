@@ -1,4 +1,5 @@
 import asyncio
+import logging
 import threading
 
 from fastapi import APIRouter, Depends, Request
@@ -13,6 +14,7 @@ from app.services.review_packs import ReviewPackService
 
 
 router = APIRouter(prefix="/api/review-packs")
+logger = logging.getLogger(__name__)
 
 
 @router.get("")
@@ -91,6 +93,7 @@ async def create_review_pack_job(
         except FileNotFoundError:
             await job.fail("Thiếu dữ liệu pipeline để tạo tài liệu. Hãy ingest lại slide rồi thử lại.")
         except Exception:
+            logger.exception("Review pack job failed")
             await job.fail("Không tạo được tài liệu tổng hợp. Hãy kiểm tra VLười hoặc API key.")
 
     threading.Thread(target=lambda: asyncio.run(run_job()), daemon=True).start()

@@ -1,0 +1,261 @@
+{
+  "schema_version": "1.0",
+  "pack_id": "pack-lesson_c0b00a07542f448ebeb7a164-001",
+  "status": "ready",
+  "lesson": {
+    "id": "lesson_c0b00a07542f448ebeb7a164",
+    "title": "day-03",
+    "slide_count": 31
+  },
+  "analysis": {
+    "student_question_count": 4,
+    "unique_user_count": 1,
+    "cluster_count": 3,
+    "included_cluster_count": 3,
+    "excluded_noise_count": 0
+  },
+  "summary": [
+    {
+      "id": "summary-01",
+      "title": "Bức tranh AI, GenAI và LLM",
+      "content": "“ef | VINUNIVERSITY : Từ Chatbot Đến Agentic Agent AICB-P1- Ngày 3- Design Pattern ReAct Tên Giảng Viên VinUniversity - Phase 1*Tuần 1 - 17/03/2026 HÃY SUY NGHĨ... “ChatGPT là chatbot hay agent? Siri thì sao? Cursor IDE thì sao?” Giữ câu hỏi này trong đầu khi học bài hôm nay Nội Dung Bài Học | VINUNIVERSITY 1. 3 Kiểu Hệ Thống AI 5. Agent Loop: Code Anatomy 2. Agenti Mục Tiêu Ngày 3 | VINUNIVERSITY - Phân biệt được rule-based bot, LLM chatbot, và agent - Dùng Agentic Fit để biết khi nào nên nâng từ chatbot lên agent - Hiểu và giải thích được vòng lặp ReAct: Thought > Action > Observa",
+      "source_pages": [
+        1,
+        2,
+        3
+      ],
+      "source_excerpt": "[Slide 1] “ef | VINUNIVERSITY : Từ Chatbot Đến Agentic Agent AICB-P1- Ngày 3- Design Pattern ReAct Tên Giảng Viên VinUniversity - Phase 1*Tuần 1 - 17/03/2026",
+      "confidence": 0.78,
+      "status": "ready"
+    },
+    {
+      "id": "summary-02",
+      "title": "LLM vận hành bằng token, context và attention",
+      "content": "Kiến Trúc Agent: Từ Trong Ra Ngoài Input từ môi trường Kéo đến trang này để mở note riêng Perception Action User input API / Search Tool results Final answer = Perception: agent nhận text, tool output, feedback = Reasoni So Sánh Chi Tiết: Text-based ReAct vs Function Calling Khía cạnh Text-based ReAct Function Calling Output format Chuỗi text tự do JSON object có cấu trúc theo schema Validation Không có — lỗi chỉ là lúc parse. Grammar-co So Sánh 3 Kiểu Hệ Thống AI | VINUNIVERSITY Tiêu chí Rule-based Bot LLM Chatbot Agent Cách xử lý If/else cố định Sinh câu trả lời tốt Plan > act — ob- theo context serve — adapt Flexibility Thấp Trung bình Cao Memory Gần",
+      "source_pages": [
+        10,
+        20,
+        5
+      ],
+      "source_excerpt": "[Slide 10] Kiến Trúc Agent: Từ Trong Ra Ngoài Input từ môi trường Kéo đến trang này để mở note riêng Perception Action User input API / Search Tool results Final answer = Perception: agent nhận text, tool output, feedback = Reasoning: phân tích trạng thái Reasoning và chọn bước tiếp theo LLM Core = Action: gọi tool hoặc trả lời user = Memory: giữ goal, facts",
+      "confidence": 0.78,
+      "status": "ready"
+    },
+    {
+      "id": "summary-03",
+      "title": "Huấn luyện và căn chỉnh model",
+      "content": "Cơ Chế Bên Trong: 2 Lớp Kết Hợp Lớp 1: Fine-tuning / RLHF Lớp 2: Grammar-constrained De- coding Model được huấn luyện thêm trên hàng ngàn trajectory “gọi tool đúng cách” — giúp model JSON Schema được biên dịch thành gram Tiến Hóa: Từ LLM Thuần Đến Agent Hiện Đại Thuần Engineering ReAct (2022) Calling (2023+) Hiện Nay Next-token Few-shot, CoT Thought/Action JSON schema Reasoning + tool call prediction vẫn 1 lượt dạng text tự do được train Từ ReAct Đến Function Calling Vì sao text-based ReAct gặp giới hạn, và cách function calling giải quyết bằng schema được train sẵn Hạn Chế Cốt Lõi Của Text-based ReAct Trong paper gốc, Action chỉ là một chuỗi text theo f",
+      "source_pages": [
+        19,
+        12,
+        15
+      ],
+      "source_excerpt": "[Slide 19] Cơ Chế Bên Trong: 2 Lớp Kết Hợp Lớp 1: Fine-tuning / RLHF Lớp 2: Grammar-constrained De- coding Model được huấn luyện thêm trên hàng ngàn trajectory “gọi tool đúng cách” — giúp model JSON Schema được biên dịch thành grammar học được khi nào nên gọi tool nào, với tham số (finite-state machine); ở mỗi bước sinh to- gi. Đây là xu hướng học được, khôn",
+      "confidence": 0.78,
+      "status": "ready"
+    },
+    {
+      "id": "summary-04",
+      "title": "Giới hạn của model và cách kiểm chứng",
+      "content": "Anti-Patterns: Khi Dùng Agent Là Sai Bài | VINUNIVERSITY (1) Bài toán 1 bước: hỏi đáp, trả FAQ, phân loại cơ bản (2) Không có tool nào để gọi: agent chỉ “suy nghĩ” nhưng không hành động được (3) Mọi thứ phải 100% determi Trace Ví Dụ: Tìm Chuyến Bay HAN -> HCM (2/2) Observation 2: Nhiệt độ 27-32C, xác suất mưa 70%. Thought 3: Tôi đã có cả lựa chọn chuyến bay và dữ liệu thời tiết. Có thể kết luận. Final Answer: Gợi ý chuyến 06:10 giá 1.75M Từ ReAct Đến Function Calling Vì sao text-based ReAct gặp giới hạn, và cách function calling giải quyết bằng schema được train sẵn Hạn Chế Cốt Lõi Của Text-based ReAct Trong paper gốc, Action chỉ là một chuỗi text theo f",
+      "source_pages": [
+        8,
+        14,
+        15
+      ],
+      "source_excerpt": "[Slide 8] Anti-Patterns: Khi Dùng Agent Là Sai Bài | VINUNIVERSITY (1) Bài toán 1 bước: hỏi đáp, trả FAQ, phân loại cơ bản (2) Không có tool nào để gọi: agent chỉ “suy nghĩ” nhưng không hành động được (3) Mọi thứ phải 100% deterministic: mỗi sai sót đều rất đắt (4) Chi phí latency không chấp nhận được: loop 3-5 bước là quá chậm @ Nguyên tắc: luôn benchmark r",
+      "confidence": 0.78,
+      "status": "ready"
+    },
+    {
+      "id": "summary-05",
+      "title": "Từ LLM đến agent và lựa chọn model",
+      "content": "So Sánh Chi Tiết: Text-based ReAct vs Function Calling Khía cạnh Text-based ReAct Function Calling Output format Chuỗi text tự do JSON object có cấu trúc theo schema Validation Không có — lỗi chỉ là lúc parse. Grammar-co Từ Anthropic: Agent Patterns Nên Tảng Đến Theo Nhu Cầu | VINUNIVERSITY Augmented Prompt LLM Chaining Prompt + Bước nối Chọn path Phân việc Tự quyết nhiều bước docs + tools tiếp rõ ràng / specialist rồi tổng hợp Bắt đầu t Checkpoint: Tóm Tắt 5 Bước Tiến Hóa | VinUniversity 1. LLM thuần: chỉ next-token prediction, không hành động được... (trang này để mở note riêng) 2. Prompt engineering: few-shot/CoT giúp reasoning tốt hơn, nhưng vẫn 1 lư",
+      "source_pages": [
+        20,
+        9,
+        22
+      ],
+      "source_excerpt": "[Slide 20] So Sánh Chi Tiết: Text-based ReAct vs Function Calling Khía cạnh Text-based ReAct Function Calling Output format Chuỗi text tự do JSON object có cấu trúc theo schema Validation Không có — lỗi chỉ là lúc parse. Grammar-constrained decod- ing chặn ngay lúc sinh token Cơ chế đảm bảo Chỉ dựa vào prompting / in- Fine-tuning + constrained de- context le",
+      "confidence": 0.78,
+      "status": "ready"
+    }
+  ],
+  "class_insights": [
+    {
+      "id": "insight-cluster-01",
+      "topic": "Những câu hỏi liên quan đến Agent",
+      "common_confusion": "Học viên thường hỏi theo nhiều cách, ví dụ: agent có những gì; giải thích kiến trúc agent.",
+      "correct_understanding": "Kiến trúc agent gồm 4 thành phần chính: 1. Perception (Nhận thức): Nhận input từ môi trường, như text của user, kết quả từ công cụ (API, search), hoặc feedback. 2. Reasoning (Suy luận): Phân tích trạng thái hiện tại để chọn bước hành động tiếp theo. 3. Action (Hành động): Gọi công cụ phù hợp hoặc trả lời user trực tiếp. 4. Memory (Bộ nhớ): Lưu trữ goal, facts, kết quả trung gian để agent không mất mạch khi xử lý nhiều bước. Gồm: - Short-term memory: Lưu trong context window, dùng cho task hiện tại. - Long-term memory: Lưu ngoài context, trong DB hoặc vector store, lưu trữ dữ liệu dài hạn hoặc key-value. Các khối này hoạt động tuần tự và lặp lại trong agent loop, giúp agent có khả năng quyết định và hành động liên tục, đồng thời giữ được trạng thái trong quá trình xử lý.",
+      "source_pages": [
+        8,
+        4,
+        10,
+        22
+      ],
+      "source_excerpt": "[Slide 8] Anti-Patterns: Khi Dùng Agent Là Sai Bài | VINUNIVERSITY (1) Bài toán 1 bước: hỏi đáp, trả FAQ, phân loại cơ bản (2) Không có tool nào để gọi: agent chỉ “suy nghĩ” nhưng không hành động được (3) Mọi thứ phải 100% deterministic: mỗi sai sót đều rất đắt (4) Chi phí latency không chấp nhận được: loop 3-5 bước là quá chậm @ Nguyên tắc: luôn benchmark rule / workflow / chatbot trước khi mở agent loop Case Study: Chatbot Đủ Hay Cần Agent? | VINUNIVERSITY Customer FAQ Booking Assistant = Câu",
+      "confidence": 0.82,
+      "status": "ready",
+      "unique_user_count": 1,
+      "question_count": 2,
+      "representative_questions": [
+        "agent có những gì",
+        "giải thích kiến trúc agent"
+      ]
+    },
+    {
+      "id": "insight-cluster-02",
+      "topic": "Câu hỏi về AI",
+      "common_confusion": "so sánh 3 kiểu hệ thống AI",
+      "correct_understanding": "So sánh 3 kiểu hệ thống AI: Rule-based Bot, LLM Chatbot, Agent | Tiêu chí | Rule-based Bot | LLM Chatbot | Agent | |-------------------|---------------------------|-----------------------------------|---------------------------------| | Cách xử lý | If/else cố định | Sinh câu trả lời tốt | Plan > act — observe theo context| | Độ linh hoạt | Thấp | Trung bình | Cao | | Memory | Gần như không có | Ngắn hạn trong context | Ngắn hạn + có thể có long-term memory| | Sử dụng công cụ | Hard-coded (cố định) | Có thể gọi tool theo bước | Chủ động chọn tool, lặp lại qua nhiều bước| | Chi phí | Thấp nhất | Trung bình | Cao hơn do nhiều lần gọi và loop | | Rủi ro | Logic dễ kiểm soát | Hallucination / format drift | Hallucination + tool misuse + loop | | Ví dụ phù hợp | Menu IVR, form validation | FAQ, hỗ trợ cơ bản | Đặt vé, research, coding assistant| Tóm lại: - Rule-based bot phù hợp task đơn giản",
+      "source_pages": [
+        5,
+        4,
+        30,
+        2
+      ],
+      "source_excerpt": "[Slide 5] So Sánh 3 Kiểu Hệ Thống AI | VINUNIVERSITY Tiêu chí Rule-based Bot LLM Chatbot Agent Cách xử lý If/else cố định Sinh câu trả lời tốt Plan > act — ob- theo context serve — adapt Flexibility Thấp Trung bình Cao Memory Gần như không có Ngắn hạn trong con- Ngắn hạn + có thể text thêm long-term memory Tool use Hard-coded Có thể gọi tool theo Chủ động chọn tool chỉ định theo bước tiếp theo Cost Thấp nhất Trung bình Cao hơn do loop và nhiều calls Risk Logic dễ kiểm soát Hallucination / for- H",
+      "confidence": 0.82,
+      "status": "ready",
+      "unique_user_count": 1,
+      "question_count": 1,
+      "representative_questions": [
+        "so sánh 3 kiểu hệ thống AI"
+      ]
+    },
+    {
+      "id": "insight-cluster-03",
+      "topic": "Câu hỏi về AI / ML",
+      "common_confusion": "AI và ML khác gì nhau vậy",
+      "correct_understanding": "AI (Trí tuệ nhân tạo) là lĩnh vực tổng quát tập trung vào việc tạo ra các hệ thống hoặc máy móc có khả năng thực hiện các nhiệm vụ mà con người thường làm, như hiểu ngôn ngữ, nhận diện hình ảnh, lập kế hoạch, hoặc ra quyết định. ML (Máy học) là một nhánh con của AI, chuyên sâu về các thuật toán và phương pháp giúp máy tự học từ dữ liệu mà không cần lập trình rõ ràng từng bước. Tóm lại: - AI là khái niệm rộng hơn, gồm cả việc xây dựng hệ thống thông minh. - ML là kỹ thuật chính để xây dựng AI thông minh thông qua việc học từ dữ liệu. Tài liệu hiện chưa có thông tin chi tiết về khái niệm này nên mình trả lời dựa trên kiến thức nền tảng chung. Nếu bạn cần, mình có thể giải thích thêm!",
+      "source_pages": [
+        29,
+        7,
+        21,
+        4
+      ],
+      "source_excerpt": "[Slide 29] Thực Hành Lab 3: Chatbot vs Agent — Hands-on Comparison Cách Chạy Lab 3 | VinUniversity 1. Chọn lại use case từ Ngày 2 hoặc một use case tương đương 2. Build chatbot baseline cho bài toán đó 3. Nâng cấp thành ReAct agent có ít nhất 1-2 tools 4. Chạy 5 test cases giống nhau trên cả hai hệ thống 5. Vẽ flowchart và ghi nhận nơi agent thực sự tạo thêm giá trị Nhớ AI generate scaffolding code, nhưng nhóm phải tự sửa system prompt, tool description, và điều kiện dừng.",
+      "confidence": 0.82,
+      "status": "ready",
+      "unique_user_count": 1,
+      "question_count": 1,
+      "representative_questions": [
+        "AI và ML khác gì nhau vậy"
+      ]
+    }
+  ],
+  "review_questions": [
+    {
+      "id": "question-01",
+      "type": "multiple_choice",
+      "question": "Ý nào mô tả đúng nhất về Bức tranh AI, GenAI và LLM?",
+      "options": [
+        "“ef | VINUNIVERSITY",
+        "Đây chỉ là nội dung logistics của lớp.",
+        "Đây là ví dụ ngoài slide, không cần ôn.",
+        "Đây là câu hỏi mở, không có đáp án từ slide."
+      ],
+      "correct_option": 0,
+      "answer": "“ef | VINUNIVERSITY",
+      "explanation": "Đáp án đúng vì đây là ý chính trong phần Bức tranh AI, GenAI và LLM.",
+      "source_pages": [
+        1,
+        2,
+        3
+      ],
+      "source_excerpt": "[Slide 1] “ef | VINUNIVERSITY : Từ Chatbot Đến Agentic Agent AICB-P1- Ngày 3- Design Pattern ReAct Tên Giảng Viên VinUniversity - Phase 1*Tuần 1 - 17/03/2026",
+      "confidence": 0.78,
+      "status": "ready"
+    },
+    {
+      "id": "question-02",
+      "type": "multiple_choice",
+      "question": "Ý nào mô tả đúng nhất về LLM vận hành bằng token, context và attention?",
+      "options": [
+        "Kiến Trúc Agent: Từ Trong Ra Ngoài Input từ môi trường Kéo đến trang này để mở note riêng Perception Action",
+        "Đây chỉ là nội dung logistics của lớp.",
+        "Đây là ví dụ ngoài slide, không cần ôn.",
+        "Đây là câu hỏi mở, không có đáp án từ slide."
+      ],
+      "correct_option": 0,
+      "answer": "Kiến Trúc Agent: Từ Trong Ra Ngoài Input từ môi trường Kéo đến trang này để mở note riêng Perception Action",
+      "explanation": "Đáp án đúng vì đây là ý chính trong phần LLM vận hành bằng token, context và attention.",
+      "source_pages": [
+        10,
+        20,
+        5
+      ],
+      "source_excerpt": "[Slide 10] Kiến Trúc Agent: Từ Trong Ra Ngoài Input từ môi trường Kéo đến trang này để mở note riêng Perception Action User input API / Search Tool results Final answer = Perception: agent nhận text, tool output, feedback = Reasoning: phân tích trạng thái Reasoning và chọn bước tiếp theo LLM Core = Action: gọi tool hoặc trả lời user = Memory: giữ goal, facts",
+      "confidence": 0.78,
+      "status": "ready"
+    },
+    {
+      "id": "question-03",
+      "type": "multiple_choice",
+      "question": "Ý nào mô tả đúng nhất về Huấn luyện và căn chỉnh model?",
+      "options": [
+        "Cơ Chế Bên Trong: 2 Lớp Kết Hợp Lớp 1: Fine-tuning / RLHF Lớp 2: Grammar-constrained De- coding Model được huấn",
+        "Đây chỉ là nội dung logistics của lớp.",
+        "Đây là ví dụ ngoài slide, không cần ôn.",
+        "Đây là câu hỏi mở, không có đáp án từ slide."
+      ],
+      "correct_option": 0,
+      "answer": "Cơ Chế Bên Trong: 2 Lớp Kết Hợp Lớp 1: Fine-tuning / RLHF Lớp 2: Grammar-constrained De- coding Model được huấn",
+      "explanation": "Đáp án đúng vì đây là ý chính trong phần Huấn luyện và căn chỉnh model.",
+      "source_pages": [
+        19,
+        12,
+        15
+      ],
+      "source_excerpt": "[Slide 19] Cơ Chế Bên Trong: 2 Lớp Kết Hợp Lớp 1: Fine-tuning / RLHF Lớp 2: Grammar-constrained De- coding Model được huấn luyện thêm trên hàng ngàn trajectory “gọi tool đúng cách” — giúp model JSON Schema được biên dịch thành grammar học được khi nào nên gọi tool nào, với tham số (finite-state machine); ở mỗi bước sinh to- gi. Đây là xu hướng học được, khôn",
+      "confidence": 0.78,
+      "status": "ready"
+    },
+    {
+      "id": "question-04",
+      "type": "multiple_choice",
+      "question": "Ý nào mô tả đúng nhất về Giới hạn của model và cách kiểm chứng?",
+      "options": [
+        "Anti-Patterns: Khi Dùng Agent Là Sai Bài | VINUNIVERSITY (1) Bài toán 1 bước: hỏi đáp",
+        "Đây chỉ là nội dung logistics của lớp.",
+        "Đây là ví dụ ngoài slide, không cần ôn.",
+        "Đây là câu hỏi mở, không có đáp án từ slide."
+      ],
+      "correct_option": 0,
+      "answer": "Anti-Patterns: Khi Dùng Agent Là Sai Bài | VINUNIVERSITY (1) Bài toán 1 bước: hỏi đáp",
+      "explanation": "Đáp án đúng vì đây là ý chính trong phần Giới hạn của model và cách kiểm chứng.",
+      "source_pages": [
+        8,
+        14,
+        15
+      ],
+      "source_excerpt": "[Slide 8] Anti-Patterns: Khi Dùng Agent Là Sai Bài | VINUNIVERSITY (1) Bài toán 1 bước: hỏi đáp, trả FAQ, phân loại cơ bản (2) Không có tool nào để gọi: agent chỉ “suy nghĩ” nhưng không hành động được (3) Mọi thứ phải 100% deterministic: mỗi sai sót đều rất đắt (4) Chi phí latency không chấp nhận được: loop 3-5 bước là quá chậm @ Nguyên tắc: luôn benchmark r",
+      "confidence": 0.78,
+      "status": "ready"
+    },
+    {
+      "id": "question-05",
+      "type": "multiple_choice",
+      "question": "Ý nào mô tả đúng nhất về Từ LLM đến agent và lựa chọn model?",
+      "options": [
+        "So Sánh Chi Tiết: Text-based ReAct vs Function Calling Khía cạnh Text-based ReAct Function Calling Output",
+        "Đây chỉ là nội dung logistics của lớp.",
+        "Đây là ví dụ ngoài slide, không cần ôn.",
+        "Đây là câu hỏi mở, không có đáp án từ slide."
+      ],
+      "correct_option": 0,
+      "answer": "So Sánh Chi Tiết: Text-based ReAct vs Function Calling Khía cạnh Text-based ReAct Function Calling Output",
+      "explanation": "Đáp án đúng vì đây là ý chính trong phần Từ LLM đến agent và lựa chọn model.",
+      "source_pages": [
+        20,
+        9,
+        22
+      ],
+      "source_excerpt": "[Slide 20] So Sánh Chi Tiết: Text-based ReAct vs Function Calling Khía cạnh Text-based ReAct Function Calling Output format Chuỗi text tự do JSON object có cấu trúc theo schema Validation Không có — lỗi chỉ là lúc parse. Grammar-constrained decod- ing chặn ngay lúc sinh token Cơ chế đảm bảo Chỉ dựa vào prompting / in- Fine-tuning + constrained de- context le",
+      "confidence": 0.78,
+      "status": "ready"
+    }
+  ],
+  "warnings": [],
+  "generated_at": "2026-07-30T00:00:00+00:00"
+}

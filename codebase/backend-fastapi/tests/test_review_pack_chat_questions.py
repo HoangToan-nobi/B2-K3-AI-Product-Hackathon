@@ -607,3 +607,42 @@ def test_normalized_pack_keeps_slide_grounded_summary_out_of_review():
     assert pack["summary"][0]["status"] == "ready"
     assert pack["status"] == "ready"
     assert pack["warnings"] == []
+
+
+def test_normalized_pack_review_status_only_depends_on_student_question_insights():
+    service = ReviewPackService(None)
+    pack = service._normalize_generated_pack(
+        lesson_id="lesson-no-review-insights",
+        title="Lesson",
+        slide_count=0,
+        generated={
+            "summary": [
+                {
+                    "title": "Một ý thiếu excerpt",
+                    "content": "Nội dung này thiếu nguồn trực tiếp.",
+                    "source_pages": [],
+                    "source_excerpt": "",
+                }
+            ],
+            "class_insights": [],
+            "review_questions": [
+                {
+                    "question": "Câu nào đúng?",
+                    "options": ["Đáp án đúng", "Sai 1", "Sai 2", "Sai 3"],
+                    "correct_option": 0,
+                    "answer": "Đáp án đúng",
+                    "explanation": "Giải thích ngắn.",
+                    "source_pages": [],
+                    "source_excerpt": "",
+                }
+            ],
+        },
+        chat_questions=[],
+        slide_pages=[],
+    )
+
+    assert pack["summary"][0]["status"] == "needs_review"
+    assert pack["review_questions"][0]["status"] == "needs_review"
+    assert pack["class_insights"] == []
+    assert pack["status"] == "ready"
+    assert pack["warnings"] == []

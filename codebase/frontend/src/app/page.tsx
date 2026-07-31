@@ -222,6 +222,12 @@ export default function Home() {
     [pack],
   );
 
+  useEffect(() => {
+    if (coachAction === "review" && pack && needsReviewCount === 0) {
+      setCoachAction("menu");
+    }
+  }, [coachAction, pack, needsReviewCount]);
+
   const selectDay = (lessonId: string) => {
     setSelectedLessonId(lessonId);
     setOpenLessonId((prev) => (prev === lessonId ? "" : lessonId));
@@ -1276,8 +1282,8 @@ function MaterialActionsPanel({
             <button className="btn ghost" id="coach-create-pack" type="button" disabled={processing || !lesson} onClick={onGenerate}>
               {processing ? "Đang tạo..." : pack ? "Tạo lại tài liệu tổng hợp" : "Tạo tài liệu tổng hợp"}
             </button>
-            <button className="btn ghost" id="coach-review-pack" type="button" disabled={!pack} onClick={onReview}>
-              {needsReviewCount > 0 ? `Duyệt ${needsReviewCount} câu hỏi cần kiểm tra` : "Kiểm tra câu hỏi chatlog"}
+            <button className="btn ghost" id="coach-review-pack" type="button" disabled={!pack || needsReviewCount === 0} onClick={onReview}>
+              {needsReviewCount > 0 ? `Duyệt ${needsReviewCount} câu hỏi cần kiểm tra` : "Không có câu hỏi cần duyệt"}
             </button>
           </>
         )}

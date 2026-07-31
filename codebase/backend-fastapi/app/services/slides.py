@@ -8,7 +8,7 @@ import urllib.request
 from pathlib import Path
 from typing import Any
 
-from app.core.config import get_settings
+from app.core.config import get_settings, openai_reasoning_effort_for_request
 from app.core.paths import REPO_ROOT, SHARED_DIR
 
 
@@ -121,7 +121,7 @@ def fill_empty_pdf_pages_with_ocr(pdf_path: Path, pages: list[dict[str, Any]]) -
             page["extraction_method"] = "ocr"
             ocr_pages.append({"page": page_number, "text": ocr_text})
 
-    normalized_pages = normalize_ocr_pages_with_deepseek(ocr_pages)
+    normalized_pages = normalize_ocr_pages_with_openai(ocr_pages)
     for page in completed:
         page_number = int(page["page"])
         normalized_text = normalized_pages.get(page_number)
@@ -167,13 +167,13 @@ def ocr_pdf_page(pdf_path: Path, page_number: int) -> str:
         return clean_pdf_page(result.stdout)
 
 
-def normalize_ocr_text_with_deepseek(text: str, *, page_number: int) -> str:
-    normalized_pages = normalize_ocr_pages_with_deepseek([{"page": page_number, "text": text}])
+def normalize_ocr_text_with_openai(text: str, *, page_number: int) -> str:
+    normalized_pages = normalize_ocr_pages_with_openai([{"page": page_number, "text": text}])
     return normalized_pages.get(page_number, text)
 
 
-def normalize_ocr_pages_with_deepseek(ocr_pages: list[dict[str, Any]]) -> dict[int, str]:
-    """Best-effort OCR cleanup. Keep ingestion usable when DeepSeek is not configured."""
+def normalize_ocr_pages_with_openai(ocr_pages: list[dict[str, Any]]) -> dict[int, str]:
+    """Best-effort OCR cleanup. Keep ingestion usable when OpenAI is not configured."""
     compact_pages = [
         {"page": int(page["page"]), "text": str(page.get("text") or "").strip()}
         for page in ocr_pages
@@ -187,7 +187,7 @@ def normalize_ocr_pages_with_deepseek(ocr_pages: list[dict[str, Any]]) -> dict[i
     except Exception:
         return {}
 
-    if not settings.deepseek_api_key:
+    if not settings.openai_api_key:
         return {}
 
     normalized_by_page: dict[int, str] = {}
@@ -228,20 +228,22 @@ Nhiệm vụ:
 Chỉ trả về JSON hợp lệ theo schema: {"pages":[{"page":1,"text":"..."}]}."""
     user_prompt = "OCR RAW PAGES:\n" + json.dumps(pages, ensure_ascii=False) + "\n\nJSON:"
     payload: dict[str, Any] = {
-        "model": settings.deepseek_model,
+        "model": settings.openai_model,
         "messages": [
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_prompt},
         ],
-        "temperature": 0,
-        "max_tokens": 4096,
+        "max_completion_tokens": 4096,
         "response_format": {"type": "json_object"},
     }
+    reasoning_effort = openai_reasoning_effort_for_request(settings)
+    if reasoning_effort:
+        payload["reasoning_effort"] = reasoning_effort
     request = urllib.request.Request(
-        settings.deepseek_api_url,
+        settings.openai_api_url,
         data=json.dumps(payload).encode("utf-8"),
         headers={
-            "Authorization": f"Bearer {settings.deepseek_api_key}",
+            "Authorization": f"Bearer {settings.openai_api_key}",
             "Content-Type": "application/json",
         },
         method="POST",

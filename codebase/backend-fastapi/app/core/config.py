@@ -11,11 +11,12 @@ PIPELINE_ENV = BACKEND_ROOT.parent / "pipeline" / ".env"
 
 class Settings(BaseSettings):
     database_url: str | None = Field(default=None, alias="DATABASE_URL")
-    deepseek_api_key: str | None = Field(default=None, alias="DEEPSEEK_API_KEY")
-    deepseek_api_url: str = Field(
-        default="https://api.deepseek.com/chat/completions", alias="DEEPSEEK_API_URL"
+    openai_api_key: str | None = Field(default=None, alias="OPENAI_API_KEY")
+    openai_api_url: str = Field(
+        default="https://api.openai.com/v1/chat/completions", alias="OPENAI_API_URL"
     )
-    deepseek_model: str = Field(default="deepseek-chat", alias="DEEPSEEK_MODEL")
+    openai_model: str = Field(default="gpt-4.1-mini", alias="OPENAI_MODEL")
+    openai_reasoning_effort: str | None = Field(default=None, alias="OPENAI_REASONING_EFFORT")
     backend_cors_origins: str = Field(
         default="http://localhost:3000", alias="BACKEND_CORS_ORIGINS"
     )
@@ -44,3 +45,10 @@ class Settings(BaseSettings):
 @lru_cache
 def get_settings() -> Settings:
     return Settings()
+
+
+def openai_reasoning_effort_for_request(settings: object) -> str | None:
+    effort = getattr(settings, "openai_reasoning_effort", None)
+    if not effort or str(effort).strip().lower() == "none":
+        return None
+    return str(effort).strip()

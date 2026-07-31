@@ -27,32 +27,34 @@ class _FakeResponse:
         ).encode("utf-8")
 
 
-def test_normalize_ocr_text_with_deepseek_uses_json_response(monkeypatch):
+def test_normalize_ocr_text_with_openai_uses_json_response(monkeypatch):
     monkeypatch.setattr(
         slides,
         "get_settings",
         lambda: SimpleNamespace(
-            deepseek_api_key="test-key",
-            deepseek_api_url="https://example.test/chat/completions",
-            deepseek_model="deepseek-chat",
+            openai_api_key="test-key",
+            openai_api_url="https://example.test/chat/completions",
+            openai_model="gpt-4.1-mini",
+            openai_reasoning_effort="none",
         ),
     )
     monkeypatch.setattr(slides.urllib.request, "urlopen", lambda *_args, **_kwargs: _FakeResponse())
 
-    result = slides.normalize_ocr_text_with_deepseek("T Ầ N G MO DEL\nV I Ệ C C Ủ A B Ạ N", page_number=3)
+    result = slides.normalize_ocr_text_with_openai("T Ầ N G MO DEL\nV I Ệ C C Ủ A B Ạ N", page_number=3)
 
     assert result == "TẦNG MODEL\nViệc của bạn"
 
 
-def test_normalize_ocr_text_with_deepseek_skips_without_api_key(monkeypatch):
+def test_normalize_ocr_text_with_openai_skips_without_api_key(monkeypatch):
     monkeypatch.setattr(
         slides,
         "get_settings",
         lambda: SimpleNamespace(
-            deepseek_api_key=None,
-            deepseek_api_url="https://example.test/chat/completions",
-            deepseek_model="deepseek-chat",
+            openai_api_key=None,
+            openai_api_url="https://example.test/chat/completions",
+            openai_model="gpt-4.1-mini",
+            openai_reasoning_effort="none",
         ),
     )
 
-    assert slides.normalize_ocr_text_with_deepseek("T Ầ N G", page_number=1) == "T Ầ N G"
+    assert slides.normalize_ocr_text_with_openai("T Ầ N G", page_number=1) == "T Ầ N G"

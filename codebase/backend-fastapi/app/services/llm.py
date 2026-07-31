@@ -4,7 +4,7 @@ from typing import Any
 
 import httpx
 
-from app.core.config import get_settings
+from app.core.config import get_settings, openai_reasoning_effort_for_request
 
 
 SYSTEM_PROMPT = """Bạn là AI Tutor cho lớp AI & LLM Foundation.
@@ -19,32 +19,22 @@ class LlmService:
 
     @property
     def enabled(self) -> bool:
-        return bool(self.settings.deepseek_api_key)
+        return bool(self.settings.openai_api_key)
 
     async def answer(self, *, question: str, context: str) -> str | None:
         if not self.enabled:
             return None
-
-        payload: dict[str, Any] = {
-            "model": self.settings.deepseek_model,
-            "messages": [
+        body = await self._chat_completion(
+            messages=[
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {
                     "role": "user",
                     "content": f"TÀI LIỆU THAM KHẢO TỪ SLIDE:\n{context}\n\nCÂU HỎI:\n{question}\n\nTRẢ LỜI CHO HỌC VIÊN:",
                 },
             ],
-            "temperature": 0.2,
-            "max_tokens": 700,
-        }
-        headers = {
-            "Authorization": f"Bearer {self.settings.deepseek_api_key}",
-            "Content-Type": "application/json",
-        }
-        async with httpx.AsyncClient(timeout=45) as client:
-            response = await client.post(self.settings.deepseek_api_url, json=payload, headers=headers)
-            response.raise_for_status()
-            body = response.json()
+            max_completion_tokens=700,
+            timeout=45,
+        )
         return self._clean_tutor_answer(body["choices"][0]["message"]["content"])
 
     async def answer_general(self, *, question: str, web_context: str = "") -> str | None:
@@ -60,23 +50,14 @@ Không nhắc đến các nhãn nội bộ như context, prompt, dữ liệu đ�
             if web_context
             else f"CÂU HỎI:\n{question}\n\nTRẢ LỜI CHO HỌC VIÊN:"
         )
-        payload: dict[str, Any] = {
-            "model": self.settings.deepseek_model,
-            "messages": [
+        body = await self._chat_completion(
+            messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_content},
             ],
-            "temperature": 0.25,
-            "max_tokens": 800,
-        }
-        headers = {
-            "Authorization": f"Bearer {self.settings.deepseek_api_key}",
-            "Content-Type": "application/json",
-        }
-        async with httpx.AsyncClient(timeout=45) as client:
-            response = await client.post(self.settings.deepseek_api_url, json=payload, headers=headers)
-            response.raise_for_status()
-            body = response.json()
+            max_completion_tokens=800,
+            timeout=45,
+        )
         return self._clean_tutor_answer(body["choices"][0]["message"]["content"])
 
     @staticmethod
@@ -123,9 +104,8 @@ Schema:
   "class_insights": [{"topic": "...", "common_confusion": "...", "correct_understanding": "...", "source_pages": [1], "source_excerpt": "...", "confidence": 0.0, "unique_user_count": 1, "question_count": 1, "representative_questions": ["..."]}],
   "review_questions": [{"question": "...", "options": ["A", "B", "C", "D"], "correct_option": 0, "answer": "...", "explanation": "...", "source_pages": [1], "source_excerpt": "...", "confidence": 0.0}]
 }"""
-        payload: dict[str, Any] = {
-            "model": self.settings.deepseek_model,
-            "messages": [
+        body = await self._chat_completion(
+            messages=[
                 {"role": "system", "content": system_prompt},
                 {
                     "role": "user",
@@ -142,20 +122,39 @@ Schema:
                     ),
                 },
             ],
-            "temperature": 0.15,
-            "max_tokens": 4096,
-            "response_format": {"type": "json_object"},
-        }
-        headers = {
-            "Authorization": f"Bearer {self.settings.deepseek_api_key}",
-            "Content-Type": "application/json",
-        }
-        async with httpx.AsyncClient(timeout=90) as client:
-            response = await client.post(self.settings.deepseek_api_url, json=payload, headers=headers)
-            response.raise_for_status()
-            body = response.json()
+            max_completion_tokens=4096,
+            response_format={"type": "json_object"},
+            timeout=180,
+        )
         content = body["choices"][0]["message"]["content"].strip()
         return json.loads(_extract_json_object(content))
+
+    async def _chat_completion(
+        self,
+        *,
+        messages: list[dict[str, str]],
+        max_completion_tokens: int,
+        timeout: float,
+        response_format: dict[str, str] | None = None,
+    ) -> dict[str, Any]:
+        payload: dict[str, Any] = {
+            "model": self.settings.openai_model,
+            "messages": messages,
+            "max_completion_tokens": max_completion_tokens,
+        }
+        if response_format is not None:
+            payload["response_format"] = response_format
+        reasoning_effort = openai_reasoning_effort_for_request(self.settings)
+        if reasoning_effort:
+            payload["reasoning_effort"] = reasoning_effort
+        headers = {
+            "Authorization": f"Bearer {self.settings.openai_api_key}",
+            "Content-Type": "application/json",
+        }
+        async with httpx.AsyncClient(timeout=timeout) as client:
+            response = await client.post(self.settings.openai_api_url, json=payload, headers=headers)
+            response.raise_for_status()
+            return response.json()
 
 
 def _extract_json_object(content: str) -> str:
