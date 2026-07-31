@@ -115,14 +115,14 @@ Schema:
                         f"TRANSCRIPT:\n{transcript_context}\n\n"
                         f"CHATLOG ẨN DANH:\n{chat_context}\n\n"
                         "Hãy tạo đúng cấu trúc nội dung cho PDF gồm: "
-                        "5-6 mục lý thuyết trọng tâm, top 5-10 mục cả lớp thường hỏi nếu chatlog có đủ dữ liệu, 3-5 câu quiz nhanh. "
+                        "4-5 mục lý thuyết trọng tâm, top 3-5 mục cả lớp thường hỏi nếu chatlog có đủ dữ liệu, 3-4 câu quiz nhanh. "
                         "Văn phong như tài liệu ôn tập chính thức: câu ngắn vừa phải, thuật ngữ rõ. "
                         "Riêng quiz phải ngắn: mỗi option dưới 22 từ, answer là ý đúng cô đọng, explanation 1-2 câu; "
                         "không markdown, không bullet trong content/common_confusion/correct_understanding/options/answer/explanation."
                     ),
                 },
             ],
-            max_completion_tokens=4096,
+            max_completion_tokens=2500,
             response_format={"type": "json_object"},
             timeout=180,
         )

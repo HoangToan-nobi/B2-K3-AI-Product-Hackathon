@@ -335,14 +335,14 @@ class ReviewPackService:
             "VLười đang lấy chữ trên từng trang slide để xác định kiến thức chính.",
         )
         slide = await self._slide_payload(lesson_id)
-        slide_context = self._slide_context(slide, limit=14000)
+        slide_context = self._slide_context(slide, limit=8000)
         await self._emit_progress(
             progress,
             24,
             "Đọc transcript buổi học",
             "VLười đang kiểm tra phần lời giảng hoặc ghi chú đi kèm nếu có.",
         )
-        transcript_context = self._safe_transcript_excerpt(lesson_id, limit=8000)
+        transcript_context = self._safe_transcript_excerpt(lesson_id, limit=4000)
         await self._emit_progress(
             progress,
             36,
@@ -358,7 +358,7 @@ class ReviewPackService:
             "VLười đang gộp các câu hỏi giống nhau và giữ lại những câu đại diện nhất.",
             detail=f"Đã tìm thấy {len(chat_questions)} câu hỏi phù hợp.",
         )
-        selected_chat_questions = self._select_chat_context_questions(chat_questions, limit=30)
+        selected_chat_questions = self._select_chat_context_questions(chat_questions, limit=15)
         chat_context = "\n".join(self._format_chat_context_item(item) for item in selected_chat_questions)
         generated: dict[str, Any] | None = None
         job: dict[str, Any] = {"mode": "ai_generated"}

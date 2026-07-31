@@ -17,67 +17,61 @@
   "summary": [
     {
       "id": "summary-01",
-      "title": "Bức tranh AI, GenAI và LLM",
-      "content": "Từ Chatbot Đến Agentic Agent AICB-P1- Ngày 3- Design Pattern ReAct Giảng Viên VinUniversity - Phase 1*Tuần 1 - 17/03/2026 HÃY SUY NGHĨ... “ChatGPT là chatbot hay agent? Siri thì sao? Cursor IDE thì sao?” Giữ câu hỏi này trong đầu khi học bài hôm nay Nội Dung Bài Học 1. 3 Kiểu Hệ Thống AI 5. Agent Loop: Code Anatomy 2. Agentic Fit Framework Mục Tiêu Ngày 3 = Phân biệt được rule-based bot, LLM chatbot, và agent = Dùng Agentic Fit để biết khi nào nên nâng cấp chatbot lên agent = Hiểu và giải thích được vòng lặp ReAct: Thought > Action > Observation = Build đư",
+      "title": "Phân biệt ba kiểu hệ thống AI: Bot, Chatbot, Agent",
+      "content": "3 kiểu hệ thống AI gồm Bot dựa trên rule cứng, LLM Chatbot trả lời thông minh không có vòng lặp, và Agent có khả năng lập kế hoạch, sử dụng công cụ, quan sát và lặp lại nhiều bước quyết định giúp xử lý các tác vụ phức tạp hơn.",
       "source_pages": [
-        1,
-        2,
-        3
+        4,
+        5
       ],
-      "source_excerpt": "[Slide 1] Từ Chatbot Đến Agentic Agent AICB-P1- Ngày 3- Design Pattern ReAct Giảng Viên VinUniversity - Phase 1*Tuần 1 - 17/03/2026",
-      "confidence": 0.78,
+      "source_excerpt": "Spectrum: Bot — Chatbot —> Agent Khả năng thích nghi, tool use, memory, risk tăng dần Rule-based LLM Autonomous ... Không phải mọi thứ dùng LLM đều là agent...",
+      "confidence": 0.95,
       "status": "ready"
     },
     {
       "id": "summary-02",
-      "title": "LLM vận hành bằng token, context và attention",
-      "content": "Kiến Trúc Agent: Từ Trong Ra Ngoài Input từ môi trường Kéo đến trang này để mở note riêng Perception Action User input API / Search Tool results Final answer Perception: agent nhận text, tool output, feedback Reasoning: So Sánh Chi Tiết: Text-based ReAct vs Function Calling Khía cạnh Text-based ReAct Function Calling Output format Chuỗi text tự do JSON object có cấu trúc theo schema Validation Không có — lỗi chỉ là lúc parse Grammar-con So Sánh 3 Kiểu Hệ Thống AI Tiêu chí Rule-based Bot LLM Chatbot Agent Cách xử lý If/else cố định Sinh câu trả lời tốt Plan > act — ob- theo context serve — adapt Flexibility Thấp Trung bình Cao Memory Gần như không có Ngắ",
+      "title": "Agentic Fit Framework để quyết định khi nào dùng agent",
+      "content": "Agentic Fit gồm 4 tiêu chí chính: multi-step reasoning, tool interaction, dynamic decision, và long horizon. Nếu bài toán có nhiều bước, cần gọi tool, ra quyết định dựa trên quan sát kết quả, hoặc giữ mục tiêu dài hạn thì agent là lựa chọn thích hợp.",
       "source_pages": [
-        10,
-        20,
-        5
+        6,
+        7
       ],
-      "source_excerpt": "[Slide 10] Kiến Trúc Agent: Từ Trong Ra Ngoài Input từ môi trường Kéo đến trang này để mở note riêng Perception Action User input API / Search Tool results Final answer Perception: agent nhận text, tool output, feedback Reasoning: phân tích trạng thái và chọn bước tiếp theo LLM Core Action: gọi tool hoặc trả lời user Memory: giữ goal, facts, và intermediate",
-      "confidence": 0.78,
+      "source_excerpt": "4 Tiêu Chí Agentic Fit 1. Multi-step Reasoning 2. Tool Interaction 3. Dynamic Decision 4. Long Horizon ... Chấm nhanh theo thang 1-5 cho từng tiêu chí",
+      "confidence": 0.96,
       "status": "ready"
     },
     {
       "id": "summary-03",
-      "title": "Huấn luyện và căn chỉnh model",
-      "content": "Cơ Chế Bên Trong: 2 Lớp Kết Hợp Lớp 1: Fine-tuning / RLHF Lớp 2: Grammar-constrained Decoding Model được huấn luyện thêm trên hàng ngàn JSON Schema được biên dịch thành grammar trajectory “gọi tool đúng cách” — giúp mode Tiến Hóa: Từ LLM Thuần Đến Agent Hiện Đại 3 bước Thuần Engineering ReAct (2022) Calling (2023+) Hiện Nay Next-token Few-shot, CoT Thought/Action JSON schema Reasoning + tool call prediction văn 1 lượt dạng text tự do đượ Từ ReAct Đến Function Calling Vì sao text-based ReAct gặp giới hạn, và cách function calling giải quyết bằng schema được train sẵn Hạn Chế Cốt Lõi Của Text-based ReAct Trong paper gốc, Action chỉ là một chuỗi text theo f",
+      "title": "Kiến trúc agent gồm Perception, Reasoning, Action, Memory",
+      "content": "Agent gồm 4 khối chính: perception nhận dữ liệu đầu vào và feedback, reasoning phân tích trạng thái để quyết định, action thực thi gọi tool hoặc trả lời, memory giữ goal, facts, và kết quả trung gian. Memory gồm short-term cho task hiện tại và long-term lưu trữ ngoài context.",
       "source_pages": [
-        19,
-        12,
-        15
+        10,
+        11
       ],
-      "source_excerpt": "[Slide 19] Cơ Chế Bên Trong: 2 Lớp Kết Hợp Lớp 1: Fine-tuning / RLHF Lớp 2: Grammar-constrained Decoding Model được huấn luyện thêm trên hàng ngàn JSON Schema được biên dịch thành grammar trajectory “gọi tool đúng cách” — giúp model (finite-state machine); ở mỗi bước sinh to- học được khi nào nên gọi tool nào, với tham số ken, chỉ token hợp lệ theo schema mớ",
-      "confidence": 0.78,
+      "source_excerpt": "Kiến Trúc Agent: Từ Trong Ra Ngoài ... Memory: giữ goal, facts, và intermediate results ... Short-term Long-term Memory Memory Context window Store / DB State và memory giúp agent không “mất mạch”.",
+      "confidence": 0.95,
       "status": "ready"
     },
     {
       "id": "summary-04",
-      "title": "Giới hạn của model và cách kiểm chứng",
-      "content": "Anti-Patterns: Khi Dùng Agent Là Sai Bài (1) Bài toán 1 bước: hỏi đáp, tra FAQ, phân loại cơ bản (2) Không có tool nào để gọi: agent chỉ “suy nghĩ” nhưng không hành động được (3) Mọi thứ phải 100% deterministic: mọi sai Trace Ví Dụ: Tìm Chuyến Bay HAN -> HCM (2/2) Observation 2: Nhiệt độ 27-32°C, xác suất mưa 70%. Thought 3: Tôi đã có cả lựa chọn chuyến bay và dữ liệu thời tiết. Có thể kết luận. Final Answer: Gợi ý chuyến 06:10 giá 1.75 Từ ReAct Đến Function Calling Vì sao text-based ReAct gặp giới hạn, và cách function calling giải quyết bằng schema được train sẵn Hạn Chế Cốt Lõi Của Text-based ReAct Trong paper gốc, Action chỉ là một chuỗi text theo f",
+      "title": "ReAct Pattern và vòng lặp Thought, Action, Observation",
+      "content": "ReAct là pattern kết hợp reasoning từng bước với gọi công cụ rồi quan sát kết quả để lặp lại. Vòng lặp gồm Thought nhận biết thiếu gì và cần làm gì, Action gọi tool với tham số, Observation nhận kết quả thực thi, lặp lại đến khi có câu trả lời hoặc dừng.",
       "source_pages": [
-        8,
-        14,
-        15
+        12,
+        13
       ],
-      "source_excerpt": "[Slide 8] Anti-Patterns: Khi Dùng Agent Là Sai Bài (1) Bài toán 1 bước: hỏi đáp, tra FAQ, phân loại cơ bản (2) Không có tool nào để gọi: agent chỉ “suy nghĩ” nhưng không hành động được (3) Mọi thứ phải 100% deterministic: mọi sai sót đều rất đắt (4) Chi phí latency không chấp nhận được: loop 3-5 bước là đã quá chậm Nguyên tắc: luôn benchmark rule / workflow",
-      "confidence": 0.78,
+      "source_excerpt": "ReAct là pattern kết hợp suy luận theo từng bước với gọi công cụ và quan sát kết quả. Thay vì trả lời ngay, agent sẽ lặp qua các bước: Thought ... Action ... Observation ...",
+      "confidence": 0.97,
       "status": "ready"
     },
     {
       "id": "summary-05",
-      "title": "Từ LLM đến agent và lựa chọn model",
-      "content": "So Sánh Chi Tiết: Text-based ReAct vs Function Calling Khía cạnh Text-based ReAct Function Calling Output format Chuỗi text tự do JSON object có cấu trúc theo schema Validation Không có — lỗi chỉ là lúc parse Grammar-con Từ Anthropic: Agent Patterns Nên Tăng Dần Theo Nhu Cầu Augmented Prompt LLM Chaining Prompt + Bước nối Chọn path Phân việc Tự quyết nhiều bước docs + tools tiếp rõ ràng / specialist rồi tổng hợp Bắt đầu từ cấu trúc đơn g Checkpoint: Tóm Tắt 5 Bước Tiến Hóa 1. LLM thuần: chỉ next-token prediction, không hành động được... ghi chú riêng 2. Prompt engineering: few-shot/CoT giúp reasoning tốt hơn, nhưng vẫn 1 luồng, không gọi tool 3. Text-bas",
+      "title": "Khi nào không nên dùng agent: các anti-patterns",
+      "content": "Agent không phù hợp với bài toán 1 bước, không có tool để gọi nên chỉ suy nghĩ mà không hành động, yêu cầu kết quả hoàn toàn determinist, hoặc khi chi phí độ trễ của vòng lặp agent không chấp nhận được. Nên benchmark chatbot hoặc rule-based bot trước khi dùng agent.",
       "source_pages": [
-        20,
-        9,
-        22
+        8
       ],
-      "source_excerpt": "[Slide 20] So Sánh Chi Tiết: Text-based ReAct vs Function Calling Khía cạnh Text-based ReAct Function Calling Output format Chuỗi text tự do JSON object có cấu trúc theo schema Validation Không có — lỗi chỉ là lúc parse Grammar-constrained decoding chặn ngay lúc sinh token Cơ chế đảm bảo Chỉ dựa vào prompting / in-context learning Fine-tuning + constrained d",
-      "confidence": 0.78,
+      "source_excerpt": "Anti-Patterns: Khi Dùng Agent Là Sai ... Bài toán 1 bước: hỏi đáp, tra FAQ, phân loại cơ bản ... Không có tool nào để gọi ... Chi phí latency không chấp nhận được ...",
+      "confidence": 0.94,
       "status": "ready"
     }
   ],
@@ -105,7 +99,7 @@
       "id": "insight-cluster-02",
       "topic": "Những câu hỏi liên quan đến AI",
       "common_confusion": "Học viên thường hỏi theo nhiều cách, ví dụ: (Trang 3, đoạn được chọn: \"AI Prototyping & MVP\") Giải thích đoạn bôi đen ở Trang 3.; (Trang 17, đoạn được chọn: \"Scope & PRD cho AI feature\") Giải thích đoạn bôi đen ở Trang 17.; (Trang 2, đoạn được chọn: \"VinUniversity trang web nào để lấy slide bài giảng buổi học của thầy Đức - dành cho AI thực chiến\") VinUniversity trang web nào để lấy slide bài giảng buổi học của thầy Đức - dành cho AI thực chiến.",
-      "correct_understanding": "Tóm tắt đoạn bôi đen ở Trang 3: \"Thiết kế sản phẩm AI cho sự không chắc chắn\" nghĩa là khi xây dựng sản phẩm AI, ta cần: 1. Tìm vấn đề thật: Xác định chính xác vấn đề người dùng đang gặp phải, không làm theo cảm tính hay giả định. 2. Thiết kế cho lúc AI sai: Dự kiến các lỗi thường xảy ra như AI báo nhầm, bỏ sót thông tin, bịa chuyện hoặc hiểu sai ý định, để chuẩn bị phương án xử lý (safeguard). 3. Cắt vừa đủ scope: Xác định phạm vi rõ ràng, vừa đủ để ý tưởng AI có thể được thử nghiệm và chứng minh giá trị thực tế qua prototype, không quá rộng sẽ gây khó kiểm soát. Mục đích cuối cùng là từ một demo chạy được, phát triển đến một sản phẩm đáng tin cậy, có thể sử dụng thật sự trong workflow của người dùng. Nói cách khác, đây không phải là quản lý sản phẩm chung, mà là tư duy thiết kế AI cụ thể, giúp ý tưởng AI đủ thực tế, đủ rõ ràng để xây dựng và chứng minh bằng prototype hiệu quả.",
+      "correct_understanding": "Đoạn bôi đen trên Trang 3 nhấn mạnh cách thiết kế sản phẩm AI trong điều kiện không chắc chắn: 1. Tìm vấn đề thật: Xác định đúng vấn đề thực tế mà người dùng đang gặp phải, không chỉ xây dựng AI vì công nghệ mà xây vì nhu cầu thật. 2. Thiết kế cho lúc AI sai: Chuẩn bị và xử lý các tình huống AI có thể trả lời sai (ví dụ báo nhầm, bỏ sót, bịa thông tin, không hiểu ý định) để đảm bảo sản phẩm vẫn tin cậy và an toàn. 3. Cắt scope vừa đủ: Chọn phạm vi (scope) đủ nhỏ, tập trung để một ý tưởng AI có thể được xây dựng và thử nghiệm rõ ràng, từ đó chứng minh được giá trị thực qua prototype, không chỉ là demo chạy được. Tóm lại, đây là cách tư duy đặc thù khi phát triển AI: từ việc demo công nghệ sang xây dựng sản phẩm thật sự hữu ích, đáng tin cậy và phù hợp với nhu cầu người dùng trong thực tế.",
       "source_pages": [
         3
       ],
@@ -126,11 +120,13 @@
       "id": "insight-cluster-03",
       "topic": "Những câu hỏi liên quan đến Agent",
       "common_confusion": "Học viên thường hỏi theo nhiều cách, ví dụ: (Trang 22, đoạn được chọn: \"Memory injection ■ Chỉ đưa vào facts thật sự cần cho task hiện tại ■ Ưu tiên recent history hoặc relevant history, không dump toàn bộ transcript ■ Tốt cho support agent, coding assistant, tutor nhiều lượt Compression ■ Summarize: tóm tắt phần cũ ■ Drop: bỏ hẳn phần không còn liên quan ■ Archive: đẩy\") Giải thích đoạn bôi đen ở Trang 22.; (Trang 9, đoạn được chọn: \"Nếu bài toán không cần dữ liệu mới, nhiều bước, hay quyết định động, agent thường là overkill.\") Giải thích đoạn bôi đen ở Trang 9: \"Nếu bài toán không cần dữ liệu mới, nhiều bước, hay quyết định động, agent thường là overkill.\"; (Trang 22, đoạn được chọn: \"ReA",
-      "correct_understanding": "Agentic Fit giúp đánh giá liệu chatbot hiện tại có đủ khả năng xử lý các yêu cầu phức tạp hay không. Khi chatbot thường xuyên gặp giới hạn như không thể gọi tool, thực hiện hành động hay xử lý reasoning đa bước, thì Agentic Fit cho thấy cần nâng cấp lên agent — một hệ thống có thể kết hợp reasoning, gọi function và sử dụng bộ nhớ để đáp ứng tốt hơn, chính xác hơn. Nói ngắn gọn, Agentic Fit là thước đo để quyết định khi nào chatbot nên chuyển thành agent để giải quyết bài toán khó hơn.",
+      "correct_understanding": "Agentic Fit giúp xác định khi nào hệ thống cần nâng cấp từ chatbot lên agent dựa trên mức độ phức tạp nhiệm vụ. Nếu hệ thống chỉ trả lời thông minh theo từng lượt (chatbot) thì không cần agent. Khi nhiệm vụ yêu cầu nhiều quyết định liên tiếp, phải lập kế hoạch, dùng công cụ, quan sát và lặp lại hành động thì mới cần agent. Nói cách khác, khi cần khả năng tự hành động, thích nghi và xử lý mục tiêu dài hạn thì nên nâng lên agent.",
       "source_pages": [
-        22
+        2,
+        4,
+        12
       ],
-      "source_excerpt": "[Slide 22] Checkpoint: Tóm Tắt 5 Bước Tiến Hóa 1. LLM thuần: chỉ next-token prediction, không hành động được... ghi chú riêng 2. Prompt engineering: few-shot/CoT giúp reasoning tốt hơn, nhưng vẫn 1 luồng, không gọi tool 3. Text-based ReAct (2022): thêm Action dạng text, nhưng phụ thuộc parser tự viết —dễ vỡ 4. Function calling (2023+): Action trở thành JSON schema được train + ép bằng constrained decoding — đáng tin cậy hơn hẳn 5. Agent hiện nay: MCP chuẩn hóa kết nối tool/data, Agent SDK/Respon",
+      "source_excerpt": "“ChatGPT là chatbot hay agent? Siri thì sao? Cursor IDE thì sao?” ... Spectrum: Bot — Chatbot —> Agent ... ReAct là pattern kết hợp suy luận và gọi công cụ.",
       "confidence": 0.82,
       "status": "ready",
       "unique_user_count": 42,
@@ -147,7 +143,7 @@
       "id": "insight-cluster-04",
       "topic": "Những câu hỏi liên quan đến LLM",
       "common_confusion": "Học viên thường hỏi theo nhiều cách, ví dụ: (Trang 5, đoạn được chọn: \"bạn được tạo ra từ LLM nào\") bạn được tạo ra từ LLM nào; (Trang 64, đoạn được chọn: \"Ví dụ code của tôi gọi llm gemma2-4b rồi nó cứ trả lời 3 step rồi dừng dù chưa tìm được câu trả lời là do đâu\") Ví dụ code của tôi gọi llm gemma2-4b rồi nó cứ trả lời 3 step rồi dừng dù chưa tìm được câu trả lời là do đâu; (Trang 40, đoạn được chọn: \"LLM có thực sự “hiểuˮ — hay chỉ là vẹt thống kê?\") Giải thích đoạn bôi đen ở Trang 40: \"LLM có thực sự “hiểuˮ — hay chỉ là vẹt thống kê?\".",
-      "correct_understanding": "Đoạn bôi đen ở Trang 22 ý nói về Transformer – một kiến trúc mạng thần kinh quan trọng trong xử lý ngôn ngữ tự nhiên. Cụ thể: - Transformer cho phép mô hình hiểu ngôn ngữ linh hoạt hơn, nghĩa là khi xử lý từng từ trong câu, mô hình có thể tham khảo (nghĩa là \"nhìn sang\") các từ quan trọng khác trong toàn bộ câu, chứ không chỉ xử lý từng từ theo thứ tự tuần tự từ trái sang phải hoặc ngược lại như trước đây. - Điều này giúp mô hình nắm bắt được mối quan hệ phức tạp giữa các từ trong câu, dù chúng ở cách xa nhau. - Nhờ vậy, Transformer trở thành nền tảng kỹ thuật quan trọng giúp xây dựng các mô hình lớn như GPT, BERT và nhiều mô hình ngôn ngữ lớn (LLM) khác sau này. Tóm lại, Transformer làm thay đổi cách hiểu ngôn ngữ của mô hình từ tuần tự sang linh hoạt, giúp cải thiện hiệu quả xử lý và tạo ra thế hệ LLM hiện đại.",
+      "correct_understanding": "Đoạn bôi đen giải thích rằng Transformer là bước đột phá trong xử lý ngôn ngữ vì nó cho phép mô hình \"chú ý\" đến các từ quan trọng trong câu một cách linh hoạt, không theo thứ tự tuần tự từng từ một. Thay vì đọc từ trái sang phải hoặc ngược lại, Transformer có thể liên kết các từ quan trọng trong cả câu cùng lúc. Nhờ vậy, mô hình hiểu ngữ cảnh tốt hơn và hiệu quả hơn, trở thành nền tảng kỹ thuật cho các mô hình lớn như GPT, BERT và các LLM khác sau này.",
       "source_pages": [
         5
       ],
@@ -206,7 +202,7 @@
       "id": "insight-cluster-07",
       "topic": "Những câu hỏi liên quan đến AI / LLM",
       "common_confusion": "Học viên thường hỏi theo nhiều cách, ví dụ: (Trang 1, đoạn được chọn: \"AI & LLM Foundation Bạn đang dùng AI mỗi ngày — nhưng thực sự bên trong nó đang làm g\") Giải thích đoạn bôi đen ở Trang 1: \"AI & LLM Foundation Bạn đang dùng AI mỗi ngày — nhưng thực sự bên trong nó đang làm g\"; (Trang 1, đoạn được chọn: \"AI & LLM Foundation\") fdfds; (Trang 3, đoạn được chọn: \"Agenda • Bức tranh AI & các tầng của AI • Lịch sử AI 70 năm • Bên trong LLM: cơ chế vận hành • Từ LLM đến AI Agent • Landscape: model hôm nay & cuộc đua hiện tại • Chọn model & chi phí token • Gọi API lần đầu • Tổng kết — những ý để mang về AI & LLM Foundation Từ \"nghe AI\" đến \"gọi AI\" trong một ngà\") Giải thích đoạn bôi đen ở Trang",
-      "correct_understanding": "Chào bạn! LLM (Large Language Model) là mô hình ngôn ngữ lớn, một loại trí tuệ nhân tạo được huấn luyện để hiểu và tạo ra ngôn ngữ tự nhiên giống con người. Cách hoạt động: LLM học từ rất nhiều văn bản để biết cách dự đoán từ tiếp theo trong câu, nhờ đó nó có thể trả lời câu hỏi, viết đoạn văn, dịch ngôn ngữ, v.v. Ví dụ thực tế dễ hiểu: Khi bạn hỏi trợ lý ảo như ChatGPT một câu hỏi, LLM sẽ hiểu câu hỏi đó và tạo ra câu trả lời phù hợp dựa trên kiến thức nó đã học. Nếu bạn muốn biết thêm chi tiết hoặc ví dụ cụ thể hơn, mình sẵn sàng hỗ trợ!",
+      "correct_understanding": "Chào bạn! Dưới đây là giải thích về LLM dành cho bạn: 1. LLM là gì? LLM (Large Language Model) là một loại mô hình trí tuệ nhân tạo lớn được thiết kế để hiểu và tạo ra ngôn ngữ tự nhiên giống như con người. 2. Nó hoạt động như thế nào? LLM được đào tạo trên rất nhiều văn bản từ sách, báo, internet... để học cách dự đoán từ tiếp theo trong câu. Nhờ đó, nó có thể trả lời câu hỏi, viết văn bản hay giao tiếp với người dùng một cách tự nhiên. 3. Ví dụ thực tế dễ hiểu: Bạn có thể tưởng tượng LLM như một trợ lý ảo khi bạn hỏi: \"Hôm nay thời tiết thế nào?\" thì nó sẽ trả lời dựa trên dữ liệu mà nó đã học hoặc liên kết với thông tin thời tiết hiện tại. Hy vọng bạn đã hiểu cơ bản về LLM! Nếu cần, mình sẽ giải thích thêm nhé.",
       "source_pages": [
         1
       ],
@@ -227,7 +223,7 @@
       "id": "insight-cluster-08",
       "topic": "Những câu hỏi liên quan đến Prompt / AI / Context",
       "common_confusion": "Học viên thường hỏi theo nhiều cách, ví dụ: (Trang 17, đoạn được chọn: \"Bạn cần viết prompt cho chatbot hỗ trợ sinh viên VinUni đăng ký môn học. Xác định 4 thành phần: ■ Role: Chatbot là ai? Expertise level? ■ Task: Nhiệm vụ cụ thể là gì? ■ Context: Hệ thống nào? Giới hạn gì? ■ Format: Output trông như thế nào?\") Kĩ thuật viết prompt này; (Trang 15, đoạn được chọn: \"Bạn cần viết prompt cho chatbot hỗ trợ sinh viên VinUni đăng ký môn học. Xác định 4 thành phần: ■ Role: Chatbot là ai? Expertise level? ■ Task: Nhiệm vụ cụ thể là gì? ■ Context: Hệ th\") viết prompt; (Trang 17, đoạn được chọn: \"Bạn cần viết prompt cho chatbot hỗ trợ sinh viên VinUni đăng ký môn học. Xác định 4 thành phần: ■ Role:",
-      "correct_understanding": "Đoạn bôi đen trên Trang 17 là một bài tập nhanh giúp bạn thực hành cách viết prompt theo mô hình RTCF gồm 4 thành phần quan trọng: 1. Role: Xác định chatbot là ai và trình độ chuyên môn (ví dụ: chatbot tư vấn đăng ký môn học dành cho sinh viên VinUni, có hiểu biết về quy trình và các môn học). 2. Task: Nhiệm vụ cụ thể chatbot cần làm (hỗ trợ sinh viên đăng ký môn học, giải đáp thắc mắc về môn học, thời gian đăng ký). 3. Context: Hệ thống hoặc phạm vi hoạt động, giới hạn của chatbot (ví dụ: chỉ hỗ trợ đăng ký trong hệ thống quản lý học tập của VinUni, không trả lời ngoài phạm vi đăng ký). 4. Format: Định dạng kết quả mà chatbot trả về (ví dụ: trả lời có cấu trúc rõ ràng, liệt kê các bước đăng ký, hoặc câu trả lời dạng danh sách dễ hiểu). Bài tập yêu cầu thảo luận nhanh với người khác và đưa ra 1-2 ví dụ prompt ứng với các thành phần trên trong 2 phút nhằm luyện kỹ năng xây dựng prompt rõ",
+      "correct_understanding": "Đoạn bôi đen trên Trang 17 là một bài tập nhanh (Quick Exercise) yêu cầu bạn thực hành viết prompt theo mô hình RTCF: - Role (Vai trò): Xác định chatbot là ai, ví dụ chatbot hỗ trợ sinh viên, trình độ chuyên môn ra sao. - Task (Nhiệm vụ): Mô tả cụ thể công việc chatbot cần làm, ở đây là giúp sinh viên VinUni đăng ký môn học. - Context (Ngữ cảnh): Môi trường hoặc hệ thống liên quan, cùng với các giới hạn hoặc quy định cần tuân thủ. - Format (Định dạng): Định dạng đầu ra cần có, ví dụ trả lời theo dạng câu hỏi, bảng thông tin, v.v. Mục đích là giúp bạn xây dựng prompt rõ ràng, đầy đủ thông tin để chatbot hoạt động hiệu quả. Sau đó, bạn thảo luận với người khác và chia sẻ ví dụ trong 2 phút.",
       "source_pages": [
         17
       ],
@@ -248,7 +244,7 @@
       "id": "insight-cluster-09",
       "topic": "Những câu hỏi liên quan đến LLM / Agent",
       "common_confusion": "Học viên thường hỏi theo nhiều cách, ví dụ: (Trang 9, đoạn được chọn: \"Giải thích đoạn bôi đen ở Trang 9: Lấy ví dụ cho tôi về bot có rule, LLM chatbot, Reactive agent\") Giải thích đoạn bôi đen ở Trang 9: Lấy ví dụ cho tôi về bot có rule, LLM chatbot, Reactive agent; (Trang 9, đoạn được chọn: \"Giải thích đoạn bôi đen ở Trang 9: Lấy ví dụ cho tôi về bot có rule, LLM chatbot, Reactive agent về các ví dụ trong thực tế\") Giải thích đoạn bôi đen ở Trang 9: Lấy ví dụ cho tôi về bot có rule, LLM chatbot, Reactive agent về các ví dụ trong thực tế; (Trang 4, đoạn được chọn: \"rule-based bot, LLM chatbot, và agent\") Khi nào nên dùng cái nào: rule-based bot, LLM chatbot, và agent.",
-      "correct_understanding": "Đoạn bôi đen giải thích về 3 mức độ hệ thống khác nhau xử lý cùng một câu hỏi: Bài toán: “Tìm vé máy bay từ Hà Nội đến Hồ Chí Minh dưới 2 triệu đồng, rồi gợi ý mang gì nếu trời mưa.” 1. Bot rule-based (theo quy tắc cứng): - Trả lời bằng menu lựa chọn cố định, không thay đổi. - Không tìm kiếm dữ liệu mới, không tổng hợp nhiều điều kiện. - Ví dụ: chỉ đưa menu có sẵn, không kiểm tra giá vé thực tế hay thời tiết. 2. LLM chatbot: - Viết câu trả lời tự nhiên, trôi chảy. - Nhưng không tự truy vấn dữ liệu giá vé thật, chỉ dựa trên kiến thức đã học. 3. Reactive agent: - Phân chia mục tiêu thành 2 bước riêng biệt: tìm vé và kiểm tra thời tiết. - Gọi từng công cụ (tool) để thu thập thông tin theo từng bước. - So sánh kết quả các bước và trả lời kết hợp, chính xác hơn. Ý chính: Mức đơn giản nhất (bot rule) dễ vận hành nhưng giới hạn, LLM viết mượt nhưng không tương tác dữ liệu mới, còn agent phân ch",
+      "correct_understanding": "Đoạn bôi đen trên Trang 9 giải thích ví dụ về cách xử lý cùng một câu hỏi \"Tìm vé HAN → HCM dưới 2 triệu, rồi gợi ý mang gì nếu trời mưa\" qua 3 mức độ hệ thống: 1. Bot có rule - Trả menu lựa chọn cố định, không linh hoạt. - Không truy cập dữ liệu mới nên không biết giá vé hiện tại. - Không tổng hợp nhiều điều kiện phức tạp. 2. LLM chatbot - Trả lời mượt, tự nhiên hơn. - Nhưng vẫn không tự truy vấn giá vé thật, chỉ dựa trên kiến thức có sẵn. 3. Reactive agent - Chia mục tiêu thành 2 việc riêng biệt: tìm vé và check thời tiết. - Gọi từng công cụ để thực hiện bước tương ứng. - So sánh kết quả rồi tổng hợp trả lời đầy đủ hơn. Tóm lại: Càng nâng cấp hệ thống, khả năng xử lý phức tạp, truy cập dữ liệu mới và tổng hợp thông tin càng tốt hơn. Tuy nhiên, nếu bài toán đơn giản, không cần dữ liệu mới hay nhiều bước, thì giải pháp đơn giản đã đủ dùng.",
       "source_pages": [
         9
       ],
@@ -269,7 +265,7 @@
       "id": "insight-cluster-10",
       "topic": "Những câu hỏi liên quan đến 1000 / AI",
       "common_confusion": "Học viên thường hỏi theo nhiều cách, ví dụ: (Trang 11, đoạn được chọn: \"Lớp học 1000 học viên (khóa K3 & K4, số lượng Trợ giảng có hạn. Dùng AI giải quyết thế nào?\") Giải thích đoạn bôi đen ở Trang 11.; (Trang 11, đoạn được chọn: \"Lớp học 1000 học viên (khóa K3 & K4, số lượng Trợ giảng có hạn. Dùng AI giải quyết thế nào\") Lớp học 1000 học viên (khóa K3 & K4, số lượng Trợ giảng có hạn. Dùng AI giải quyết thế nào; (Trang 11, đoạn được chọn: \"Lớp học 1000 học viên (khóa K3 & K4, số lượng Trợ giảng có hạn. Dùng AI giải quyết thế nào? V I Ế T C Â U T R Ả L Ờ I L Ê N D I S C O R D — 5 P H Ú T\") giải quyết như napf?.",
-      "correct_understanding": "Đoạn bôi đen nói về tình huống lớp học đông (1000 học viên) nhưng số trợ giảng có hạn, gây khó khăn trong việc hỗ trợ cá nhân học viên. Giải pháp dùng AI sẽ tận dụng Tool Calling và mô hình ReAct Pattern để biến AI thành trợ giảng ảo: - AI có thể reasoning + acting tức suy nghĩ và hành động, giúp trả lời, hướng dẫn học viên. - Tool Calling tạo cầu nối giữa AI và các công cụ bên ngoài (ví dụ: tra cứu tài liệu, giải bài tập). - Nhờ vậy, AI thay thế một phần trợ giảng thực, xử lý nhiều học viên cùng lúc, giúp giảm tải cho trợ giảng thật và nâng cao hiệu quả giảng dạy. Tóm lại, AI sẽ là “tay chân” giúp xử lý các tương tác với học viên qua các công cụ hỗ trợ tự động, giải quyết vấn đề hỗ trợ hạn chế bởi số lượng trợ giảng thực.",
+      "correct_understanding": "Vấn đề: Lớp học có tới 1000 học viên (khoá K3 & K4), trong khi số lượng trợ giảng rất hạn chế, làm khó khăn trong việc hỗ trợ, giải đáp thắc mắc kịp thời cho tất cả học viên. Giải pháp dùng AI: - Sử dụng Agent AI có khả năng gọi Tool (Tool Calling) để thực hiện các hành động thay vì chỉ trả lời, ví dụ như tra cứu tài liệu, giải bài tập, trả lời nhanh các câu hỏi thường gặp. - AI sẽ đóng vai trợ giảng ảo, giúp xử lý và phản hồi đồng loạt hàng nghìn câu hỏi của học viên một cách hiệu quả. - Nhờ mô hình ReAct Pattern (Reasoning + Acting), AI không chỉ suy nghĩ mà còn thực hiện hành động tương ứng, tăng khả năng hỗ trợ và giảm tải cho trợ giảng thật. Tóm lại, AI như một trợ giảng số giúp mở rộng năng lực của đội ngũ trợ giảng hạn chế, giải quyết nhanh chóng yêu cầu của lớp đông học viên.",
       "source_pages": [
         11
       ],
@@ -291,111 +287,81 @@
     {
       "id": "question-01",
       "type": "multiple_choice",
-      "question": "Ý nào mô tả đúng nhất về Bức tranh AI, GenAI và LLM?",
+      "question": "Điểm khác biệt chính giữa chatbot và agent là gì?",
       "options": [
-        "Từ Chatbot Đến Agentic Agent AICB-P1- Ngày 3- Design Pattern ReAct Giảng Viên VinUniversity",
-        "Đây chỉ là nội dung logistics của lớp.",
-        "Đây là ví dụ ngoài slide, không cần ôn.",
-        "Đây là câu hỏi mở, không có đáp án từ slide."
+        "Agent có khả năng lập kế hoạch nhiều bước và dùng công cụ",
+        "Chatbot luôn xử lý đa bước và dùng công cụ",
+        "Agent chỉ trả lời một lượt không lặp lại",
+        "Chatbot có long-term memory"
       ],
       "correct_option": 0,
-      "answer": "Từ Chatbot Đến Agentic Agent AICB-P1- Ngày 3- Design Pattern ReAct Giảng Viên VinUniversity",
-      "explanation": "Đáp án đúng vì đây là ý chính trong phần Bức tranh AI, GenAI và LLM.",
+      "answer": "Agent có khả năng lập kế hoạch nhiều bước và dùng công cụ",
+      "explanation": "Agent có vòng lặp lập kế hoạch, gọi tool, và quan sát kết quả; chatbot trả lời một lượt không có hành trình nhiều bước.",
       "source_pages": [
-        1,
-        2,
-        3
+        4
       ],
-      "source_excerpt": "[Slide 1] Từ Chatbot Đến Agentic Agent AICB-P1- Ngày 3- Design Pattern ReAct Giảng Viên VinUniversity - Phase 1*Tuần 1 - 17/03/2026",
-      "confidence": 0.78,
+      "source_excerpt": "Spectrum: Bot — Chatbot —> Agent Khả năng thích nghi, tool use, memory, risk tăng dần",
+      "confidence": 0.95,
       "status": "ready"
     },
     {
       "id": "question-02",
       "type": "multiple_choice",
-      "question": "Ý nào mô tả đúng nhất về LLM vận hành bằng token, context và attention?",
+      "question": "Tiêu chí nào không thuộc Agentic Fit Framework?",
       "options": [
-        "Kiến Trúc Agent: Từ Trong Ra Ngoài Input từ môi trường Kéo đến trang này để mở note riêng Perception Action",
-        "Đây chỉ là nội dung logistics của lớp.",
-        "Đây là ví dụ ngoài slide, không cần ôn.",
-        "Đây là câu hỏi mở, không có đáp án từ slide."
+        "Multi-step Reasoning",
+        "Tool Interaction",
+        "Dynamic Decision",
+        "Fixed deterministic logic"
       ],
-      "correct_option": 0,
-      "answer": "Kiến Trúc Agent: Từ Trong Ra Ngoài Input từ môi trường Kéo đến trang này để mở note riêng Perception Action",
-      "explanation": "Đáp án đúng vì đây là ý chính trong phần LLM vận hành bằng token, context và attention.",
+      "correct_option": 3,
+      "answer": "Fixed deterministic logic",
+      "explanation": "Agentic Fit gồm reasoning đa bước, tương tác tool, quyết định động, và mục tiêu dài hạn; logic cố định không thuộc tiêu chí này.",
       "source_pages": [
-        10,
-        20,
-        5
+        7
       ],
-      "source_excerpt": "[Slide 10] Kiến Trúc Agent: Từ Trong Ra Ngoài Input từ môi trường Kéo đến trang này để mở note riêng Perception Action User input API / Search Tool results Final answer Perception: agent nhận text, tool output, feedback Reasoning: phân tích trạng thái và chọn bước tiếp theo LLM Core Action: gọi tool hoặc trả lời user Memory: giữ goal, facts, và intermediate",
-      "confidence": 0.78,
+      "source_excerpt": "4 Tiêu Chí Agentic Fit 1. Multi-step Reasoning 2. Tool Interaction 3. Dynamic Decision 4. Long Horizon",
+      "confidence": 0.96,
       "status": "ready"
     },
     {
       "id": "question-03",
       "type": "multiple_choice",
-      "question": "Ý nào mô tả đúng nhất về Huấn luyện và căn chỉnh model?",
+      "question": "Vòng lặp ReAct không gồm bước nào sau đây?",
       "options": [
-        "Cơ Chế Bên Trong: 2 Lớp Kết Hợp Lớp 1: Fine-tuning / RLHF Lớp 2: Grammar-constrained Decoding Model được huấn",
-        "Đây chỉ là nội dung logistics của lớp.",
-        "Đây là ví dụ ngoài slide, không cần ôn.",
-        "Đây là câu hỏi mở, không có đáp án từ slide."
+        "Thought",
+        "Action",
+        "Observation",
+        "Execution"
       ],
-      "correct_option": 0,
-      "answer": "Cơ Chế Bên Trong: 2 Lớp Kết Hợp Lớp 1: Fine-tuning / RLHF Lớp 2: Grammar-constrained Decoding Model được huấn",
-      "explanation": "Đáp án đúng vì đây là ý chính trong phần Huấn luyện và căn chỉnh model.",
+      "correct_option": 3,
+      "answer": "Execution",
+      "explanation": "ReAct gồm Thought, Action, Observation; Execution không phải thuật ngữ chính trong vòng lặp này.",
       "source_pages": [
-        19,
-        12,
-        15
+        12
       ],
-      "source_excerpt": "[Slide 19] Cơ Chế Bên Trong: 2 Lớp Kết Hợp Lớp 1: Fine-tuning / RLHF Lớp 2: Grammar-constrained Decoding Model được huấn luyện thêm trên hàng ngàn JSON Schema được biên dịch thành grammar trajectory “gọi tool đúng cách” — giúp model (finite-state machine); ở mỗi bước sinh to- học được khi nào nên gọi tool nào, với tham số ken, chỉ token hợp lệ theo schema mớ",
-      "confidence": 0.78,
+      "source_excerpt": "ReAct là pattern kết hợp suy luận theo từng bước với gọi công cụ và quan sát kết quả: Thought, Action, Observation",
+      "confidence": 0.97,
       "status": "ready"
     },
     {
       "id": "question-04",
       "type": "multiple_choice",
-      "question": "Ý nào mô tả đúng nhất về Giới hạn của model và cách kiểm chứng?",
+      "question": "Khi nào không nên dùng agent?",
       "options": [
-        "Anti-Patterns: Khi Dùng Agent Là Sai Bài (1) Bài toán 1 bước: hỏi đáp",
-        "Đây chỉ là nội dung logistics của lớp.",
-        "Đây là ví dụ ngoài slide, không cần ôn.",
-        "Đây là câu hỏi mở, không có đáp án từ slide."
+        "Bài toán nhiều bước yêu cầu công cụ",
+        "Thuật toán if/else cứng không thay đổi",
+        "Cần ra quyết định dựa trên kết quả quan sát",
+        "Mục tiêu kéo dài nhiều vòng lặp"
       ],
-      "correct_option": 0,
-      "answer": "Anti-Patterns: Khi Dùng Agent Là Sai Bài (1) Bài toán 1 bước: hỏi đáp",
-      "explanation": "Đáp án đúng vì đây là ý chính trong phần Giới hạn của model và cách kiểm chứng.",
+      "correct_option": 1,
+      "answer": "Thuật toán if/else cứng không thay đổi",
+      "explanation": "Agent không phù hợp với bài toán đơn giản cố định nếu/else vì agent gây phức tạp và tăng chi phí.",
       "source_pages": [
-        8,
-        14,
-        15
+        8
       ],
-      "source_excerpt": "[Slide 8] Anti-Patterns: Khi Dùng Agent Là Sai Bài (1) Bài toán 1 bước: hỏi đáp, tra FAQ, phân loại cơ bản (2) Không có tool nào để gọi: agent chỉ “suy nghĩ” nhưng không hành động được (3) Mọi thứ phải 100% deterministic: mọi sai sót đều rất đắt (4) Chi phí latency không chấp nhận được: loop 3-5 bước là đã quá chậm Nguyên tắc: luôn benchmark rule / workflow",
-      "confidence": 0.78,
-      "status": "ready"
-    },
-    {
-      "id": "question-05",
-      "type": "multiple_choice",
-      "question": "Ý nào mô tả đúng nhất về Từ LLM đến agent và lựa chọn model?",
-      "options": [
-        "So Sánh Chi Tiết: Text-based ReAct vs Function Calling Khía cạnh Text-based ReAct Function Calling Output",
-        "Đây chỉ là nội dung logistics của lớp.",
-        "Đây là ví dụ ngoài slide, không cần ôn.",
-        "Đây là câu hỏi mở, không có đáp án từ slide."
-      ],
-      "correct_option": 0,
-      "answer": "So Sánh Chi Tiết: Text-based ReAct vs Function Calling Khía cạnh Text-based ReAct Function Calling Output",
-      "explanation": "Đáp án đúng vì đây là ý chính trong phần Từ LLM đến agent và lựa chọn model.",
-      "source_pages": [
-        20,
-        9,
-        22
-      ],
-      "source_excerpt": "[Slide 20] So Sánh Chi Tiết: Text-based ReAct vs Function Calling Khía cạnh Text-based ReAct Function Calling Output format Chuỗi text tự do JSON object có cấu trúc theo schema Validation Không có — lỗi chỉ là lúc parse Grammar-constrained decoding chặn ngay lúc sinh token Cơ chế đảm bảo Chỉ dựa vào prompting / in-context learning Fine-tuning + constrained d",
-      "confidence": 0.78,
+      "source_excerpt": "Anti-Patterns: Khi Dùng Agent Là Sai Bài ... Bài toán 1 bước, if/else cứng",
+      "confidence": 0.94,
       "status": "ready"
     }
   ],
